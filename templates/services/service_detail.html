@@ -59,7 +59,7 @@
         <!-- Боксы -->
         <div class="card mb-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card-body p-4">
-                <h6 style="font-weight:700; margin-bottom:20px; color:white;">🏠 Доступные {{ service.category.slot_unit|lower }}ы</h6>
+                <h6 style="font-weight:700; margin-bottom:20px; color:white;">🏠 Доступные {{ service.category.slot_unit|lower }}</h6>
                 {% for box in service.boxes.all %}
                     {% if box.is_active %}
                     <a href="{% url 'slot_list' box.pk %}" class="text-decoration-none">
@@ -78,7 +78,7 @@
                     </a>
                     {% endif %}
                 {% empty %}
-                    <p style="color:rgba(255,255,255,0.4);">{{ service.category.slot_unit }}ы не добавлены</p>
+                    <p style="color:rgba(255,255,255,0.4);">Нет доступных {{ service.category.slot_unit|lower }}</p>
                 {% endfor %}
             </div>
         </div>

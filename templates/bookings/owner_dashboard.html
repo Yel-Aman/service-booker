@@ -45,7 +45,7 @@
 <!-- Управление боксами -->
 <div class="card mb-4" data-aos="fade-up">
     <div class="card-body p-4">
-        <h6 style="font-weight:700; margin-bottom:20px; color:white;">{{ service.category.slot_unit }}ы</h6>
+        <h6 style="font-weight:700; margin-bottom:20px; color:white;">{{ service.category.slot_unit }}</h6>
         {% for box in service.boxes.all %}
         <div class="d-flex justify-content-between align-items-center p-3 mb-2"
              style="background:rgba(255,255,255,0.04); border-radius:14px; border:1px solid rgba(255,255,255,0.08);">
@@ -73,7 +73,7 @@
             </div>
         </div>
         {% empty %}
-        <p style="color:rgba(255,255,255,0.4);">Нет боксов.</p>
+        <p style="color:rgba(255,255,255,0.4);">Нет {{ service.category.slot_unit|lower }}.</p>
         {% endfor %}
 
         <form method="post" action="{% url 'add_box' service.pk %}" class="d-flex gap-2 mt-3">
