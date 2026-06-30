@@ -1,7 +1,8 @@
+import os
 import requests
 from services.models import Service
 
-TELEGRAM_TOKEN = '8929399215:AAHzdtEOK-qSMfa3IBsprjJM22Os5N8kG0E'
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 
 
 def process_updates():

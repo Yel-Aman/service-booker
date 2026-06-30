@@ -8,9 +8,10 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'phone')
+        fields = ('username', 'email', 'phone')
         labels = {
             'username': 'Имя пользователя',
+            'email': 'Email',
             'phone': 'Телефон',
         }
 
@@ -25,7 +26,7 @@ class RegisterForm(forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
-        user.role = 'client'  # Всегда клиент при регистрации
+        user.role = 'client'
         if commit:
             user.save()
         return user

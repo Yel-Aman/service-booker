@@ -6,9 +6,11 @@ from datetime import datetime, timedelta
 import requests
 from .models import TimeSlot, Booking, Review
 from services.models import Box, Service
+import os
 
-TELEGRAM_TOKEN = '8929399215:AAHzdtEOK-qSMfa3IBsprjJM22Os5N8kG0E'
-ADMIN_CHAT_ID = '316023355'
+
+TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
+ADMIN_CHAT_ID = os.environ.get('TELEGRAM_ADMIN_CHAT_ID')
 
 
 def send_telegram_notification(service, message):
