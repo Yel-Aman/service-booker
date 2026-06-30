@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход — ServiceBooker{% endblock %}
+
+{% block content %}
+<div class="row min-vh-75 align-items-center justify-content-center">
+    <div class="col-md-5" data-aos="fade-up">
+        <div class="text-center mb-4">
+            <div style="font-size:3rem; animation:float 3s ease-in-out infinite;">⚡</div>
+            <h3 style="font-weight:800; letter-spacing:-1px; margin-top:8px; color:white;">Добро пожаловать!</h3>
+            <p style="color:rgba(255,255,255,0.4);">Войдите чтобы управлять записями</p>
+        </div>
+        <div class="card" style="border-radius:24px;">
+            <div class="card-body p-5">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger" style="border-radius:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#ef4444;">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-4">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div style="color:#ef4444; font-size:0.8rem; margin-top:4px;">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary w-100 py-3" style="border-radius:12px; font-size:1rem;">
+                        Войти →
+                    </button>
+                </form>
+                <p class="text-center mt-4 mb-0" style="color:rgba(255,255,255,0.4); font-size:0.9rem;">
+                    Нет аккаунта? <a href="{% url 'register' %}" style="color:#a855f7; font-weight:600;">Зарегистрироваться</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Оставить отзыв — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5" data-aos="fade-up">
+        <div class="text-center mb-4">
+            <div style="font-size:3rem; animation:float 3s ease-in-out infinite;">⭐</div>
+            <h3 style="font-weight:800; letter-spacing:-1px; margin-top:8px; color:white;">Оставить отзыв</h3>
+            <p style="color:rgba(255,255,255,0.4);">{{ service.name }}</p>
+        </div>
+        <div class="card" style="border-radius:24px;">
+            <div class="card-body p-5">
+                <form method="post">
+                    {% csrf_token %}
+                    <!-- Рейтинг звёздами -->
+                    <div class="mb-4">
+                        <label class="form-label">Оценка</label>
+                        <div class="d-flex gap-2" id="stars">
+                            {% for i in "12345" %}
+                            <div onclick="setRating({{ forloop.counter }})"
+                                 id="star-{{ forloop.counter }}"
+                                 style="font-size:2rem; cursor:pointer; transition:transform 0.2s; opacity:0.3;"
+                                 onmouseover="hoverRating({{ forloop.counter }})"
+                                 onmouseout="resetHover()">⭐</div>
+                            {% endfor %}
+                        </div>
+                        <input type="hidden" name="rating" id="rating-input" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Комментарий</label>
+                        <textarea name="comment" class="form-control" rows="4" placeholder="Расскажите о вашем опыте..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3" style="border-radius:12px; font-size:1rem;">
+                        ⭐ Отправить отзыв
+                    </button>
+                </form>
+                <a href="{% url 'service_detail' service.pk %}" class="btn btn-outline-secondary w-100 mt-2" style="border-radius:12px;">← Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentRating = 0;
+
+function setRating(rating) {
+    currentRating = rating;
+    document.getElementById('rating-input').value = rating;
+    updateStars(rating);
+}
+
+function hoverRating(rating) {
+    updateStars(rating);
+}
+
+function resetHover() {
+    updateStars(currentRating);
+}
+
+function updateStars(rating) {
+    for (let i = 1; i <= 5; i++) {
+        const star = document.getElementById('star-' + i);
+        star.style.opacity = i <= rating ? '1' : '0.3';
+        star.style.transform = i <= rating ? 'scale(1.2)' : 'scale(1)';
+    }
+}
+</script>
+{% endblock %}

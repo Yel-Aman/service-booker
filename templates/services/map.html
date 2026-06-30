@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Карта сервисов — ServiceBooker{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-up">
+    <h4 style="font-weight:800; letter-spacing:-1px; color:white;">🗺️ Карта сервисов</h4>
+    <a href="{% url 'service_list' %}" class="btn btn-outline-secondary btn-sm">Список →</a>
+</div>
+
+<div style="border-radius:24px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 32px rgba(0,0,0,0.4);" data-aos="fade-up">
+    <div id="map" style="width:100%; height:600px;"></div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    const services = {{ services_json|safe }};
+
+    const map = L.map('map').setView([47.1067, 51.9214], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const icon = L.divIcon({
+        html: `<div style="background:linear-gradient(135deg,#6c47ff,#a855f7); width:36px; height:36px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); border:3px solid rgba(255,255,255,0.3); box-shadow:0 4px 16px rgba(108,71,255,0.6);"></div>`,
+        iconSize: [36, 36],
+        iconAnchor: [18, 36],
+        className: ''
+    });
+
+    services.forEach(service => {
+        const marker = L.marker([service.lat, service.lng], {icon}).addTo(map);
+        marker.bindPopup(`
+            <div style="font-family:Inter,sans-serif; min-width:200px; padding:4px;">
+                <div style="font-size:0.75rem; color:#6c47ff; font-weight:600; margin-bottom:4px;">${service.category}</div>
+                <div style="font-weight:700; font-size:1rem; margin-bottom:8px; color:#1a1a1a;">${service.name}</div>
+                <div style="font-size:0.85rem; color:#888; margin-bottom:4px;">📍 ${service.address}</div>
+                <div style="font-size:0.85rem; color:#888; margin-bottom:12px;">📞 ${service.phone}</div>
+                <a href="${service.url}" style="background:linear-gradient(135deg,#6c47ff,#a855f7); color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.85rem; font-weight:600; display:block; text-align:center;">Записаться →</a>
+            </div>
+        `, {maxWidth: 250});
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Удалить слоты — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5" data-aos="fade-up">
+        <div class="text-center mb-4">
+            <div style="font-size:3rem; animation:float 3s ease-in-out infinite;">🗑️</div>
+            <h3 style="font-weight:800; letter-spacing:-1px; margin-top:8px; color:white;">Удалить слоты</h3>
+            <p style="color:rgba(255,255,255,0.4);">{{ service.name }}</p>
+        </div>
+        <div class="card" style="border-radius:24px;">
+            <div class="card-body p-5">
+                <div style="background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:12px; padding:16px; margin-bottom:24px;">
+                    <p style="font-size:0.85rem; color:rgba(255,255,255,0.5); margin:0;">
+                        ⚠️ Удалятся только <strong style="color:#ef4444;">свободные</strong> слоты. Забронированные и активные останутся.
+                    </p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label">Дата с <span style="color:rgba(255,255,255,0.3); font-size:0.8rem;">(необязательно)</span></label>
+                        <input type="date" name="date_from" class="form-control">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Дата по</label>
+                        <input type="date" name="date_to" class="form-control">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Время с <span style="color:rgba(255,255,255,0.3); font-size:0.8rem;">(пусто — весь день)</span></label>
+                        <input type="time" name="time_from" class="form-control">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Время по</label>
+                        <input type="time" name="time_to" class="form-control">
+                    </div>
+                    <button type="submit" class="btn w-100 py-3 mb-2" style="border-radius:12px; font-size:1rem; background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3);">
+                        🗑️ Удалить свободные слоты
+                    </button>
+                </form>
+                <a href="{% url 'owner_dashboard' service.pk %}" class="btn btn-outline-secondary w-100" style="border-radius:12px;">← Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Мои записи — ServiceBooker{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-up">
+    <h3 style="font-weight:800; letter-spacing:-1px; color:white;">Мои записи</h3>
+    <a href="{% url 'service_list' %}" class="btn btn-primary btn-sm">+ Новая запись</a>
+</div>
+
+{% for booking in bookings %}
+<div class="card mb-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="d-flex gap-3 align-items-center">
+                <div style="width:56px; height:56px; background:linear-gradient(135deg,#6c47ff,#a855f7); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0;">
+                    {% if booking.slot.box.service.category.name == 'Автомойка' %}🚗
+                    {% elif booking.slot.box.service.category.name == 'СТО' %}🔧
+                    {% elif booking.slot.box.service.category.name == 'Шиномонтаж' %}🔩
+                    {% elif booking.slot.box.service.category.name == 'Салон красоты' %}💇
+                    {% else %}🏢{% endif %}
+                </div>
+                <div>
+                    <h6 style="font-weight:700; margin-bottom:4px; color:white;">{{ booking.slot.box.service.name }}</h6>
+                    <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin-bottom:4px;">{{ booking.slot.box.name }}</p>
+                    <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin:0;">
+                        📅 {{ booking.slot.date }} &nbsp; 🕐 {{ booking.slot.start_time|time:"H:i" }} - {{ booking.slot.end_time|time:"H:i" }}
+                    </p>
+                </div>
+            </div>
+            <div class="text-end">
+                <span class="badge mb-2 d-block"
+                    style="{% if booking.slot.status == 'booked' %}background:rgba(108,71,255,0.2); color:#a855f7;
+                    {% elif booking.slot.status == 'in_progress' %}background:rgba(245,158,11,0.2); color:#f59e0b;
+                    {% else %}background:rgba(99,255,180,0.1); color:#63ffb4;{% endif %}
+                    padding:6px 12px; font-size:0.8rem; border-radius:8px;">
+                    {{ booking.slot.get_status_display }}
+                </span>
+                {% if booking.slot.status == 'booked' %}
+                <form method="post" action="{% url 'cancel_booking' booking.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm" style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:8px; font-size:0.8rem;">
+                        Отменить
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="text-center py-5" data-aos="fade-up">
+    <div style="font-size:5rem; margin-bottom:16px; animation:float 3s ease-in-out infinite;">📋</div>
+    <h5 style="font-weight:700; margin-bottom:8px; color:white;">Записей пока нет</h5>
+    <p style="color:rgba(255,255,255,0.4); margin-bottom:24px;">Найди сервис и запишись онлайн!</p>
+    <a href="{% url 'service_list' %}" class="btn btn-primary px-4">Найти сервис</a>
+</div>
+{% endfor %}
+{% endblock %}

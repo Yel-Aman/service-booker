@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать слоты — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5" data-aos="fade-up">
+        <div class="text-center mb-4">
+            <div style="font-size:3rem; animation:float 3s ease-in-out infinite;">⚙️</div>
+            <h3 style="font-weight:800; letter-spacing:-1px; margin-top:8px; color:white;">Создать слоты</h3>
+            <p style="color:rgba(255,255,255,0.4);">{{ service.name }}</p>
+        </div>
+        <div class="card" style="border-radius:24px;">
+            <div class="card-body p-5">
+                <div style="background:rgba(99,255,180,0.06); border:1px solid rgba(99,255,180,0.15); border-radius:12px; padding:16px; margin-bottom:24px;">
+                    <p style="font-size:0.85rem; color:rgba(255,255,255,0.5); margin:0;">
+                        🕐 Режим работы: <strong style="color:#63ffb4;">{{ service.opening_time|time:"H:i" }} — {{ service.closing_time|time:"H:i" }}</strong><br>
+                        Слоты создадутся для всех активных боксов на каждый день в выбранном диапазоне.
+                    </p>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label">Дата с</label>
+                        <input type="date" name="date_from" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Дата по</label>
+                        <input type="date" name="date_to" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Интервал (минуты)</label>
+                        <input type="number" name="interval" class="form-control" value="60" min="15" max="240" required>
+                        <div style="font-size:0.8rem; color:rgba(255,255,255,0.3); margin-top:6px;">
+                            Например: 30 для мойки · 60 для салона · 120 для СТО
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3 mb-2" style="border-radius:12px; font-size:1rem;">
+                        🚀 Создать слоты
+                    </button>
+                </form>
+                <a href="{% url 'owner_dashboard' service.pk %}" class="btn btn-outline-secondary w-100" style="border-radius:12px;">← Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

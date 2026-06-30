@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ service.name }} — ServiceBooker{% endblock %}
+
+{% block content %}
+<!-- Hero сервиса -->
+<div style="background:linear-gradient(135deg, rgba(108,71,255,0.3), rgba(168,85,247,0.2)); border:1px solid rgba(108,71,255,0.3); border-radius:24px; padding:48px; margin-bottom:32px; color:white; position:relative; overflow:hidden;" data-aos="fade-up">
+    <div style="position:absolute; top:-60px; right:-60px; width:250px; height:250px; background:radial-gradient(circle, rgba(108,71,255,0.3), transparent); border-radius:50%;"></div>
+    <span style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:4px 14px; border-radius:50px; font-size:0.8rem; font-weight:600; color:white;">{{ service.category.name }}</span>
+    <h2 style="font-weight:800; letter-spacing:-1px; margin-top:12px; margin-bottom:4px; font-size:2.5rem; color:white;">{{ service.name }}</h2>
+    {% if service.description %}
+    <p style="opacity:0.6; margin:0;">{{ service.description }}</p>
+    {% endif %}
+    {% if avg_rating %}
+    <div style="margin-top:12px;">
+        <span style="color:#f59e0b; font-size:1.2rem;">
+            {% for i in "12345" %}{% if forloop.counter <= avg_rating %}⭐{% endif %}{% endfor %}
+        </span>
+        <span style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-left:8px;">{{ avg_rating|floatformat:1 }} / 5 ({{ reviews|length }} отзывов)</span>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <!-- Информация -->
+        <div class="card mb-4" data-aos="fade-up">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; margin-bottom:20px; color:white;">📋 Информация</h6>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px;">
+                            <div style="font-size:0.75rem; color:rgba(255,255,255,0.3); margin-bottom:4px; letter-spacing:1px;">АДРЕС</div>
+                            <div style="font-weight:600; font-size:0.9rem; color:white;">{{ service.address }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:16px;">
+                            <div style="font-size:0.75rem; color:rgba(255,255,255,0.3); margin-bottom:4px; letter-spacing:1px;">ТЕЛЕФОН</div>
+                            <div style="font-weight:600; font-size:0.9rem; color:white;">{{ service.phone }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div style="background:rgba(108,71,255,0.1); border:1px solid rgba(108,71,255,0.2); border-radius:12px; padding:16px;">
+                            <div style="font-size:0.75rem; color:#a855f7; margin-bottom:4px; letter-spacing:1px;">РЕЖИМ РАБОТЫ</div>
+                            <div style="font-weight:700; font-size:0.9rem; color:#a855f7;">{{ service.opening_time|time:"H:i" }} — {{ service.closing_time|time:"H:i" }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div style="background:rgba(99,255,180,0.06); border:1px solid rgba(99,255,180,0.15); border-radius:12px; padding:16px;">
+                            <div style="font-size:0.75rem; color:#63ffb4; margin-bottom:4px; letter-spacing:1px;">СТАТУС</div>
+                            <div style="font-weight:700; font-size:0.9rem; color:#63ffb4;">✅ Открыто</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Боксы -->
+        <div class="card mb-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; margin-bottom:20px; color:white;">🏠 Доступные {{ service.category.slot_unit|lower }}ы</h6>
+                {% for box in service.boxes.all %}
+                    {% if box.is_active %}
+                    <a href="{% url 'slot_list' box.pk %}" class="text-decoration-none">
+                        <div class="d-flex justify-content-between align-items-center p-3 mb-2"
+                             style="background:rgba(255,255,255,0.03); border-radius:14px; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);"
+                             onmouseover="this.style.background='rgba(108,71,255,0.1)'; this.style.borderColor='rgba(108,71,255,0.3)';"
+                             onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='rgba(255,255,255,0.06)';">
+                            <div class="d-flex align-items-center gap-3">
+                                <div style="width:40px; height:40px; background:linear-gradient(135deg,#6c47ff,#a855f7); border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:0.85rem;">
+                                    {{ forloop.counter }}
+                                </div>
+                                <span style="font-weight:600; color:white;">{{ box.name }}</span>
+                            </div>
+                            <span style="font-size:0.85rem; color:#a855f7; font-weight:600;">Выбрать время →</span>
+                        </div>
+                    </a>
+                    {% endif %}
+                {% empty %}
+                    <p style="color:rgba(255,255,255,0.4);">{{ service.category.slot_unit }}ы не добавлены</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Отзывы -->
+        <div class="card mb-4" data-aos="fade-up" data-aos-delay="150">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h6 style="font-weight:700; color:white; margin:0;">⭐ Отзывы</h6>
+                    {% if user.is_authenticated and user.role == 'client' %}
+                    <a href="{% url 'add_review' service.pk %}" class="btn btn-sm btn-primary" style="border-radius:8px;">+ Оставить отзыв</a>
+                    {% endif %}
+                </div>
+                {% for review in reviews %}
+                <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:14px; padding:16px; margin-bottom:12px;">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <span style="font-weight:700; color:white; font-size:0.9rem;">{{ review.user.username }}</span>
+                            <span style="color:#f59e0b; margin-left:8px;">
+                                {% for i in "12345" %}{% if forloop.counter <= review.rating %}⭐{% endif %}{% endfor %}
+                            </span>
+                        </div>
+                        <span style="font-size:0.75rem; color:rgba(255,255,255,0.3);">{{ review.created_at|date:"d.m.Y" }}</span>
+                    </div>
+                    <p style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin:0;">{{ review.comment }}</p>
+                </div>
+                {% empty %}
+                <div class="text-center py-4">
+                    <div style="font-size:2.5rem; margin-bottom:8px;">💬</div>
+                    <p style="color:rgba(255,255,255,0.3); margin:0;">Отзывов пока нет</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card" data-aos="fade-up" data-aos-delay="200" style="position:sticky; top:80px;">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; margin-bottom:20px; color:white;">Быстрые действия</h6>
+                <a href="tel:{{ service.phone }}" class="btn btn-success w-100 mb-3" style="border-radius:12px; padding:14px;">
+                    📞 Позвонить
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary w-100 mb-3" style="border-radius:12px; padding:14px;">
+                    📋 Мои записи
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-3" style="border-radius:12px; padding:14px;">
+                    🔐 Войти для записи
+                </a>
+                {% endif %}
+                <a href="{% url 'service_list' %}" class="btn btn-outline-secondary w-100" style="border-radius:12px; padding:14px;">
+                    ← Все сервисы
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

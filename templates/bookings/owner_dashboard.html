@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Панель владельца — {{ service.name }}{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div style="background:linear-gradient(135deg, rgba(108,71,255,0.3), rgba(168,85,247,0.2)); border:1px solid rgba(108,71,255,0.3); border-radius:24px; padding:40px; margin-bottom:32px; color:white;" data-aos="fade-up">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <p style="opacity:0.5; font-size:0.8rem; text-transform:uppercase; letter-spacing:3px; margin-bottom:8px; color:#63ffb4;">Панель управления</p>
+            <h2 style="font-weight:800; letter-spacing:-1px; margin:0; color:white;">{{ service.name }}</h2>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'generate_slots' service.pk %}" class="btn btn-primary btn-sm">⚙️ Создать слоты</a>
+            <a href="{% url 'delete_slots' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">🗑️ Удалить слоты</a>
+            <a href="{% url 'connect_telegram' service.pk %}" class="btn btn-sm" style="background:{% if service.telegram_chat_id %}rgba(99,255,180,0.15){% else %}rgba(255,255,255,0.08){% endif %}; color:{% if service.telegram_chat_id %}#63ffb4{% else %}white{% endif %}; border:1px solid {% if service.telegram_chat_id %}rgba(99,255,180,0.3){% else %}rgba(255,255,255,0.15){% endif %}; border-radius:10px;">
+                {% if service.telegram_chat_id %}✅ Telegram{% else %}📱 Подключить Telegram{% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Статистика -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="card text-center p-4">
+            <div style="font-size:2.5rem; font-weight:800; color:#6c47ff;">{{ total_bookings }}</div>
+            <div style="font-size:0.85rem; color:rgba(255,255,255,0.5); margin-top:4px;">Всего броней</div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="card text-center p-4">
+            <div style="font-size:2.5rem; font-weight:800; color:#f59e0b;">{{ in_progress }}</div>
+            <div style="font-size:0.85rem; color:rgba(255,255,255,0.5); margin-top:4px;">В процессе</div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="card text-center p-4">
+            <div style="font-size:2.5rem; font-weight:800; color:#63ffb4;">{{ free_slots }}</div>
+            <div style="font-size:0.85rem; color:rgba(255,255,255,0.5); margin-top:4px;">Свободных слотов</div>
+        </div>
+    </div>
+</div>
+
+<!-- Управление боксами -->
+<div class="card mb-4" data-aos="fade-up">
+    <div class="card-body p-4">
+        <h6 style="font-weight:700; margin-bottom:20px; color:white;">{{ service.category.slot_unit }}ы</h6>
+        {% for box in service.boxes.all %}
+        <div class="d-flex justify-content-between align-items-center p-3 mb-2"
+             style="background:rgba(255,255,255,0.04); border-radius:14px; border:1px solid rgba(255,255,255,0.08);">
+            <span style="font-weight:600; color:white; {% if not box.is_active %}opacity:0.4; text-decoration:line-through;{% endif %}">
+                {{ box.name }}
+            </span>
+            <div class="d-flex gap-2 align-items-center">
+                <form method="post" action="{% url 'edit_box' box.pk %}" class="d-flex gap-1">
+                    {% csrf_token %}
+                    <input type="text" name="name" class="form-control form-control-sm" placeholder="{{ box.name }}" style="width:120px; border-radius:8px;">
+                    <button class="btn btn-sm" style="background:rgba(108,71,255,0.2); color:#a855f7; border:1px solid rgba(108,71,255,0.3); border-radius:8px;">✏️</button>
+                </form>
+                <form method="post" action="{% url 'toggle_box' box.pk %}">
+                    {% csrf_token %}
+                    {% if box.is_active %}
+                        <button class="btn btn-sm" style="background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); border-radius:8px;">🔴 Закрыть</button>
+                    {% else %}
+                        <button class="btn btn-sm" style="background:rgba(99,255,180,0.1); color:#63ffb4; border:1px solid rgba(99,255,180,0.3); border-radius:8px;">🟢 Открыть</button>
+                    {% endif %}
+                </form>
+                <form method="post" action="{% url 'delete_box' box.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm" style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:8px;" onclick="return confirm('Удалить {{ box.name }}?')">🗑️</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+        <p style="color:rgba(255,255,255,0.4);">Нет боксов.</p>
+        {% endfor %}
+
+        <form method="post" action="{% url 'add_box' service.pk %}" class="d-flex gap-2 mt-3">
+            {% csrf_token %}
+            <input type="text" name="name" class="form-control" placeholder="{{ service.category.slot_unit }} №{{ service.boxes.count|add:1 }}">
+            <button class="btn btn-primary" style="white-space:nowrap;">➕ Добавить</button>
+        </form>
+    </div>
+</div>
+
+<!-- Активные брони -->
+<h6 style="font-weight:700; margin-bottom:16px; color:white;" data-aos="fade-up">Активные брони</h6>
+{% for booking in bookings %}
+<div class="card mb-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+    <div class="card-body p-4 d-flex justify-content-between align-items-center">
+        <div class="d-flex gap-3 align-items-center">
+            <div style="width:48px; height:48px; background:linear-gradient(135deg,#6c47ff,#a855f7); border-radius:14px; display:flex; align-items:center; justify-content:center; color:white; font-size:1.2rem; flex-shrink:0;">
+                👤
+            </div>
+            <div>
+                {% if booking.user %}
+                    <div style="font-weight:700; margin-bottom:4px; color:white;">{{ booking.user.username }}
+                        {% if booking.user.phone %}<span style="color:rgba(255,255,255,0.4); font-weight:400; font-size:0.85rem;"> — {{ booking.user.phone }}</span>{% endif %}
+                    </div>
+                {% else %}
+                    <div style="font-weight:700; margin-bottom:4px; color:white;">📞 {{ booking.client_name }}
+                        <span style="color:rgba(255,255,255,0.4); font-weight:400; font-size:0.85rem;"> — {{ booking.client_phone }}</span>
+                    </div>
+                {% endif %}
+                <div style="font-size:0.85rem; color:rgba(255,255,255,0.4);">
+                    {{ booking.slot.box.name }} · 📅 {{ booking.slot.date }} · 🕐 {{ booking.slot.start_time|time:"H:i" }} - {{ booking.slot.end_time|time:"H:i" }}
+                </div>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            {% if booking.slot.status == 'booked' %}
+            <form method="post" action="{% url 'slot_in_progress' booking.slot.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-sm" style="background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:8px 16px; font-weight:600;">▶ В процессе</button>
+            </form>
+            {% elif booking.slot.status == 'in_progress' %}
+            <form method="post" action="{% url 'slot_free' booking.slot.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-sm" style="background:rgba(99,255,180,0.1); color:#63ffb4; border:1px solid rgba(99,255,180,0.3); border-radius:10px; padding:8px 16px; font-weight:600;">✅ Завершить</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="text-center py-4" data-aos="fade-up" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:16px;">
+    <div style="font-size:3rem; margin-bottom:12px;">📭</div>
+    <p style="color:rgba(255,255,255,0.4); margin:0;">Активных броней нет</p>
+</div>
+{% endfor %}
+{% endblock %}
