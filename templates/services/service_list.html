@@ -52,6 +52,7 @@
                     {% elif service.category.name == 'СТО' %}https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=300&fit=crop
                     {% elif service.category.name == 'Шиномонтаж' %}https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&h=300&fit=crop
                     {% elif service.category.name == 'Салон красоты' %}https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&h=300&fit=crop
+                    {% elif service.category.name == 'Бани и Сауны' %}https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=300&fit=crop
                     {% else %}https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&h=300&fit=crop
                     {% endif %}"
                      style="width:100%; height:100%; object-fit:cover; filter:brightness(0.6); transition:transform 0.3s;"
@@ -107,6 +108,10 @@ const synonyms = {
     'колеса': 'Шиномонтаж',
     'покрышки': 'Шиномонтаж',
     'шиномонтаж': 'Шиномонтаж',
+    'баня': 'Бани и Сауны',
+    'сауна': 'Бани и Сауны',
+    'хамам': 'Бани и Сауны',
+    'парилка': 'Бани и Сауны',
 };
 
 const searchInput = document.getElementById('search-input');

@@ -66,6 +66,7 @@
                     {% elif category.name == 'СТО' %}https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=400&h=200&fit=crop
                     {% elif category.name == 'Шиномонтаж' %}https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=400&h=200&fit=crop
                     {% elif category.name == 'Салон красоты' %}https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&h=200&fit=crop
+                    {% elif category.name == 'Бани и Сауны' %}https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=400&h=200&fit=crop
                     {% else %}https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=200&fit=crop
                     {% endif %}"
                      style="width:100%; height:100%; object-fit:cover; filter:brightness(0.6);">
@@ -76,6 +77,7 @@
                         {% elif category.name == 'СТО' %}🔧
                         {% elif category.name == 'Шиномонтаж' %}🔩
                         {% elif category.name == 'Салон красоты' %}💇
+                        {% elif category.name == 'Бани и Сауны' %}🛁
                         {% else %}🏢{% endif %}
                     </div>
                     <div style="font-weight:700; font-size:1rem;">{{ category.name }}</div>
@@ -121,6 +123,7 @@
                     {% elif service.category.name == 'СТО' %}https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=300&fit=crop
                     {% elif service.category.name == 'Шиномонтаж' %}https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&h=300&fit=crop
                     {% elif service.category.name == 'Салон красоты' %}https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&h=300&fit=crop
+                    {% elif service.category.name == 'Бани и Сауны' %}https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&h=300&fit=crop
                     {% else %}https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&h=300&fit=crop
                     {% endif %}"
                      style="width:100%; height:100%; object-fit:cover; filter:brightness(0.7); transition:transform 0.3s;"
@@ -133,8 +136,8 @@
             </div>
             <div class="card-body p-4">
                 <h5 style="font-weight:700; letter-spacing:-0.5px; margin-bottom:12px; color:white;">{{ service.name }}</h5>
-                <p style="font-size:0.85rem; color:rgba(255,255,255,0.5); margin-bottom:6px;">📍 {{ service.address }}</p>
-                <p style="font-size:0.85rem; color:rgba(255,255,255,0.5); margin-bottom:6px;">📞 {{ service.phone }}</p>
+                <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin-bottom:6px;">📍 {{ service.address }}</p>
+                <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin-bottom:6px;">📞 {{ service.phone }}</p>
                 <p style="font-size:0.85rem; color:#63ffb4; font-weight:600; margin-bottom:0;">🕐 {{ service.opening_time|time:"H:i" }} - {{ service.closing_time|time:"H:i" }}</p>
             </div>
             <div class="card-footer" style="padding:16px 24px;">
