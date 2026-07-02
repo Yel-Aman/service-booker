@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,8 +7,6 @@ from datetime import datetime, timedelta
 import requests
 from .models import TimeSlot, Booking, Review
 from services.models import Box, Service
-import os
-
 
 TELEGRAM_TOKEN = os.environ.get('TELEGRAM_TOKEN')
 ADMIN_CHAT_ID = os.environ.get('TELEGRAM_ADMIN_CHAT_ID')
@@ -146,11 +145,22 @@ def generate_slots(request, service_id):
         messages.error(request, 'Доступ запрещён.')
         return redirect('home')
 
+    active_boxes = service.boxes.filter(is_active=True)
+    if not active_boxes.exists():
+        messages.error(request, f'❌ Сначала добавьте {service.category.slot_unit.lower()} — без них нельзя создать слоты!')
+        return redirect('owner_dashboard', service_id=service.pk)
+
     if request.method == 'POST':
         date_from = request.POST.get('date_from')
         date_to = request.POST.get('date_to')
         interval = int(request.POST.get('interval', 60))
-        boxes = service.boxes.filter(is_active=True)
+        box_id = request.POST.get('box_id', 'all')
+
+        # Выбор конкретного бокса или всех
+        if box_id == 'all':
+            boxes = active_boxes
+        else:
+            boxes = active_boxes.filter(pk=box_id)
 
         start_date = datetime.strptime(date_from, "%Y-%m-%d").date()
         end_date = datetime.strptime(date_to, "%Y-%m-%d").date()
@@ -180,7 +190,10 @@ def generate_slots(request, service_id):
         messages.success(request, f'Создано {count} слотов с {date_from} по {date_to}!')
         return redirect('owner_dashboard', service_id=service.pk)
 
-    return render(request, 'bookings/generate_slots.html', {'service': service})
+    return render(request, 'bookings/generate_slots.html', {
+        'service': service,
+        'active_boxes': active_boxes,
+    })
 
 
 @login_required

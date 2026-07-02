@@ -27,6 +27,7 @@ class RegisterForm(forms.ModelForm):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data['password1'])
         user.role = 'client'
+        user.username = user.username.lower()  # Сохраняем в нижнем регистре
         if commit:
             user.save()
         return user

@@ -21,13 +21,15 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
+        username = request.POST.get('username', '').lower()
+        password = request.POST.get('password', '')
+        user = authenticate(request, username=username, password=password)
+        if user:
             login(request, user)
             return redirect('home')
         else:
             messages.error(request, 'Неверный логин или пароль')
+        form = AuthenticationForm(data=request.POST)
     else:
         form = AuthenticationForm()
     return render(request, 'users/login.html', {'form': form})

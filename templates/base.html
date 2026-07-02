@@ -57,169 +57,57 @@
             top: 0;
             z-index: 1000;
         }
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.1rem;
-            color: #fff !important;
-            letter-spacing: -0.5px;
-        }
+        .navbar-brand { font-weight: 800; font-size: 1.1rem; color: #fff !important; letter-spacing: -0.5px; }
         .nav-link { color: rgba(255,255,255,0.6) !important; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
         .nav-link:hover { color: #63ffb4 !important; }
 
         .btn { border-radius: 10px; font-weight: 600; font-size: 0.88rem; padding: 10px 20px; transition: all 0.2s; }
-        .btn-primary {
-            background: linear-gradient(135deg, #6c47ff, #a855f7);
-            border: none;
-            box-shadow: 0 0 20px rgba(108,71,255,0.3);
-        }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #5835ee, #9333ea);
-            transform: translateY(-1px);
-            box-shadow: 0 0 32px rgba(108,71,255,0.5);
-        }
-        .btn-success {
-            background: linear-gradient(135deg, #00c851, #00a844);
-            border: none;
-            box-shadow: 0 0 20px rgba(0,200,81,0.2);
-        }
+        .btn-primary { background: linear-gradient(135deg, #6c47ff, #a855f7); border: none; box-shadow: 0 0 20px rgba(108,71,255,0.3); }
+        .btn-primary:hover { background: linear-gradient(135deg, #5835ee, #9333ea); transform: translateY(-1px); box-shadow: 0 0 32px rgba(108,71,255,0.5); }
+        .btn-success { background: linear-gradient(135deg, #00c851, #00a844); border: none; box-shadow: 0 0 20px rgba(0,200,81,0.2); }
         .btn-success:hover { transform: translateY(-1px); box-shadow: 0 0 32px rgba(0,200,81,0.4); }
-        .btn-outline-secondary {
-            border-color: rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.6);
-            background: rgba(255,255,255,0.04);
-        }
-        .btn-outline-secondary:hover {
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.2);
-            color: white;
-        }
-        .btn-light {
-            background: white;
-            color: #6c47ff;
-            border: none;
-        }
-        .btn-light:hover {
-            background: #f0f0f0;
-            color: #5835ee;
-            transform: translateY(-1px);
-        }
+        .btn-outline-secondary { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); }
+        .btn-outline-secondary:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: white; }
+        .btn-light { background: white; color: #6c47ff; border: none; }
+        .btn-light:hover { background: #f0f0f0; color: #5835ee; transform: translateY(-1px); }
         .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
 
-        .card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #e8eaf0;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(108,71,255,0.3);
-            box-shadow: 0 8px 40px rgba(108,71,255,0.15);
-        }
-        .card-footer {
-            background: transparent !important;
-            border-top: 1px solid rgba(255,255,255,0.06) !important;
-        }
+        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #e8eaf0; }
+        .card:hover { transform: translateY(-4px); border-color: rgba(108,71,255,0.3); box-shadow: 0 8px 40px rgba(108,71,255,0.15); }
+        .card-footer { background: transparent !important; border-top: 1px solid rgba(255,255,255,0.06) !important; }
 
-        .hero {
-            background: linear-gradient(135deg, rgba(108,71,255,0.15) 0%, rgba(168,85,247,0.1) 50%, rgba(99,255,180,0.05) 100%);
-            border: 1px solid rgba(108,71,255,0.2);
-            color: white;
-            border-radius: 28px;
-            padding: 100px 40px;
-            margin-bottom: 64px;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -150px; right: -150px;
-            width: 500px; height: 500px;
-            background: radial-gradient(circle, rgba(108,71,255,0.2) 0%, transparent 70%);
-            animation: pulse 4s ease-in-out infinite;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -100px; left: -100px;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(99,255,180,0.1) 0%, transparent 70%);
-            animation: pulse 6s ease-in-out infinite reverse;
-        }
+        .hero { background: linear-gradient(135deg, rgba(108,71,255,0.15) 0%, rgba(168,85,247,0.1) 50%, rgba(99,255,180,0.05) 100%); border: 1px solid rgba(108,71,255,0.2); color: white; border-radius: 28px; padding: 100px 40px; margin-bottom: 64px; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: -150px; right: -150px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(108,71,255,0.2) 0%, transparent 70%); animation: pulse 4s ease-in-out infinite; }
+        .hero::after { content: ''; position: absolute; bottom: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(99,255,180,0.1) 0%, transparent 70%); animation: pulse 6s ease-in-out infinite reverse; }
 
-        .category-card {
-            background: rgba(255,255,255,0.03);
-            border-radius: 20px;
-            padding: 32px 20px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            color: #e8eaf0;
-        }
-        .category-card:hover {
-            background: rgba(108,71,255,0.15);
-            border-color: rgba(108,71,255,0.4);
-            transform: translateY(-6px);
-            box-shadow: 0 20px 48px rgba(108,71,255,0.2), 0 0 0 1px rgba(108,71,255,0.3);
-        }
+        .category-card { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 32px 20px; text-align: center; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; color: #e8eaf0; }
+        .category-card:hover { background: rgba(108,71,255,0.15); border-color: rgba(108,71,255,0.4); transform: translateY(-6px); box-shadow: 0 20px 48px rgba(108,71,255,0.2), 0 0 0 1px rgba(108,71,255,0.3); }
         .category-card:hover h6 { color: #63ffb4 !important; }
 
         .badge { border-radius: 8px; font-weight: 500; }
 
-        .form-control {
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05);
-            color: white;
-            padding: 11px 16px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        .form-control:focus {
-            border-color: #6c47ff;
-            box-shadow: 0 0 0 3px rgba(108,71,255,0.2);
-            background: rgba(255,255,255,0.08);
-            color: white;
-        }
+        .form-control { border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; padding: 11px 16px; font-size: 0.9rem; transition: all 0.2s; }
+        .form-control:focus { border-color: #6c47ff; box-shadow: 0 0 0 3px rgba(108,71,255,0.2); background: rgba(255,255,255,0.08); color: white; }
         .form-control::placeholder { color: rgba(255,255,255,0.3); }
         .form-label { color: rgba(255,255,255,0.7); font-weight: 500; font-size: 0.88rem; }
 
         .alert { border-radius: 12px; border: none; }
-
-        footer {
-            background: rgba(255,255,255,0.02) !important;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            margin-top: 80px;
-        }
-
+        footer { background: rgba(255,255,255,0.02) !important; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 80px; }
         h1, h2, h3, h4, h5, h6 { color: #fff; }
         p { color: rgba(255,255,255,0.6); }
         .text-muted { color: rgba(255,255,255,0.4) !important; }
-
         .glow { color: #63ffb4; text-shadow: 0 0 20px rgba(99,255,180,0.5); }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">⚡ ServiceBooker</a>
+            <span id="weather" style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-left:12px;"></span>
             <div class="navbar-nav ms-auto d-flex flex-row gap-3 align-items-center">
                 <a class="nav-link" href="{% url 'service_list' %}">Сервисы</a>
                 <a class="nav-link" href="{% url 'service_map' %}">🗺️ Карта</a>
@@ -272,6 +160,35 @@
                 glow.style.top = e.clientY - 200 + 'px';
             }
         });
+
+        // Виджет погоды по геолокации
+function getWeather(lat, lon) {
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&timezone=auto`)
+        .then(r => r.json())
+        .then(data => {
+            const temp = Math.round(data.current.temperature_2m);
+            const code = data.current.weathercode;
+            const icons = {
+                0: '☀️', 1: '🌤', 2: '⛅', 3: '☁️',
+                45: '🌫', 48: '🌫', 51: '🌦', 53: '🌦', 55: '🌧',
+                61: '🌧', 63: '🌧', 65: '🌧', 71: '🌨', 73: '🌨',
+                75: '❄️', 80: '🌦', 81: '🌧', 82: '⛈', 95: '⛈'
+            };
+            const icon = icons[code] || '🌡';
+            document.getElementById('weather').textContent = `${icon} ${temp}°C`;
+        })
+        .catch(() => {});
+}
+
+// Пробуем геолокацию, если не разрешено — показываем Атырау
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+        pos => getWeather(pos.coords.latitude, pos.coords.longitude),
+        () => getWeather(47.1067, 51.9214) // Атырау по умолчанию
+    );
+} else {
+    getWeather(47.1067, 51.9214);
+}
     </script>
 
     <div id="cursor-glow" style="position:fixed; width:400px; height:400px; background:radial-gradient(circle, rgba(108,71,255,0.06) 0%, transparent 70%); pointer-events:none; z-index:0; transition:left 0.3s ease, top 0.3s ease; border-radius:50%;"></div>

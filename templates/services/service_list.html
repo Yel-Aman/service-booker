@@ -24,7 +24,7 @@
 <!-- Фильтр -->
 <div class="mb-4 d-flex flex-wrap gap-2" data-aos="fade-up">
     <a href="{% url 'service_list' %}{% if query %}?q={{ query }}{% endif %}"
-       class="btn btn-sm {% if not selected_category %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+       class="btn btn-sm {% if not selected_category and not open_now %}btn-primary{% else %}btn-outline-secondary{% endif %}">
         Все
     </a>
     {% for category in categories %}
@@ -33,6 +33,10 @@
         {{ category.name }}
     </a>
     {% endfor %}
+    <a href="?open_now=1{% if selected_category %}&category={{ selected_category }}{% endif %}{% if query %}&q={{ query }}{% endif %}"
+       class="btn btn-sm {% if open_now %}btn-success{% else %}btn-outline-secondary{% endif %}">
+        🟢 Открыто сейчас
+    </a>
 </div>
 
 {% if query %}
@@ -48,7 +52,8 @@
         <div class="card h-100" style="border-radius:20px; overflow:hidden;">
             <div style="position:relative; height:160px; overflow:hidden;">
                 <img src="
-                    {% if service.category.name == 'Автомойка' %}https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=600&h=300&fit=crop
+                    {% if service.category.image_url %}{{ service.category.image_url }}
+                    {% elif service.category.name == 'Автомойка' %}https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=600&h=300&fit=crop
                     {% elif service.category.name == 'СТО' %}https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=300&fit=crop
                     {% elif service.category.name == 'Шиномонтаж' %}https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&h=300&fit=crop
                     {% elif service.category.name == 'Салон красоты' %}https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&h=300&fit=crop

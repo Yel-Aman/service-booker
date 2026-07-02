@@ -22,6 +22,7 @@ def service_list(request):
 
     category_id = request.GET.get('category')
     query = request.GET.get('q', '')
+    open_now = request.GET.get('open_now')
 
     if category_id:
         services = services.filter(category_id=category_id)
@@ -32,12 +33,17 @@ def service_list(request):
             services.filter(description__icontains=query) |
             services.filter(category__name__icontains=query)
         ).distinct()
+    if open_now:
+        from datetime import datetime
+        now = datetime.now().time()
+        services = services.filter(opening_time__lte=now, closing_time__gte=now)
 
     return render(request, 'services/service_list.html', {
         'services': services,
         'categories': categories,
         'selected_category': category_id,
         'query': query,
+        'open_now': open_now,
     })
 
 
