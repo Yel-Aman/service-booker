@@ -9,14 +9,14 @@
             <div style="width:80px; height:80px; background:linear-gradient(135deg,#6c47ff,#a855f7); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:2rem;">
                 👤
             </div>
-            <h3 style="font-weight:800; letter-spacing:-1px; color:white;">{{ user.username }}</h3>
-            <p style="color:rgba(255,255,255,0.4);">{{ user.get_role_display }}</p>
+            <h3 style="font-weight:800; letter-spacing:-1px;">{{ user.username }}</h3>
+            <p style="color:var(--text-muted);">{{ user.get_role_display }}</p>
         </div>
         <div class="card" style="border-radius:24px;">
             <div class="card-body p-5">
                 {% if messages %}
                     {% for message in messages %}
-                    <div class="alert alert-success" style="border-radius:12px; background:rgba(99,255,180,0.1); border:1px solid rgba(99,255,180,0.3); color:#63ffb4;">{{ message }}</div>
+                    <div class="alert" style="border-radius:12px; background:rgba(0,200,81,0.1); border:1px solid rgba(0,200,81,0.3); color:#00c851;">{{ message }}</div>
                     {% endfor %}
                 {% endif %}
                 <form method="post">

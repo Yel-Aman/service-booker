@@ -7,14 +7,14 @@
     <div class="col-md-5" data-aos="fade-up">
         <div class="text-center mb-4">
             <div style="font-size:3rem; animation:float 3s ease-in-out infinite;">⚡</div>
-            <h3 style="font-weight:800; letter-spacing:-1px; margin-top:8px; color:white;">Добро пожаловать!</h3>
-            <p style="color:rgba(255,255,255,0.4);">Войдите чтобы управлять записями</p>
+            <h3 style="font-weight:800; letter-spacing:-1px; margin-top:8px;">Добро пожаловать!</h3>
+            <p style="color:var(--text-muted);">Войдите чтобы управлять записями</p>
         </div>
         <div class="card" style="border-radius:24px;">
             <div class="card-body p-5">
                 {% if messages %}
                     {% for message in messages %}
-                    <div class="alert alert-danger" style="border-radius:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#ef4444;">{{ message }}</div>
+                    <div class="alert" style="border-radius:12px; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:#ef4444;">{{ message }}</div>
                     {% endfor %}
                 {% endif %}
                 <form method="post">
@@ -33,9 +33,9 @@
                     </button>
                 </form>
                 <p class="text-center mt-3 mb-0">
-                    <a href="{% url 'password_reset' %}" style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Забыли пароль?</a>
+                    <a href="{% url 'password_reset' %}" style="color:var(--text-muted); font-size:0.85rem;">Забыли пароль?</a>
                 </p>
-                <p class="text-center mt-3 mb-0" style="color:rgba(255,255,255,0.4); font-size:0.9rem;">
+                <p class="text-center mt-3 mb-0" style="color:var(--text-muted); font-size:0.9rem;">
                     Нет аккаунта? <a href="{% url 'register' %}" style="color:#a855f7; font-weight:600;">Зарегистрироваться</a>
                 </p>
             </div>

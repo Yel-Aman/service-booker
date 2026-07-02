@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,51 +9,113 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * { font-family: 'Inter', sans-serif; }
-        body { background: #080b11; color: #e8eaf0; min-height: 100vh; background-image: linear-gradient(rgba(99,255,180,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(99,255,180,0.03) 1px, transparent 1px); background-size: 40px 40px; }
-        body::before { content: ''; position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(108,71,255,0.12) 0%, transparent 70%); pointer-events: none; z-index: 0; }
-        body::after { content: ''; position: fixed; bottom: -200px; right: -100px; width: 600px; height: 600px; background: radial-gradient(ellipse, rgba(99,255,180,0.06) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+
+        [data-theme="dark"] {
+            --bg: #080b11;
+            --bg-card: rgba(255,255,255,0.03);
+            --bg-card-hover: rgba(108,71,255,0.15);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(108,71,255,0.3);
+            --text: #e8eaf0;
+            --text-muted: rgba(255,255,255,0.4);
+            --text-sub: rgba(255,255,255,0.6);
+            --navbar-bg: rgba(8,11,17,0.8);
+            --navbar-border: rgba(255,255,255,0.06);
+            --input-bg: rgba(255,255,255,0.05);
+            --input-border: rgba(255,255,255,0.1);
+            --grid-color: rgba(99,255,180,0.03);
+            --city-btn-bg: rgba(255,255,255,0.06);
+            --city-btn-border: rgba(255,255,255,0.1);
+            --modal-bg: #0f1219;
+            --footer-bg: rgba(255,255,255,0.02);
+        }
+
+        [data-theme="light"] {
+            --bg: #f5f5f7;
+            --bg-card: #ffffff;
+            --bg-card-hover: rgba(108,71,255,0.05);
+            --border: rgba(0,0,0,0.08);
+            --border-hover: rgba(108,71,255,0.3);
+            --text: #1a1a1a;
+            --text-muted: rgba(0,0,0,0.4);
+            --text-sub: rgba(0,0,0,0.6);
+            --navbar-bg: rgba(255,255,255,0.9);
+            --navbar-border: rgba(0,0,0,0.08);
+            --input-bg: #ffffff;
+            --input-border: #e0e0e0;
+            --grid-color: rgba(108,71,255,0.03);
+            --city-btn-bg: rgba(108,71,255,0.08);
+            --city-btn-border: rgba(108,71,255,0.2);
+            --modal-bg: #ffffff;
+            --footer-bg: #1a1a1a;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body::before { content: ''; position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(108,71,255,0.08) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+
         .container { position: relative; z-index: 1; }
-        .navbar { background: rgba(8,11,17,0.8) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.06); padding: 16px 0; position: sticky; top: 0; z-index: 1000; }
-        .navbar-brand { font-weight: 800; font-size: 1.1rem; color: #fff !important; letter-spacing: -0.5px; }
-        .nav-link { color: rgba(255,255,255,0.6) !important; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
-        .nav-link:hover { color: #63ffb4 !important; }
+
+        .navbar { background: var(--navbar-bg) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--navbar-border); padding: 16px 0; position: sticky; top: 0; z-index: 1000; }
+        .navbar-brand { font-weight: 800; font-size: 1.1rem; color: var(--text) !important; letter-spacing: -0.5px; }
+        .nav-link { color: var(--text-sub) !important; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+        .nav-link:hover { color: #6c47ff !important; }
+
         .btn { border-radius: 10px; font-weight: 600; font-size: 0.88rem; padding: 10px 20px; transition: all 0.2s; }
-        .btn-primary { background: linear-gradient(135deg, #6c47ff, #a855f7); border: none; box-shadow: 0 0 20px rgba(108,71,255,0.3); }
-        .btn-primary:hover { background: linear-gradient(135deg, #5835ee, #9333ea); transform: translateY(-1px); box-shadow: 0 0 32px rgba(108,71,255,0.5); }
-        .btn-success { background: linear-gradient(135deg, #00c851, #00a844); border: none; }
-        .btn-success:hover { transform: translateY(-1px); }
-        .btn-outline-secondary { border-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.04); }
-        .btn-outline-secondary:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: white; }
+        .btn-primary { background: linear-gradient(135deg, #6c47ff, #a855f7); border: none; box-shadow: 0 0 20px rgba(108,71,255,0.3); color: white; }
+        .btn-primary:hover { background: linear-gradient(135deg, #5835ee, #9333ea); transform: translateY(-1px); box-shadow: 0 0 32px rgba(108,71,255,0.5); color: white; }
+        .btn-success { background: linear-gradient(135deg, #00c851, #00a844); border: none; color: white; }
+        .btn-success:hover { transform: translateY(-1px); color: white; }
+        .btn-outline-secondary { border-color: var(--border); color: var(--text-sub); background: var(--bg-card); }
+        .btn-outline-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-hover); color: var(--text); }
         .btn-light { background: white; color: #6c47ff; border: none; }
-        .btn-light:hover { background: #f0f0f0; color: #5835ee; transform: translateY(-1px); }
         .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
-        .card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); color: #e8eaf0; }
-        .card:hover { transform: translateY(-4px); border-color: rgba(108,71,255,0.3); box-shadow: 0 8px 40px rgba(108,71,255,0.15); }
-        .card-footer { background: transparent !important; border-top: 1px solid rgba(255,255,255,0.06) !important; }
-        .hero { background: linear-gradient(135deg, rgba(108,71,255,0.15) 0%, rgba(168,85,247,0.1) 50%, rgba(99,255,180,0.05) 100%); border: 1px solid rgba(108,71,255,0.2); color: white; border-radius: 28px; padding: 100px 40px; margin-bottom: 64px; position: relative; overflow: hidden; }
-        .hero::before { content: ''; position: absolute; top: -150px; right: -150px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(108,71,255,0.2) 0%, transparent 70%); animation: pulse 4s ease-in-out infinite; }
-        .hero::after { content: ''; position: absolute; bottom: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(99,255,180,0.1) 0%, transparent 70%); animation: pulse 6s ease-in-out infinite reverse; }
-        .category-card { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 32px 20px; text-align: center; border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; color: #e8eaf0; }
-        .category-card:hover { background: rgba(108,71,255,0.15); border-color: rgba(108,71,255,0.4); transform: translateY(-6px); box-shadow: 0 20px 48px rgba(108,71,255,0.2); }
-        .category-card:hover h6 { color: #63ffb4 !important; }
-        .city-selector { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 6px 12px; color: white; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
-        .city-selector:hover { background: rgba(108,71,255,0.2); border-color: rgba(108,71,255,0.4); }
+
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); transition: all 0.3s; color: var(--text); }
+        .card:hover { transform: translateY(-4px); border-color: var(--border-hover); box-shadow: 0 8px 40px rgba(108,71,255,0.15); }
+        .card-footer { background: transparent !important; border-top: 1px solid var(--border) !important; }
+
+        .hero { background: linear-gradient(135deg, rgba(108,71,255,0.8) 0%, rgba(168,85,247,0.7) 50%, rgba(99,255,180,0.3) 100%); border: 1px solid rgba(108,71,255,0.2); color: white; border-radius: 28px; padding: 100px 40px; margin-bottom: 64px; position: relative; overflow: hidden; }
+        .hero * { text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .hero::before { content: ''; position: absolute; top: -150px; right: -150px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(108,71,255,0.3) 0%, transparent 70%); animation: pulse 4s ease-in-out infinite; }
+        .hero::after { content: ''; position: absolute; bottom: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(99,255,180,0.15) 0%, transparent 70%); animation: pulse 6s ease-in-out infinite reverse; }
+
+        .category-card { background: var(--bg-card); border-radius: 20px; padding: 32px 20px; text-align: center; border: 1px solid var(--border); transition: all 0.3s; cursor: pointer; color: var(--text); }
+        .category-card:hover { background: rgba(108,71,255,0.1); border-color: rgba(108,71,255,0.4); transform: translateY(-6px); box-shadow: 0 20px 48px rgba(108,71,255,0.2); }
+        .category-card:hover h6 { color: #6c47ff !important; }
+
+        .city-selector { background: var(--city-btn-bg); border: 1px solid var(--city-btn-border); border-radius: 10px; padding: 6px 12px; color: var(--text); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .city-selector:hover { background: rgba(108,71,255,0.2); }
+
+        .theme-toggle { background: var(--city-btn-bg); border: 1px solid var(--city-btn-border); border-radius: 10px; padding: 6px 12px; color: var(--text); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .theme-toggle:hover { background: rgba(108,71,255,0.2); }
+
         .city-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; }
         .city-modal.show { display:flex; }
-        .city-modal-content { background:#0f1219; border:1px solid rgba(255,255,255,0.1); border-radius:24px; padding:32px; width:400px; max-height:80vh; overflow-y:auto; }
-        .city-item { padding:12px 16px; border-radius:10px; cursor:pointer; transition:background 0.2s; color:rgba(255,255,255,0.8); font-size:0.9rem; }
-        .city-item:hover { background:rgba(108,71,255,0.2); color:white; }
-        .city-item.active { background:rgba(108,71,255,0.3); color:#63ffb4; font-weight:600; }
+        .city-modal-content { background: var(--modal-bg); border:1px solid var(--border); border-radius:24px; padding:32px; width:400px; max-height:80vh; overflow-y:auto; }
+        .city-item { padding:12px 16px; border-radius:10px; cursor:pointer; transition:background 0.2s; color: var(--text-sub); font-size:0.9rem; }
+        .city-item:hover { background:rgba(108,71,255,0.2); color: var(--text); }
+        .city-item.active { background:rgba(108,71,255,0.3); color:#6c47ff; font-weight:600; }
+
         .badge { border-radius: 8px; font-weight: 500; }
-        .form-control { border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; padding: 11px 16px; font-size: 0.9rem; transition: all 0.2s; }
-        .form-control:focus { border-color: #6c47ff; box-shadow: 0 0 0 3px rgba(108,71,255,0.2); background: rgba(255,255,255,0.08); color: white; }
-        .form-control::placeholder { color: rgba(255,255,255,0.3); }
-        .form-label { color: rgba(255,255,255,0.7); font-weight: 500; font-size: 0.88rem; }
+        .form-control { border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); padding: 11px 16px; font-size: 0.9rem; transition: all 0.2s; }
+        .form-control:focus { border-color: #6c47ff; box-shadow: 0 0 0 3px rgba(108,71,255,0.2); color: var(--text); }
+        .form-control::placeholder { color: var(--text-muted); }
+        .form-label { color: var(--text-sub); font-weight: 500; font-size: 0.88rem; }
+
         .alert { border-radius: 12px; border: none; }
-        footer { background: rgba(255,255,255,0.02) !important; border-top: 1px solid rgba(255,255,255,0.06); margin-top: 80px; }
-        h1, h2, h3, h4, h5, h6 { color: #fff; }
-        p { color: rgba(255,255,255,0.6); }
-        .text-muted { color: rgba(255,255,255,0.4) !important; }
+        footer { background: var(--footer-bg) !important; border-top: 1px solid var(--border); margin-top: 80px; }
+        h1, h2, h3, h4, h5, h6 { color: var(--text); }
+        p { color: var(--text-sub); }
+        .text-muted { color: var(--text-muted) !important; }
+
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); opacity: 0.8; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -64,7 +126,7 @@
 <!-- City Modal -->
 <div class="city-modal" id="cityModal">
     <div class="city-modal-content">
-        <h5 style="color:white; font-weight:700; margin-bottom:20px;">📍 Выберите город</h5>
+        <h5 style="font-weight:700; margin-bottom:20px;">📍 Выберите город</h5>
         <input type="text" id="citySearch" class="form-control mb-3" placeholder="Поиск города...">
         <div id="cityList">
             {% for city in all_cities %}
@@ -80,11 +142,12 @@
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">⚡ ServiceBooker</a>
-        <span id="weather" style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-left:12px;"></span>
+        <span id="weather" style="font-size:0.8rem; color:var(--text-muted); margin-left:12px;"></span>
         <div class="navbar-nav ms-auto d-flex flex-row gap-3 align-items-center">
             <button class="city-selector" onclick="document.getElementById('cityModal').classList.add('show')">
                 📍 {{ request.session.city_name|default:"Выбрать город" }}
             </button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
             <a class="nav-link" href="{% url 'service_list' %}">Сервисы</a>
             <a class="nav-link" href="{% url 'service_map' %}">🗺️ Карта</a>
             {% if user.is_authenticated %}
@@ -121,7 +184,7 @@
 </main>
 
 <footer class="text-center py-4">
-    <p class="mb-0" style="opacity:0.3; font-size:0.82rem;">© 2026 ServiceBooker</p>
+    <p class="mb-0" style="opacity:0.3; font-size:0.82rem; color:white;">© 2026 ServiceBooker</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -129,13 +192,18 @@
 <script>
     AOS.init({ duration: 600, once: true, offset: 80 });
 
-    document.addEventListener('mousemove', (e) => {
-        const glow = document.getElementById('cursor-glow');
-        if (glow) {
-            glow.style.left = e.clientX - 200 + 'px';
-            glow.style.top = e.clientY - 200 + 'px';
-        }
-    });
+    // Тема
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
+
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
+    }
 
     // Погода
     function getWeather(lat, lon) {
@@ -174,9 +242,17 @@
         });
     });
 
-    // Закрыть модал при клике вне
+    // Закрыть модал
     document.getElementById('cityModal').addEventListener('click', function(e) {
         if (e.target === this) this.classList.remove('show');
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        const glow = document.getElementById('cursor-glow');
+        if (glow) {
+            glow.style.left = e.clientX - 200 + 'px';
+            glow.style.top = e.clientY - 200 + 'px';
+        }
     });
 </script>
 
