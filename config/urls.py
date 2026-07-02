@@ -7,6 +7,7 @@ urlpatterns = [
     path('', include('services.urls')),
     path('bookings/', include('bookings.urls')),
     path('accounts/', include('users.urls')),
+    path('cities/', include('cities.urls')),
 
     # Сброс пароля
     path('accounts/password-reset/', auth_views.PasswordResetView.as_view(

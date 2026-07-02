@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -5,19 +6,24 @@ from django.db import models
 import json
 from .models import Service, Box
 from categories.models import Category
+from cities.models import City
+from cities.views import get_current_city
 
 
 def home(request):
+    current_city = get_current_city(request)
     categories = Category.objects.all()
-    services = Service.objects.filter(is_active=True)[:6]
+    services = Service.objects.filter(is_active=True, city=current_city)[:6]
     return render(request, 'services/home.html', {
         'categories': categories,
         'services': services,
+        'current_city': current_city,
     })
 
 
 def service_list(request):
-    services = Service.objects.filter(is_active=True)
+    current_city = get_current_city(request)
+    services = Service.objects.filter(is_active=True, city=current_city)
     categories = Category.objects.all()
 
     category_id = request.GET.get('category')
@@ -44,6 +50,7 @@ def service_list(request):
         'selected_category': category_id,
         'query': query,
         'open_now': open_now,
+        'current_city': current_city,
     })
 
 
@@ -59,7 +66,8 @@ def service_detail(request, pk):
 
 
 def service_map(request):
-    services = Service.objects.filter(is_active=True)
+    current_city = get_current_city(request)
+    services = Service.objects.filter(is_active=True, city=current_city)
     services_data = []
     for s in services:
         services_data.append({
@@ -74,6 +82,7 @@ def service_map(request):
         })
     return render(request, 'services/map.html', {
         'services_json': json.dumps(services_data, ensure_ascii=False),
+        'current_city': current_city,
     })
 
 

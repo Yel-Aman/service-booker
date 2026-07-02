@@ -1,0 +1,17 @@
+[
+  {"model": "cities.city", "pk": 1, "fields": {"name": "Atyrau", "name_ru": "Атырау", "latitude": "47.106800", "longitude": "51.921400", "is_active": true}},
+  {"model": "cities.city", "pk": 2, "fields": {"name": "Almaty", "name_ru": "Алматы", "latitude": "43.238900", "longitude": "76.889700", "is_active": true}},
+  {"model": "cities.city", "pk": 3, "fields": {"name": "Astana", "name_ru": "Астана", "latitude": "51.180000", "longitude": "71.446000", "is_active": true}},
+  {"model": "cities.city", "pk": 4, "fields": {"name": "Shymkent", "name_ru": "Шымкент", "latitude": "42.317200", "longitude": "69.596300", "is_active": true}},
+  {"model": "cities.city", "pk": 5, "fields": {"name": "Aktobe", "name_ru": "Актобе", "latitude": "50.300000", "longitude": "57.153600", "is_active": true}},
+  {"model": "cities.city", "pk": 6, "fields": {"name": "Karaganda", "name_ru": "Қарағанды", "latitude": "49.806400", "longitude": "73.085400", "is_active": true}},
+  {"model": "cities.city", "pk": 7, "fields": {"name": "Taraz", "name_ru": "Тараз", "latitude": "42.900000", "longitude": "71.366700", "is_active": true}},
+  {"model": "cities.city", "pk": 8, "fields": {"name": "Oskemen", "name_ru": "Өскемен", "latitude": "49.948900", "longitude": "82.628200", "is_active": true}},
+  {"model": "cities.city", "pk": 9, "fields": {"name": "Pavlodar", "name_ru": "Павлодар", "latitude": "52.285600", "longitude": "76.940700", "is_active": true}},
+  {"model": "cities.city", "pk": 10, "fields": {"name": "Aktau", "name_ru": "Актау", "latitude": "43.650000", "longitude": "51.166700", "is_active": true}},
+  {"model": "cities.city", "pk": 11, "fields": {"name": "Uralsk", "name_ru": "Орал", "latitude": "51.233300", "longitude": "51.366700", "is_active": true}},
+  {"model": "cities.city", "pk": 12, "fields": {"name": "Kostanay", "name_ru": "Қостанай", "latitude": "53.214400", "longitude": "63.624400", "is_active": true}},
+  {"model": "cities.city", "pk": 13, "fields": {"name": "Petropavl", "name_ru": "Петропавл", "latitude": "54.866700", "longitude": "69.133300", "is_active": true}},
+  {"model": "cities.city", "pk": 14, "fields": {"name": "Semey", "name_ru": "Семей", "latitude": "50.411100", "longitude": "80.227800", "is_active": true}},
+  {"model": "cities.city", "pk": 15, "fields": {"name": "Atbasar", "name_ru": "Атбасар", "latitude": "51.816700", "longitude": "68.366700", "is_active": true}}
+]
