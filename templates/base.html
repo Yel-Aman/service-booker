@@ -126,7 +126,11 @@
 <!-- City Modal -->
 <div class="city-modal" id="cityModal">
     <div class="city-modal-content">
-        <h5 style="font-weight:700; margin-bottom:20px;">📍 Выберите город</h5>
+        <div class="text-center mb-4">
+            <div style="font-size:2.5rem; margin-bottom:8px;">📍</div>
+            <h5 style="font-weight:700; margin-bottom:4px;">Выберите ваш город</h5>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Мы покажем сервисы рядом с вами</p>
+        </div>
         <input type="text" id="citySearch" class="form-control mb-3" placeholder="Поиск города...">
         <div id="cityList">
             {% for city in all_cities %}
@@ -205,6 +209,38 @@
         document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
     }
 
+    // Попап города при первом заходе
+    if (!localStorage.getItem('city_selected')) {
+        setTimeout(() => {
+            document.getElementById('cityModal').classList.add('show');
+        }, 800);
+    }
+
+    // Выбор города
+    function selectCity(id, name) {
+        localStorage.setItem('city_selected', '1');
+        fetch(`/cities/set-city/?city_id=${id}`)
+            .then(() => {
+                document.getElementById('cityModal').classList.remove('show');
+                window.location.reload();
+            });
+    }
+
+    // Поиск города
+    document.getElementById('citySearch').addEventListener('input', function() {
+        const val = this.value.toLowerCase();
+        document.querySelectorAll('.city-item').forEach(item => {
+            item.style.display = item.textContent.toLowerCase().includes(val) ? 'block' : 'none';
+        });
+    });
+
+    // Закрыть модал при клике вне (только если город уже выбран)
+    document.getElementById('cityModal').addEventListener('click', function(e) {
+        if (e.target === this && localStorage.getItem('city_selected')) {
+            this.classList.remove('show');
+        }
+    });
+
     // Погода
     function getWeather(lat, lon) {
         fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&timezone=auto`)
@@ -224,28 +260,6 @@
     } else {
         getWeather(47.1067, 51.9214);
     }
-
-    // Выбор города
-    function selectCity(id, name) {
-        fetch(`/cities/set-city/?city_id=${id}`)
-            .then(() => {
-                document.getElementById('cityModal').classList.remove('show');
-                window.location.reload();
-            });
-    }
-
-    // Поиск города
-    document.getElementById('citySearch').addEventListener('input', function() {
-        const val = this.value.toLowerCase();
-        document.querySelectorAll('.city-item').forEach(item => {
-            item.style.display = item.textContent.toLowerCase().includes(val) ? 'block' : 'none';
-        });
-    });
-
-    // Закрыть модал
-    document.getElementById('cityModal').addEventListener('click', function(e) {
-        if (e.target === this) this.classList.remove('show');
-    });
 
     document.addEventListener('mousemove', (e) => {
         const glow = document.getElementById('cursor-glow');
