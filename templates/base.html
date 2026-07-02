@@ -116,6 +116,23 @@
         p { color: var(--text-sub); }
         .text-muted { color: var(--text-muted) !important; }
 
+        /* Мобильные стили */
+        @media (max-width: 768px) {
+            .container { padding-left: 16px; padding-right: 16px; }
+            .hero { padding: 48px 20px; margin-bottom: 32px; border-radius: 20px; }
+            .hero h1 { font-size: 2.2rem !important; letter-spacing: -1px !important; }
+            .hero p { font-size: 0.95rem !important; }
+            .navbar { padding: 10px 0; }
+            .navbar .container { flex-wrap: nowrap; overflow-x: auto; }
+            .navbar-nav { flex-wrap: nowrap !important; gap: 8px !important; }
+            .city-selector, .theme-toggle { font-size: 0.75rem; padding: 4px 8px; }
+            .nav-link { font-size: 0.8rem !important; }
+            .city-modal-content { width: calc(100% - 32px); margin: 16px; padding: 24px; }
+            .card { border-radius: 12px; }
+            .btn { padding: 8px 16px; font-size: 0.85rem; }
+            #weather { display: none; }
+        }
+
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); opacity: 0.8; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
