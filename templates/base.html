@@ -54,66 +54,47 @@
             --footer-bg: #1a1a1a;
         }
 
-        body {
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 40px 40px;
-            transition: background 0.3s, color 0.3s;
-        }
-
+        body { background: var(--bg); color: var(--text); min-height: 100vh; background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px); background-size: 40px 40px; transition: background 0.3s, color 0.3s; }
         body::before { content: ''; position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(108,71,255,0.08) 0%, transparent 70%); pointer-events: none; z-index: 0; }
-
         .container { position: relative; z-index: 1; }
-
         .navbar { background: var(--navbar-bg) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--navbar-border); padding: 16px 0; position: sticky; top: 0; z-index: 1000; }
         .navbar-brand { font-weight: 800; font-size: 1.1rem; color: var(--text) !important; letter-spacing: -0.5px; }
         .nav-link { color: var(--text-sub) !important; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
         .nav-link:hover { color: #6c47ff !important; }
-
         .btn { border-radius: 10px; font-weight: 600; font-size: 0.88rem; padding: 10px 20px; transition: all 0.2s; }
         .btn-primary { background: linear-gradient(135deg, #6c47ff, #a855f7); border: none; box-shadow: 0 0 20px rgba(108,71,255,0.3); color: white; }
-        .btn-primary:hover { background: linear-gradient(135deg, #5835ee, #9333ea); transform: translateY(-1px); box-shadow: 0 0 32px rgba(108,71,255,0.5); color: white; }
+        .btn-primary:hover { background: linear-gradient(135deg, #5835ee, #9333ea); transform: translateY(-1px); color: white; }
         .btn-success { background: linear-gradient(135deg, #00c851, #00a844); border: none; color: white; }
         .btn-success:hover { transform: translateY(-1px); color: white; }
         .btn-outline-secondary { border-color: var(--border); color: var(--text-sub); background: var(--bg-card); }
         .btn-outline-secondary:hover { background: var(--bg-card-hover); border-color: var(--border-hover); color: var(--text); }
         .btn-light { background: white; color: #6c47ff; border: none; }
         .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
-
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); transition: all 0.3s; color: var(--text); }
         .card:hover { transform: translateY(-4px); border-color: var(--border-hover); box-shadow: 0 8px 40px rgba(108,71,255,0.15); }
         .card-footer { background: transparent !important; border-top: 1px solid var(--border) !important; }
-
         .hero { background: linear-gradient(135deg, rgba(108,71,255,0.8) 0%, rgba(168,85,247,0.7) 50%, rgba(99,255,180,0.3) 100%); border: 1px solid rgba(108,71,255,0.2); color: white; border-radius: 28px; padding: 100px 40px; margin-bottom: 64px; position: relative; overflow: hidden; }
         .hero * { text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
         .hero::before { content: ''; position: absolute; top: -150px; right: -150px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(108,71,255,0.3) 0%, transparent 70%); animation: pulse 4s ease-in-out infinite; }
         .hero::after { content: ''; position: absolute; bottom: -100px; left: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(99,255,180,0.15) 0%, transparent 70%); animation: pulse 6s ease-in-out infinite reverse; }
-
         .category-card { background: var(--bg-card); border-radius: 20px; padding: 32px 20px; text-align: center; border: 1px solid var(--border); transition: all 0.3s; cursor: pointer; color: var(--text); }
         .category-card:hover { background: rgba(108,71,255,0.1); border-color: rgba(108,71,255,0.4); transform: translateY(-6px); box-shadow: 0 20px 48px rgba(108,71,255,0.2); }
         .category-card:hover h6 { color: #6c47ff !important; }
-
         .city-selector { background: var(--city-btn-bg); border: 1px solid var(--city-btn-border); border-radius: 10px; padding: 6px 12px; color: var(--text); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
         .city-selector:hover { background: rgba(108,71,255,0.2); }
-
         .theme-toggle { background: var(--city-btn-bg); border: 1px solid var(--city-btn-border); border-radius: 10px; padding: 6px 12px; color: var(--text); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
         .theme-toggle:hover { background: rgba(108,71,255,0.2); }
-
         .city-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; }
         .city-modal.show { display:flex; }
         .city-modal-content { background: var(--modal-bg); border:1px solid var(--border); border-radius:24px; padding:32px; width:400px; max-height:80vh; overflow-y:auto; }
         .city-item { padding:12px 16px; border-radius:10px; cursor:pointer; transition:background 0.2s; color: var(--text-sub); font-size:0.9rem; }
         .city-item:hover { background:rgba(108,71,255,0.2); color: var(--text); }
         .city-item.active { background:rgba(108,71,255,0.3); color:#6c47ff; font-weight:600; }
-
         .badge { border-radius: 8px; font-weight: 500; }
         .form-control { border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); padding: 11px 16px; font-size: 0.9rem; transition: all 0.2s; }
         .form-control:focus { border-color: #6c47ff; box-shadow: 0 0 0 3px rgba(108,71,255,0.2); color: var(--text); }
         .form-control::placeholder { color: var(--text-muted); }
         .form-label { color: var(--text-sub); font-weight: 500; font-size: 0.88rem; }
-
         .alert { border-radius: 12px; border: none; }
         footer { background: var(--footer-bg) !important; border-top: 1px solid var(--border); margin-top: 80px; }
         h1, h2, h3, h4, h5, h6 { color: var(--text); }
@@ -184,6 +165,7 @@
                     {% endif %}
                     {% endwith %}
                 {% else %}
+                    <a class="nav-link" href="{% url 'favorites' %}">❤️</a>
                     <a class="nav-link" href="{% url 'profile' %}">👤 {{ user.username }}</a>
                 {% endif %}
                 <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
@@ -216,7 +198,6 @@
 <script>
     AOS.init({ duration: 600, once: true, offset: 80 });
 
-    // Тема
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     document.getElementById('themeBtn').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
@@ -229,14 +210,12 @@
         document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
     }
 
-    // Попап города при первом заходе
     if (!localStorage.getItem('city_selected')) {
         setTimeout(() => {
             document.getElementById('cityModal').classList.add('show');
         }, 800);
     }
 
-    // Выбор города
     function selectCity(id, name) {
         localStorage.setItem('city_selected', '1');
         fetch(`/cities/set-city/?city_id=${id}`)
@@ -246,7 +225,6 @@
             });
     }
 
-    // Поиск города
     document.getElementById('citySearch').addEventListener('input', function() {
         const val = this.value.toLowerCase();
         document.querySelectorAll('.city-item').forEach(item => {
@@ -254,14 +232,12 @@
         });
     });
 
-    // Закрыть модал при клике вне
     document.getElementById('cityModal').addEventListener('click', function(e) {
         if (e.target === this && localStorage.getItem('city_selected')) {
             this.classList.remove('show');
         }
     });
 
-    // Погода
     function getWeather(lat, lon) {
         fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&timezone=auto`)
             .then(r => r.json())
@@ -289,7 +265,6 @@
         }
     });
 
-    // Service Worker для PWA
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/static/sw.js')
             .then(reg => console.log('SW registered'))

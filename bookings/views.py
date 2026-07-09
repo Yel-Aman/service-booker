@@ -23,6 +23,17 @@ def send_telegram_notification(service, message):
         print(f'Telegram error: {e}')
 
 
+def send_telegram_to_user(user, message):
+    """Отправляет уведомление клиенту если он подключил Telegram"""
+    if not user.telegram_chat_id:
+        return
+    try:
+        url = f'https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage'
+        requests.post(url, data={'chat_id': user.telegram_chat_id, 'text': message})
+    except Exception as e:
+        print(f'Telegram client error: {e}')
+
+
 def slot_list(request, box_id):
     box = get_object_or_404(Box, pk=box_id, is_active=True)
     now = datetime.now()
@@ -66,12 +77,21 @@ def book_slot(request, slot_id):
             return redirect('owner_dashboard', service_id=slot.box.service.pk)
         else:
             Booking.objects.create(user=request.user, slot=slot)
+            # Уведомление владельцу
             send_telegram_notification(slot.box.service,
                 f"🎉 Новая онлайн-бронь!\n"
                 f"Сервис: {slot.box.service.name}\n"
                 f"{slot.box.name}\n"
                 f"Клиент: {request.user.username} ({request.user.phone})\n"
                 f"Дата: {slot.date} {slot.start_time.strftime('%H:%M')}-{slot.end_time.strftime('%H:%M')}"
+            )
+            # Уведомление клиенту
+            send_telegram_to_user(request.user,
+                f"✅ Вы записались!\n"
+                f"Сервис: {slot.box.service.name}\n"
+                f"{slot.box.name}\n"
+                f"Дата: {slot.date} {slot.start_time.strftime('%H:%M')}-{slot.end_time.strftime('%H:%M')}\n"
+                f"Адрес: {slot.box.service.address}"
             )
             messages.success(request, 'Вы успешно забронировали слот!')
             return redirect('my_bookings')
@@ -92,6 +112,12 @@ def my_bookings(request):
 def cancel_booking(request, booking_id):
     booking = get_object_or_404(Booking, pk=booking_id, user=request.user)
     if request.method == 'POST':
+        # Уведомление клиенту об отмене
+        send_telegram_to_user(request.user,
+            f"❌ Бронирование отменено\n"
+            f"Сервис: {booking.slot.box.service.name}\n"
+            f"Дата: {booking.slot.date} {booking.slot.start_time.strftime('%H:%M')}"
+        )
         booking.slot.status = 'free'
         booking.slot.save()
         booking.delete()
@@ -127,6 +153,15 @@ def slot_in_progress(request, slot_id):
     if request.method == 'POST':
         slot.status = 'in_progress'
         slot.save()
+        # Уведомление клиенту
+        booking = Booking.objects.filter(slot=slot).first()
+        if booking and booking.user:
+            send_telegram_to_user(booking.user,
+                f"🚀 Ваша запись началась!\n"
+                f"Сервис: {slot.box.service.name}\n"
+                f"{slot.box.name}\n"
+                f"Время: {slot.start_time.strftime('%H:%M')}-{slot.end_time.strftime('%H:%M')}"
+            )
     return redirect('owner_dashboard', service_id=slot.box.service.pk)
 
 
@@ -294,7 +329,6 @@ def analytics(request, service_id):
 
     total = bookings.count()
 
-    # Брони по дням для графика
     bookings_by_day = {}
     for i in range(days):
         d = date_type.today() - timedelta(days=days-i-1)
@@ -304,24 +338,20 @@ def analytics(request, service_id):
         if key in bookings_by_day:
             bookings_by_day[key] += 1
 
-    # Популярные часы
     hours = {}
     for b in bookings:
         hour = b.slot.start_time.strftime('%H:00')
         hours[hour] = hours.get(hour, 0) + 1
     popular_hours = sorted(hours.items(), key=lambda x: x[1], reverse=True)[:5]
 
-    # Топ клиенты
     top_clients = bookings.filter(user__isnull=False).values(
         'user__username', 'user__phone'
     ).annotate(count=Count('id')).order_by('-count')[:10]
 
-    # Загрузка боксов
     box_stats = bookings.values('slot__box__name').annotate(
         count=Count('id')
     ).order_by('-count')
 
-    # Средний рейтинг
     avg_rating = service.reviews.aggregate(Avg('rating'))['rating__avg']
 
     periods = [('7', '7 дней'), ('30', '30 дней'), ('90', '3 месяца'), ('365', '1 год')]
