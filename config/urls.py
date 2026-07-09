@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -9,7 +11,6 @@ urlpatterns = [
     path('accounts/', include('users.urls')),
     path('cities/', include('cities.urls')),
 
-    # Сброс пароля
     path('accounts/password-reset/', auth_views.PasswordResetView.as_view(
         template_name='users/password_reset.html'
     ), name='password_reset'),
@@ -22,4 +23,4 @@ urlpatterns = [
     path('accounts/reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='users/password_reset_complete.html'
     ), name='password_reset_complete'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
