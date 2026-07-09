@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru" data-theme="dark">
 <head>
-    {% load static %}
+    {% load static i18n %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="{% static 'manifest.json' %}">
@@ -84,6 +84,9 @@
         .city-selector:hover { background: rgba(108,71,255,0.2); }
         .theme-toggle { background: var(--city-btn-bg); border: 1px solid var(--city-btn-border); border-radius: 10px; padding: 6px 12px; color: var(--text); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
         .theme-toggle:hover { background: rgba(108,71,255,0.2); }
+        .lang-selector { background: var(--city-btn-bg); border: 1px solid var(--city-btn-border); border-radius: 10px; padding: 6px 12px; color: var(--text); font-size: 0.85rem; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+        .lang-selector:hover { background: rgba(108,71,255,0.2); color: var(--text); }
+        .lang-selector.active { background: rgba(108,71,255,0.3); color: #6c47ff; border-color: rgba(108,71,255,0.4); }
         .city-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; }
         .city-modal.show { display:flex; }
         .city-modal-content { background: var(--modal-bg); border:1px solid var(--border); border-radius:24px; padding:32px; width:400px; max-height:80vh; overflow-y:auto; }
@@ -109,7 +112,7 @@
             .navbar { padding: 10px 0; }
             .navbar .container { flex-wrap: nowrap; overflow-x: auto; }
             .navbar-nav { flex-wrap: nowrap !important; gap: 8px !important; }
-            .city-selector, .theme-toggle { font-size: 0.75rem; padding: 4px 8px; }
+            .city-selector, .theme-toggle, .lang-selector { font-size: 0.75rem; padding: 4px 8px; }
             .nav-link { font-size: 0.8rem !important; }
             .city-modal-content { width: calc(100% - 32px); margin: 16px; padding: 24px; }
             .card { border-radius: 12px; }
@@ -129,10 +132,10 @@
     <div class="city-modal-content">
         <div class="text-center mb-4">
             <div style="font-size:2.5rem; margin-bottom:8px;">📍</div>
-            <h5 style="font-weight:700; margin-bottom:4px;">Выберите ваш город</h5>
-            <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">Мы покажем сервисы рядом с вами</p>
+            <h5 style="font-weight:700; margin-bottom:4px;">{% trans "Выберите ваш город" %}</h5>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">{% trans "Мы покажем сервисы рядом с вами" %}</p>
         </div>
-        <input type="text" id="citySearch" class="form-control mb-3" placeholder="Поиск города...">
+        <input type="text" id="citySearch" class="form-control mb-3" placeholder="{% trans 'Поиск города...' %}">
         <div id="cityList">
             {% for city in all_cities %}
             <div class="city-item {% if city.pk == request.session.city_id %}active{% endif %}"
@@ -148,13 +151,34 @@
     <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">⚡ ServiceBooker</a>
         <span id="weather" style="font-size:0.8rem; color:var(--text-muted); margin-left:12px;"></span>
-        <div class="navbar-nav ms-auto d-flex flex-row gap-3 align-items-center">
+        <div class="navbar-nav ms-auto d-flex flex-row gap-2 align-items-center">
+            <!-- Переключатель языка -->
+            <div class="d-flex gap-1">
+                <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="language" value="ru">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" class="lang-selector {% if LANGUAGE_CODE == 'ru' %}active{% endif %}">RU</button>
+                </form>
+                <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="language" value="kk">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" class="lang-selector {% if LANGUAGE_CODE == 'kk' %}active{% endif %}">ҚАЗ</button>
+                </form>
+                <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="language" value="en">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" class="lang-selector {% if LANGUAGE_CODE == 'en' %}active{% endif %}">EN</button>
+                </form>
+            </div>
             <button class="city-selector" onclick="document.getElementById('cityModal').classList.add('show')">
                 📍 {{ request.session.city_name|default:"Выбрать город" }}
             </button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
-            <a class="nav-link" href="{% url 'service_list' %}">Сервисы</a>
-            <a class="nav-link" href="{% url 'service_map' %}">🗺️ Карта</a>
+            <a class="nav-link" href="{% url 'service_list' %}">{% trans "Сервисы" %}</a>
+            <a class="nav-link" href="{% url 'service_map' %}">🗺️ {% trans "Карта" %}</a>
             {% if user.is_authenticated %}
                 {% if user.role == 'business_owner' %}
                     {% with service=user.services.first %}
@@ -168,10 +192,10 @@
                     <a class="nav-link" href="{% url 'favorites' %}">❤️</a>
                     <a class="nav-link" href="{% url 'profile' %}">👤 {{ user.username }}</a>
                 {% endif %}
-                <a class="nav-link" href="{% url 'logout' %}">Выйти</a>
+                <a class="nav-link" href="{% url 'logout' %}">{% trans "Выйти" %}</a>
             {% else %}
-                <a class="nav-link" href="{% url 'login' %}">Войти</a>
-                <a class="btn btn-primary btn-sm" href="{% url 'register' %}">Регистрация</a>
+                <a class="nav-link" href="{% url 'login' %}">{% trans "Войти" %}</a>
+                <a class="btn btn-primary btn-sm" href="{% url 'register' %}">{% trans "Регистрация" %}</a>
             {% endif %}
         </div>
     </div>
