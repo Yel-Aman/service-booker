@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактировать — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6" data-aos="fade-up">
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <a href="{% url 'owner_dashboard' service.pk %}" class="btn btn-outline-secondary btn-sm">← Назад</a>
+            <h3 style="font-weight:800; letter-spacing:-1px; margin:0;">Редактировать сервис</h3>
+        </div>
+        <div class="card" style="border-radius:24px;">
+            <div class="card-body p-5">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label">Название</label>
+                        <input type="text" name="name" class="form-control" value="{{ service.name }}" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Описание</label>
+                        <textarea name="description" class="form-control" rows="3">{{ service.description }}</textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Адрес</label>
+                        <input type="text" name="address" class="form-control" value="{{ service.address }}" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Телефон</label>
+                        <input type="text" name="phone" class="form-control" value="{{ service.phone }}" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-4">
+                            <label class="form-label">Открытие</label>
+                            <input type="time" name="opening_time" class="form-control" value="{{ service.opening_time|time:'H:i' }}" required>
+                        </div>
+                        <div class="col-6 mb-4">
+                            <label class="form-label">Закрытие</label>
+                            <input type="time" name="closing_time" class="form-control" value="{{ service.closing_time|time:'H:i' }}" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3" style="border-radius:12px; font-size:1rem;">
+                        💾 Сохранить изменения
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

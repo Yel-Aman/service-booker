@@ -11,6 +11,7 @@
             <h2 style="font-weight:800; letter-spacing:-1px; margin:0; color:white;">{{ service.name }}</h2>
         </div>
         <div class="d-flex gap-2 flex-wrap">
+            <a href="{% url 'edit_service' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">✏️ Редактировать</a>
             <a href="{% url 'generate_slots' service.pk %}" class="btn btn-primary btn-sm">⚙️ Создать слоты</a>
             <a href="{% url 'delete_slots' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">🗑️ Удалить слоты</a>
             <a href="{% url 'connect_telegram' service.pk %}" class="btn btn-sm" style="background:{% if service.telegram_chat_id %}rgba(99,255,180,0.15){% else %}rgba(255,255,255,0.08){% endif %}; color:{% if service.telegram_chat_id %}#63ffb4{% else %}white{% endif %}; border:1px solid {% if service.telegram_chat_id %}rgba(99,255,180,0.3){% else %}rgba(255,255,255,0.15){% endif %}; border-radius:10px;">

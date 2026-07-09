@@ -87,6 +87,27 @@ def service_map(request):
 
 
 @login_required
+def edit_service(request, service_id):
+    service = get_object_or_404(Service, pk=service_id, owner=request.user)
+    if request.user.role != 'business_owner':
+        messages.error(request, 'Доступ запрещён.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        service.name = request.POST.get('name', service.name)
+        service.description = request.POST.get('description', service.description)
+        service.address = request.POST.get('address', service.address)
+        service.phone = request.POST.get('phone', service.phone)
+        service.opening_time = request.POST.get('opening_time', service.opening_time)
+        service.closing_time = request.POST.get('closing_time', service.closing_time)
+        service.save()
+        messages.success(request, 'Данные сервиса обновлены!')
+        return redirect('owner_dashboard', service_id=service.pk)
+
+    return render(request, 'services/edit_service.html', {'service': service})
+
+
+@login_required
 def add_box(request, service_id):
     service = get_object_or_404(Service, pk=service_id)
     if request.user.role != 'business_owner':
