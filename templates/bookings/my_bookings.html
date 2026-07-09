@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Мои записи — ServiceBooker{% endblock %}
+{% block title %}{% trans "Мои записи" %} — ServiceBooker{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-up">
-    <h3 style="font-weight:800; letter-spacing:-1px;">Мои записи</h3>
-    <a href="{% url 'service_list' %}" class="btn btn-primary btn-sm">+ Новая запись</a>
+    <h3 style="font-weight:800; letter-spacing:-1px;">{% trans "Мои записи" %}</h3>
+    <a href="{% url 'service_list' %}" class="btn btn-primary btn-sm">+ {% trans "Новая запись" %}</a>
 </div>
 
 {% for booking in bookings %}
@@ -35,13 +36,15 @@
                     {% elif booking.slot.status == 'in_progress' %}background:rgba(245,158,11,0.2); color:#f59e0b;
                     {% else %}background:rgba(0,200,81,0.1); color:#00c851;{% endif %}
                     padding:6px 12px; font-size:0.8rem; border-radius:8px;">
-                    {{ booking.slot.get_status_display }}
+                    {% if booking.slot.status == 'booked' %}{% trans "Забронировано" %}
+                    {% elif booking.slot.status == 'in_progress' %}{% trans "В процессе" %}
+                    {% else %}{% trans "Завершено" %}{% endif %}
                 </span>
                 {% if booking.slot.status == 'booked' %}
                 <form method="post" action="{% url 'cancel_booking' booking.pk %}">
                     {% csrf_token %}
                     <button class="btn btn-sm" style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:8px; font-size:0.8rem;">
-                        Отменить
+                        {% trans "Отменить" %}
                     </button>
                 </form>
                 {% endif %}
@@ -52,9 +55,9 @@
 {% empty %}
 <div class="text-center py-5" data-aos="fade-up">
     <div style="font-size:5rem; margin-bottom:16px; animation:float 3s ease-in-out infinite;">📋</div>
-    <h5 style="font-weight:700; margin-bottom:8px;">Записей пока нет</h5>
-    <p style="color:var(--text-muted); margin-bottom:24px;">Найди сервис и запишись онлайн!</p>
-    <a href="{% url 'service_list' %}" class="btn btn-primary px-4">Найти сервис</a>
+    <h5 style="font-weight:700; margin-bottom:8px;">{% trans "Записей пока нет" %}</h5>
+    <p style="color:var(--text-muted); margin-bottom:24px;">{% trans "Найди сервис и запишись онлайн!" %}</p>
+    <a href="{% url 'service_list' %}" class="btn btn-primary px-4">{% trans "Найти сервис" %}</a>
 </div>
 {% endfor %}
 {% endblock %}

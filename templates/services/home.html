@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}ServiceBooker — Сервисы{% endblock %}
+{% block title %}ServiceBooker — {% trans "Сервисы" %}{% endblock %}
 
 {% block content %}
 <!-- Hero -->
@@ -15,20 +16,20 @@
     </div>
 
     <div style="position:relative; z-index:1;">
-        <p style="font-size:0.8rem; letter-spacing:4px; opacity:0.5; text-transform:uppercase; margin-bottom:20px; color:#63ffb4;">🇰🇿 {{ current_city.name_ru }} · Казахстан</p>
+        <p style="font-size:0.8rem; letter-spacing:4px; opacity:0.5; text-transform:uppercase; margin-bottom:20px; color:#63ffb4;">🇰🇿 {{ current_city.name_ru }} · {% trans "Казахстан" %}</p>
         <h1 style="font-size:4.5rem; font-weight:800; letter-spacing:-2.5px; line-height:1.05; margin-bottom:24px; animation: fadeInUp 0.8s ease both; color:white;">
-            Найди и запишись<br>онлайн за 30 секунд
+            {% trans "Найди и запишись" %}<br>{% trans "онлайн за 30 секунд" %}
         </h1>
         <p style="opacity:0.6; font-size:1.15rem; margin-bottom:40px; max-width:500px; margin-left:auto; margin-right:auto; animation: fadeInUp 0.8s ease 0.2s both; color:white;">
-            Автомойки, СТО, салоны красоты и многое другое в {{ current_city.name_ru }}
+            {% trans "Автомойки, СТО, салоны красоты и многое другое в" %} {{ current_city.name_ru }}
         </p>
         <div class="d-flex gap-3 justify-content-center flex-wrap" style="animation: fadeInUp 0.8s ease 0.4s both;">
             <a href="{% url 'service_list' %}" class="btn btn-light px-4 py-2" style="border-radius:50px; font-weight:700; font-size:0.95rem; color:#6c47ff;">
-                Найти сервис →
+                {% trans "Найти сервис" %} →
             </a>
             {% if not user.is_authenticated %}
             <a href="{% url 'register' %}" class="btn px-4 py-2" style="border-radius:50px; font-weight:700; font-size:0.95rem; background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.2);">
-                Регистрация
+                {% trans "Регистрация" %}
             </a>
             {% endif %}
         </div>
@@ -36,24 +37,24 @@
         <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap" style="animation: fadeInUp 0.8s ease 0.6s both;">
             <div>
                 <div style="font-size:2rem; font-weight:800; color:#63ffb4;">4+</div>
-                <div style="font-size:0.8rem; opacity:0.5; color:white;">Категории</div>
+                <div style="font-size:0.8rem; opacity:0.5; color:white;">{% trans "Категории" %}</div>
             </div>
             <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
             <div>
                 <div style="font-size:2rem; font-weight:800; color:#63ffb4;">24/7</div>
-                <div style="font-size:0.8rem; opacity:0.5; color:white;">Онлайн запись</div>
+                <div style="font-size:0.8rem; opacity:0.5; color:white;">{% trans "Онлайн запись" %}</div>
             </div>
             <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
             <div>
-                <div style="font-size:2rem; font-weight:800; color:#63ffb4;">30с</div>
-                <div style="font-size:0.8rem; opacity:0.5; color:white;">Время записи</div>
+                <div style="font-size:2rem; font-weight:800; color:#63ffb4;">30{% trans "с" %}</div>
+                <div style="font-size:0.8rem; opacity:0.5; color:white;">{% trans "Время записи" %}</div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Категории с фото -->
-<h5 class="mb-4 mt-5" style="font-weight:700; letter-spacing:-0.5px; font-size:1.3rem;" data-aos="fade-up">Категории</h5>
+<h5 class="mb-4 mt-5" style="font-weight:700; letter-spacing:-0.5px; font-size:1.3rem;" data-aos="fade-up">{% trans "Категории" %}</h5>
 <div class="row mb-5">
     {% for category in categories %}
     <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
@@ -91,28 +92,28 @@
 
 <!-- Как это работает -->
 <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:28px; padding:40px 24px; margin-bottom:48px;" data-aos="fade-up">
-    <h5 class="text-center mb-4" style="font-weight:700; font-size:1.2rem; letter-spacing:-0.5px;">Как это работает</h5>
+    <h5 class="text-center mb-4" style="font-weight:700; font-size:1.2rem; letter-spacing:-0.5px;">{% trans "Как это работает" %}</h5>
     <div class="row text-center">
         <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="0">
             <div style="width:56px; height:56px; background:linear-gradient(135deg,#6c47ff,#a855f7); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:1.5rem; box-shadow:0 8px 24px rgba(108,71,255,0.4); animation:float 4s ease-in-out infinite;">🔍</div>
-            <h6 style="font-weight:700; font-size:0.95rem; margin-bottom:6px;">Найди сервис</h6>
-            <p style="font-size:0.82rem; margin:0;">Выбери категорию и найди ближайший сервис</p>
+            <h6 style="font-weight:700; font-size:0.95rem; margin-bottom:6px;">{% trans "Найди сервис" %}</h6>
+            <p style="font-size:0.82rem; margin:0;">{% trans "Выбери категорию и найди ближайший сервис" %}</p>
         </div>
         <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
             <div style="width:56px; height:56px; background:linear-gradient(135deg,#a855f7,#ec4899); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:1.5rem; box-shadow:0 8px 24px rgba(168,85,247,0.4); animation:float 4s ease-in-out infinite 0.5s;">📅</div>
-            <h6 style="font-weight:700; font-size:0.95rem; margin-bottom:6px;">Выбери время</h6>
-            <p style="font-size:0.82rem; margin:0;">Выбери свободный бокс и удобное время</p>
+            <h6 style="font-weight:700; font-size:0.95rem; margin-bottom:6px;">{% trans "Выбери время" %}</h6>
+            <p style="font-size:0.82rem; margin:0;">{% trans "Выбери свободный бокс и удобное время" %}</p>
         </div>
         <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
             <div style="width:56px; height:56px; background:linear-gradient(135deg,#ec4899,#f97316); border-radius:16px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px; font-size:1.5rem; box-shadow:0 8px 24px rgba(236,72,153,0.4); animation:float 4s ease-in-out infinite 1s;">✅</div>
-            <h6 style="font-weight:700; font-size:0.95rem; margin-bottom:6px;">Готово!</h6>
-            <p style="font-size:0.82rem; margin:0;">Запись подтверждена — просто приезжай</p>
+            <h6 style="font-weight:700; font-size:0.95rem; margin-bottom:6px;">{% trans "Готово!" %}</h6>
+            <p style="font-size:0.82rem; margin:0;">{% trans "Запись подтверждена — просто приезжай" %}</p>
         </div>
     </div>
 </div>
 
 <!-- Популярные сервисы -->
-<h5 class="mb-4" style="font-weight:700; letter-spacing:-0.5px; font-size:1.3rem;" data-aos="fade-up">Популярные сервисы</h5>
+<h5 class="mb-4" style="font-weight:700; letter-spacing:-0.5px; font-size:1.3rem;" data-aos="fade-up">{% trans "Популярные сервисы" %}</h5>
 <div class="row">
     {% for service in services %}
     <div class="col-12 col-md-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
@@ -142,7 +143,7 @@
                 <p style="font-size:0.82rem; color:#00c851; font-weight:600; margin-bottom:0;">🕐 {{ service.opening_time|time:"H:i" }} - {{ service.closing_time|time:"H:i" }}</p>
             </div>
             <div class="card-footer" style="padding:12px 16px;">
-                <a href="{% url 'service_detail' service.pk %}" class="btn btn-primary w-100">Записаться</a>
+                <a href="{% url 'service_detail' service.pk %}" class="btn btn-primary w-100">{% trans "Записаться" %}</a>
             </div>
         </div>
     </div>
@@ -152,10 +153,10 @@
 <!-- CTA -->
 <div class="text-center mt-4" data-aos="fade-up" style="background:linear-gradient(135deg,#1a1a1a,#2d2d2d); border-radius:24px; padding:48px 24px; margin-bottom:0; position:relative; overflow:hidden;">
     <div style="position:absolute; top:-80px; right:-80px; width:300px; height:300px; background:radial-gradient(circle, rgba(108,71,255,0.2), transparent); border-radius:50%;"></div>
-    <h3 style="color:white; font-weight:800; letter-spacing:-1px; margin-bottom:12px; position:relative; font-size:1.5rem;">Вы владелец бизнеса?</h3>
-    <p style="color:rgba(255,255,255,0.5); margin-bottom:24px; position:relative; font-size:0.9rem;">Свяжитесь с нами — добавим ваш сервис на платформу</p>
+    <h3 style="color:white; font-weight:800; letter-spacing:-1px; margin-bottom:12px; position:relative; font-size:1.5rem;">{% trans "Вы владелец бизнеса?" %}</h3>
+    <p style="color:rgba(255,255,255,0.5); margin-bottom:24px; position:relative; font-size:0.9rem;">{% trans "Свяжитесь с нами — добавим ваш сервис на платформу" %}</p>
     <a href="tel:+77001234567" class="btn btn-light px-4 py-2" style="border-radius:50px; font-weight:700; color:#6c47ff; position:relative;">
-        📞 Связаться с нами
+        📞 {% trans "Связаться с нами" %}
     </a>
 </div>
 

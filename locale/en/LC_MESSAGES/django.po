@@ -1,55 +1,293 @@
 # English translations for ServiceBooker
+# Copyright (C) 2026
+#
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ServiceBooker\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-09 15:50+0500\n"
 "PO-Revision-Date: 2026-07-09 15:50+0500\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
-#: .\config\settings.py:124
 msgid "Русский"
 msgstr "Russian"
 
-#: .\config\settings.py:125
 msgid "Қазақша"
 msgstr "Kazakh"
 
-#: .\config\settings.py:126
 msgid "English"
 msgstr "English"
 
-#: .\templates\base.html:135
 msgid "Выберите ваш город"
 msgstr "Select your city"
 
-#: .\templates\base.html:136
 msgid "Мы покажем сервисы рядом с вами"
 msgstr "We will show services near you"
 
-#: .\templates\base.html:138
 msgid "Поиск города..."
 msgstr "Search city..."
 
-#: .\templates\base.html:180
 msgid "Сервисы"
 msgstr "Services"
 
-#: .\templates\base.html:181
 msgid "Карта"
 msgstr "Map"
 
-#: .\templates\base.html:195
 msgid "Выйти"
 msgstr "Logout"
 
-#: .\templates\base.html:197
 msgid "Войти"
 msgstr "Login"
 
-#: .\templates\base.html:198
 msgid "Регистрация"
 msgstr "Register"
+
+msgid "Казахстан"
+msgstr "Kazakhstan"
+
+msgid "Найди и запишись"
+msgstr "Find and book"
+
+msgid "онлайн за 30 секунд"
+msgstr "online in 30 seconds"
+
+msgid "Автомойки, СТО, салоны красоты и многое другое в"
+msgstr "Car washes, auto services, beauty salons and more in"
+
+msgid "Найти сервис"
+msgstr "Find service"
+
+msgid "Категории"
+msgstr "Categories"
+
+msgid "Онлайн запись"
+msgstr "Online booking"
+
+msgid "Время записи"
+msgstr "Booking time"
+
+msgid "с"
+msgstr "s"
+
+msgid "Как это работает"
+msgstr "How it works"
+
+msgid "Найди сервис"
+msgstr "Find a service"
+
+msgid "Выбери категорию и найди ближайший сервис"
+msgstr "Choose a category and find the nearest service"
+
+msgid "Выбери время"
+msgstr "Choose time"
+
+msgid "Выбери свободный бокс и удобное время"
+msgstr "Choose a free slot and convenient time"
+
+msgid "Готово!"
+msgstr "Done!"
+
+msgid "Запись подтверждена — просто приезжай"
+msgstr "Booking confirmed — just come"
+
+msgid "Популярные сервисы"
+msgstr "Popular services"
+
+msgid "Записаться"
+msgstr "Book now"
+
+msgid "Вы владелец бизнеса?"
+msgstr "Are you a business owner?"
+
+msgid "Свяжитесь с нами — добавим ваш сервис на платформу"
+msgstr "Contact us — we will add your service to the platform"
+
+msgid "Связаться с нами"
+msgstr "Contact us"
+
+msgid "Все сервисы"
+msgstr "All services"
+
+msgid "Найти сервис в"
+msgstr "Find service in"
+
+msgid "Мойка, парикмахерская, шиномонтаж..."
+msgstr "Car wash, barbershop, tire service..."
+
+msgid "Найти"
+msgstr "Search"
+
+msgid "Все"
+msgstr "All"
+
+msgid "Открыто сейчас"
+msgstr "Open now"
+
+msgid "Результаты по запросу"
+msgstr "Search results"
+
+msgid "найдено"
+msgstr "found"
+
+msgid "Подробнее"
+msgstr "Details"
+
+msgid "Ничего не найдено"
+msgstr "Nothing found"
+
+msgid "Попробуйте другой запрос"
+msgstr "Try a different search"
+
+msgid "Показать все"
+msgstr "Show all"
+
+msgid "отзывов"
+msgstr "reviews"
+
+msgid "Информация"
+msgstr "Information"
+
+msgid "АДРЕС"
+msgstr "ADDRESS"
+
+msgid "ТЕЛЕФОН"
+msgstr "PHONE"
+
+msgid "РЕЖИМ РАБОТЫ"
+msgstr "WORKING HOURS"
+
+msgid "СТАТУС"
+msgstr "STATUS"
+
+msgid "Открыто"
+msgstr "Open"
+
+msgid "Доступные"
+msgstr "Available"
+
+msgid "Выбрать время"
+msgstr "Choose time"
+
+msgid "Нет доступных"
+msgstr "No available"
+
+msgid "Отзывы"
+msgstr "Reviews"
+
+msgid "Оставить отзыв"
+msgstr "Leave a review"
+
+msgid "Отзывов пока нет"
+msgstr "No reviews yet"
+
+msgid "Быстрые действия"
+msgstr "Quick actions"
+
+msgid "Позвонить"
+msgstr "Call"
+
+msgid "В избранном"
+msgstr "In favorites"
+
+msgid "В избранное"
+msgstr "Add to favorites"
+
+msgid "Поделиться в WhatsApp"
+msgstr "Share on WhatsApp"
+
+msgid "Поделиться в Telegram"
+msgstr "Share on Telegram"
+
+msgid "Записывайся онлайн"
+msgstr "Book online"
+
+msgid "Мои записи"
+msgstr "My bookings"
+
+msgid "Войти для записи"
+msgstr "Login to book"
+
+msgid "Добро пожаловать!"
+msgstr "Welcome!"
+
+msgid "Войдите чтобы управлять записями"
+msgstr "Login to manage your bookings"
+
+msgid "Забыли пароль?"
+msgstr "Forgot password?"
+
+msgid "Нет аккаунта?"
+msgstr "No account?"
+
+msgid "Зарегистрироваться"
+msgstr "Sign up"
+
+msgid "Создать аккаунт"
+msgstr "Create account"
+
+msgid "Регистрация займёт меньше минуты"
+msgstr "Registration takes less than a minute"
+
+msgid "Уже есть аккаунт?"
+msgstr "Already have an account?"
+
+msgid "Профиль"
+msgstr "Profile"
+
+msgid "Телефон"
+msgstr "Phone"
+
+msgid "Сохранить изменения"
+msgstr "Save changes"
+
+msgid "Telegram уведомления"
+msgstr "Telegram notifications"
+
+msgid "Telegram подключён!"
+msgstr "Telegram connected!"
+
+msgid "Вы будете получать уведомления о бронированиях"
+msgstr "You will receive booking notifications"
+
+msgid "Подключите Telegram чтобы получать уведомления о своих записях."
+msgstr "Connect Telegram to receive notifications about your bookings."
+
+msgid "Откройте бота"
+msgstr "Open the bot"
+
+msgid "Отправьте команду"
+msgstr "Send the command"
+
+msgid "Вернитесь сюда и нажмите кнопку"
+msgstr "Come back here and press the button"
+
+msgid "Проверить подключение"
+msgstr "Check connection"
+
+msgid "Новая запись"
+msgstr "New booking"
+
+msgid "Забронировано"
+msgstr "Booked"
+
+msgid "В процессе"
+msgstr "In progress"
+
+msgid "Завершено"
+msgstr "Completed"
+
+msgid "Отменить"
+msgstr "Cancel"
+
+msgid "Записей пока нет"
+msgstr "No bookings yet"
+
+msgid "Найди сервис и запишись онлайн!"
+msgstr "Find a service and book online!"

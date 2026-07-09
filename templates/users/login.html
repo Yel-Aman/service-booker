@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Вход — ServiceBooker{% endblock %}
+{% block title %}{% trans "Вход" %} — ServiceBooker{% endblock %}
 
 {% block content %}
 <div class="row min-vh-75 align-items-center justify-content-center">
     <div class="col-md-5" data-aos="fade-up">
         <div class="text-center mb-4">
             <div style="font-size:3rem; animation:float 3s ease-in-out infinite;">⚡</div>
-            <h3 style="font-weight:800; letter-spacing:-1px; margin-top:8px;">Добро пожаловать!</h3>
-            <p style="color:var(--text-muted);">Войдите чтобы управлять записями</p>
+            <h3 style="font-weight:800; letter-spacing:-1px; margin-top:8px;">{% trans "Добро пожаловать!" %}</h3>
+            <p style="color:var(--text-muted);">{% trans "Войдите чтобы управлять записями" %}</p>
         </div>
         <div class="card" style="border-radius:24px;">
             <div class="card-body p-5">
@@ -29,14 +30,14 @@
                     </div>
                     {% endfor %}
                     <button type="submit" class="btn btn-primary w-100 py-3" style="border-radius:12px; font-size:1rem;">
-                        Войти →
+                        {% trans "Войти" %} →
                     </button>
                 </form>
                 <p class="text-center mt-3 mb-0">
-                    <a href="{% url 'password_reset' %}" style="color:var(--text-muted); font-size:0.85rem;">Забыли пароль?</a>
+                    <a href="{% url 'password_reset' %}" style="color:var(--text-muted); font-size:0.85rem;">{% trans "Забыли пароль?" %}</a>
                 </p>
                 <p class="text-center mt-3 mb-0" style="color:var(--text-muted); font-size:0.9rem;">
-                    Нет аккаунта? <a href="{% url 'register' %}" style="color:#a855f7; font-weight:600;">Зарегистрироваться</a>
+                    {% trans "Нет аккаунта?" %} <a href="{% url 'register' %}" style="color:#a855f7; font-weight:600;">{% trans "Зарегистрироваться" %}</a>
                 </p>
             </div>
         </div>

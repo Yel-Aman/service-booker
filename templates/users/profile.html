@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Профиль — ServiceBooker{% endblock %}
+{% block title %}{% trans "Профиль" %} — ServiceBooker{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
@@ -22,7 +23,7 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="mb-4">
-                        <label class="form-label">Телефон</label>
+                        <label class="form-label">{% trans "Телефон" %}</label>
                         <input type="text" name="phone" class="form-control" value="{{ user.phone }}" placeholder="+7 777 123 4567">
                     </div>
                     <div class="mb-4">
@@ -30,7 +31,7 @@
                         <input type="email" name="email" class="form-control" value="{{ user.email }}" placeholder="email@example.com">
                     </div>
                     <button type="submit" class="btn btn-primary w-100 py-3" style="border-radius:12px; font-size:1rem;">
-                        💾 Сохранить изменения
+                        💾 {% trans "Сохранить изменения" %}
                     </button>
                 </form>
             </div>
@@ -39,34 +40,34 @@
         <!-- Telegram подключение -->
         <div class="card mb-3" style="border-radius:24px;">
             <div class="card-body p-4">
-                <h6 style="font-weight:700; margin-bottom:16px;">📱 Telegram уведомления</h6>
+                <h6 style="font-weight:700; margin-bottom:16px;">📱 {% trans "Telegram уведомления" %}</h6>
                 {% if user.telegram_chat_id %}
                 <div style="background:rgba(0,200,81,0.1); border:1px solid rgba(0,200,81,0.3); border-radius:12px; padding:16px; text-align:center;">
-                    <p style="color:#00c851; margin:0; font-weight:600;">✅ Telegram подключён!</p>
-                    <p style="color:var(--text-muted); font-size:0.85rem; margin:8px 0 0;">Вы будете получать уведомления о бронированиях</p>
+                    <p style="color:#00c851; margin:0; font-weight:600;">✅ {% trans "Telegram подключён!" %}</p>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin:8px 0 0;">{% trans "Вы будете получать уведомления о бронированиях" %}</p>
                 </div>
                 {% else %}
-                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">Подключите Telegram чтобы получать уведомления о своих записях.</p>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">{% trans "Подключите Telegram чтобы получать уведомления о своих записях." %}</p>
                 <ol style="color:var(--text-sub); font-size:0.85rem; padding-left:20px;">
-                    <li class="mb-2">Откройте бота: <a href="https://t.me/kz_servicebooker_bot" target="_blank" style="color:#a855f7;">@kz_servicebooker_bot</a></li>
-                    <li class="mb-2">Отправьте команду:
+                    <li class="mb-2">{% trans "Откройте бота" %}: <a href="https://t.me/kz_servicebooker_bot" target="_blank" style="color:#a855f7;">@kz_servicebooker_bot</a></li>
+                    <li class="mb-2">{% trans "Отправьте команду" %}:
                         <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:8px 12px; margin-top:6px; font-family:monospace; color:#63ffb4;">
                             /client {{ user.username }}
                         </div>
                     </li>
-                    <li>Вернитесь сюда и нажмите кнопку</li>
+                    <li>{% trans "Вернитесь сюда и нажмите кнопку" %}</li>
                 </ol>
                 <form method="post" action="{% url 'connect_client_telegram' %}">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary w-100 mt-3" style="border-radius:12px;">
-                        ✅ Проверить подключение
+                        ✅ {% trans "Проверить подключение" %}
                     </button>
                 </form>
                 {% endif %}
             </div>
         </div>
 
-        <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary w-100" style="border-radius:12px;">📋 Мои записи</a>
+        <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary w-100" style="border-radius:12px;">📋 {% trans "Мои записи" %}</a>
     </div>
 </div>
 {% endblock %}

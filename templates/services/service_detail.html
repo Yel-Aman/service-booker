@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
 {% block title %}{{ service.name }} — ServiceBooker{% endblock %}
 
@@ -16,7 +17,7 @@
         <span style="color:#f59e0b; font-size:1.2rem;">
             {% for i in "12345" %}{% if forloop.counter <= avg_rating %}⭐{% endif %}{% endfor %}
         </span>
-        <span style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-left:8px;">{{ avg_rating|floatformat:1 }} / 5 ({{ reviews|length }} отзывов)</span>
+        <span style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-left:8px;">{{ avg_rating|floatformat:1 }} / 5 ({{ reviews|length }} {% trans "отзывов" %})</span>
     </div>
     {% endif %}
 </div>
@@ -26,30 +27,30 @@
         <!-- Информация -->
         <div class="card mb-4" data-aos="fade-up">
             <div class="card-body p-4">
-                <h6 style="font-weight:700; margin-bottom:20px;">📋 Информация</h6>
+                <h6 style="font-weight:700; margin-bottom:20px;">📋 {% trans "Информация" %}</h6>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px;">
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; letter-spacing:1px;">АДРЕС</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; letter-spacing:1px;">{% trans "АДРЕС" %}</div>
                             <div style="font-weight:600; font-size:0.9rem;">{{ service.address }}</div>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px;">
-                            <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; letter-spacing:1px;">ТЕЛЕФОН</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:4px; letter-spacing:1px;">{% trans "ТЕЛЕФОН" %}</div>
                             <div style="font-weight:600; font-size:0.9rem;">{{ service.phone }}</div>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div style="background:rgba(108,71,255,0.1); border:1px solid rgba(108,71,255,0.2); border-radius:12px; padding:16px;">
-                            <div style="font-size:0.75rem; color:#a855f7; margin-bottom:4px; letter-spacing:1px;">РЕЖИМ РАБОТЫ</div>
+                            <div style="font-size:0.75rem; color:#a855f7; margin-bottom:4px; letter-spacing:1px;">{% trans "РЕЖИМ РАБОТЫ" %}</div>
                             <div style="font-weight:700; font-size:0.9rem; color:#a855f7;">{{ service.opening_time|time:"H:i" }} — {{ service.closing_time|time:"H:i" }}</div>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <div style="background:rgba(0,200,81,0.08); border:1px solid rgba(0,200,81,0.2); border-radius:12px; padding:16px;">
-                            <div style="font-size:0.75rem; color:#00c851; margin-bottom:4px; letter-spacing:1px;">СТАТУС</div>
-                            <div style="font-weight:700; font-size:0.9rem; color:#00c851;">✅ Открыто</div>
+                            <div style="font-size:0.75rem; color:#00c851; margin-bottom:4px; letter-spacing:1px;">{% trans "СТАТУС" %}</div>
+                            <div style="font-weight:700; font-size:0.9rem; color:#00c851;">✅ {% trans "Открыто" %}</div>
                         </div>
                     </div>
                 </div>
@@ -59,7 +60,7 @@
         <!-- Боксы/Кресла -->
         <div class="card mb-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card-body p-4">
-                <h6 style="font-weight:700; margin-bottom:20px;">🏠 Доступные {{ service.category.slot_unit|lower }}</h6>
+                <h6 style="font-weight:700; margin-bottom:20px;">🏠 {% trans "Доступные" %} {{ service.category.slot_unit|lower }}</h6>
                 {% for box in service.boxes.all %}
                     {% if box.is_active %}
                     <a href="{% url 'slot_list' box.pk %}" class="text-decoration-none">
@@ -73,12 +74,12 @@
                                 </div>
                                 <span style="font-weight:600;">{{ box.name }}</span>
                             </div>
-                            <span style="font-size:0.85rem; color:#a855f7; font-weight:600;">Выбрать время →</span>
+                            <span style="font-size:0.85rem; color:#a855f7; font-weight:600;">{% trans "Выбрать время" %} →</span>
                         </div>
                     </a>
                     {% endif %}
                 {% empty %}
-                    <p style="color:var(--text-muted);">Нет доступных {{ service.category.slot_unit|lower }}</p>
+                    <p style="color:var(--text-muted);">{% trans "Нет доступных" %} {{ service.category.slot_unit|lower }}</p>
                 {% endfor %}
             </div>
         </div>
@@ -87,9 +88,9 @@
         <div class="card mb-4" data-aos="fade-up" data-aos-delay="150">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h6 style="font-weight:700; margin:0;">⭐ Отзывы</h6>
+                    <h6 style="font-weight:700; margin:0;">⭐ {% trans "Отзывы" %}</h6>
                     {% if user.is_authenticated and user.role == 'client' %}
-                    <a href="{% url 'add_review' service.pk %}" class="btn btn-sm btn-primary" style="border-radius:8px;">+ Оставить отзыв</a>
+                    <a href="{% url 'add_review' service.pk %}" class="btn btn-sm btn-primary" style="border-radius:8px;">+ {% trans "Оставить отзыв" %}</a>
                     {% endif %}
                 </div>
                 {% for review in reviews %}
@@ -108,7 +109,7 @@
                 {% empty %}
                 <div class="text-center py-4">
                     <div style="font-size:2.5rem; margin-bottom:8px;">💬</div>
-                    <p style="color:var(--text-muted); margin:0;">Отзывов пока нет</p>
+                    <p style="color:var(--text-muted); margin:0;">{% trans "Отзывов пока нет" %}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -118,9 +119,9 @@
     <div class="col-md-4">
         <div class="card" data-aos="fade-up" data-aos-delay="200" style="position:sticky; top:80px;">
             <div class="card-body p-4">
-                <h6 style="font-weight:700; margin-bottom:20px;">Быстрые действия</h6>
+                <h6 style="font-weight:700; margin-bottom:20px;">{% trans "Быстрые действия" %}</h6>
                 <a href="tel:{{ service.phone }}" class="btn btn-success w-100 mb-3" style="border-radius:12px; padding:14px;">
-                    📞 Позвонить
+                    📞 {% trans "Позвонить" %}
                 </a>
                 {% if user.is_authenticated and user.role == 'client' %}
                 <form method="post" action="{% url 'toggle_favorite' service.pk %}">
@@ -131,31 +132,31 @@
                         {% else %}
                         background:var(--bg-card); color:var(--text); border:1px solid var(--border);
                         {% endif %}">
-                        {% if service in user.favorites.all %}❤️ В избранном{% else %}🤍 В избранное{% endif %}
+                        {% if service in user.favorites.all %}❤️ {% trans "В избранном" %}{% else %}🤍 {% trans "В избранное" %}{% endif %}
                     </button>
                 </form>
                 {% endif %}
-                <a href="https://wa.me/?text=Записывайся онлайн: {{ service.name }} — {{ request.build_absolute_uri }}"
+                <a href="https://wa.me/?text={% trans 'Записывайся онлайн' %}: {{ service.name }} — {{ request.build_absolute_uri }}"
                    target="_blank" class="btn w-100 mb-3"
                    style="background:#25D366; color:white; border-radius:12px; padding:14px; font-weight:600; border:none;">
-                    📲 Поделиться в WhatsApp
+                    📲 {% trans "Поделиться в WhatsApp" %}
                 </a>
-                <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text=Записывайся онлайн: {{ service.name }}"
+                <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}&text={% trans 'Записывайся онлайн' %}: {{ service.name }}"
                    target="_blank" class="btn w-100 mb-3"
                    style="background:#229ED9; color:white; border-radius:12px; padding:14px; font-weight:600; border:none;">
-                    ✈️ Поделиться в Telegram
+                    ✈️ {% trans "Поделиться в Telegram" %}
                 </a>
                 {% if user.is_authenticated %}
                 <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary w-100 mb-3" style="border-radius:12px; padding:14px;">
-                    📋 Мои записи
+                    📋 {% trans "Мои записи" %}
                 </a>
                 {% else %}
                 <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-3" style="border-radius:12px; padding:14px;">
-                    🔐 Войти для записи
+                    🔐 {% trans "Войти для записи" %}
                 </a>
                 {% endif %}
                 <a href="{% url 'service_list' %}" class="btn btn-outline-secondary w-100" style="border-radius:12px; padding:14px;">
-                    ← Все сервисы
+                    ← {% trans "Все сервисы" %}
                 </a>
             </div>
         </div>
