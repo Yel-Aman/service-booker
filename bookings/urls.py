@@ -13,4 +13,5 @@ urlpatterns = [
     path('delete-slots/<int:service_id>/', views.delete_slots, name='delete_slots'),
     path('review/<int:service_id>/', views.add_review, name='add_review'),
     path('connect-telegram/<int:service_id>/', views.connect_telegram, name='connect_telegram'),
+    path('analytics/<int:service_id>/', views.analytics, name='analytics'),
 ]

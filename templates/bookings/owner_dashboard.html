@@ -12,6 +12,7 @@
         </div>
         <div class="d-flex gap-2 flex-wrap">
             <a href="{% url 'edit_service' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">✏️ Редактировать</a>
+            <a href="{% url 'analytics' service.pk %}" class="btn btn-sm" style="background:rgba(99,255,180,0.1); color:#00c851; border:1px solid rgba(99,255,180,0.3); border-radius:10px;">📊 Аналитика</a>
             <a href="{% url 'generate_slots' service.pk %}" class="btn btn-primary btn-sm">⚙️ Создать слоты</a>
             <a href="{% url 'delete_slots' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">🗑️ Удалить слоты</a>
             <a href="{% url 'connect_telegram' service.pk %}" class="btn btn-sm" style="background:{% if service.telegram_chat_id %}rgba(99,255,180,0.15){% else %}rgba(255,255,255,0.08){% endif %}; color:{% if service.telegram_chat_id %}#63ffb4{% else %}white{% endif %}; border:1px solid {% if service.telegram_chat_id %}rgba(99,255,180,0.3){% else %}rgba(255,255,255,0.15){% endif %}; border-radius:10px;">
@@ -53,7 +54,7 @@
             <span style="font-weight:600; {% if not box.is_active %}opacity:0.4; text-decoration:line-through;{% endif %}">
                 {{ box.name }}
             </span>
-            <div class="d-flex gap-2 align-items-center">
+            <div class="d-flex gap-2 align-items-center flex-wrap">
                 <form method="post" action="{% url 'edit_box' box.pk %}" class="d-flex gap-1">
                     {% csrf_token %}
                     <input type="text" name="name" class="form-control form-control-sm" placeholder="{{ box.name }}" style="width:120px; border-radius:8px;">

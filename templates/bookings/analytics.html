@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Аналитика — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center gap-3 mb-4" data-aos="fade-up">
+    <a href="{% url 'owner_dashboard' service.pk %}" class="btn btn-outline-secondary btn-sm">← Назад</a>
+    <h3 style="font-weight:800; letter-spacing:-1px; margin:0;">📊 Аналитика</h3>
+    <span style="color:var(--text-muted); font-size:0.9rem;">{{ service.name }}</span>
+</div>
+
+<!-- Фильтр периода -->
+<div class="d-flex gap-2 mb-4" data-aos="fade-up">
+    {% for p, label in periods %}
+    <a href="?period={{ p }}" class="btn btn-sm {% if period == p %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+        {{ label }}
+    </a>
+    {% endfor %}
+</div>
+
+<!-- Общая статистика -->
+<div class="row mb-4">
+    <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="0">
+        <div class="card text-center p-4">
+            <div style="font-size:2rem; font-weight:800; color:#6c47ff;">{{ total }}</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Всего броней</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="card text-center p-4">
+            <div style="font-size:2rem; font-weight:800; color:#00c851;">{{ avg_rating|floatformat:1|default:"—" }}</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Средний рейтинг</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="card text-center p-4">
+            <div style="font-size:2rem; font-weight:800; color:#a855f7;">{{ top_clients|length }}</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Уникальных клиентов</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="card text-center p-4">
+            <div style="font-size:2rem; font-weight:800; color:#f59e0b;">{{ box_stats|length }}</div>
+            <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Активных боксов</div>
+        </div>
+    </div>
+</div>
+
+<!-- График броней по дням -->
+<div class="card mb-4" data-aos="fade-up">
+    <div class="card-body p-4">
+        <h6 style="font-weight:700; margin-bottom:20px;">📈 Брони по дням</h6>
+        <canvas id="bookingsChart" height="80"></canvas>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Популярные часы -->
+    <div class="col-md-4 mb-4" data-aos="fade-up">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; margin-bottom:16px;">⏰ Популярные часы</h6>
+                {% for hour, count in popular_hours %}
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span style="font-weight:600;">{{ hour }}</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <div style="width:80px; height:6px; background:var(--border); border-radius:3px;">
+                            <div style="width:{{ count }}0%; height:100%; background:linear-gradient(135deg,#6c47ff,#a855f7); border-radius:3px;"></div>
+                        </div>
+                        <span style="color:var(--text-muted); font-size:0.85rem;">{{ count }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <p style="color:var(--text-muted);">Нет данных</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Загрузка боксов -->
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; margin-bottom:16px;">🏠 Загрузка {{ service.category.slot_unit|lower }}ов</h6>
+                {% for box in box_stats %}
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span style="font-weight:600;">{{ box.slot__box__name }}</span>
+                    <span class="badge" style="background:rgba(108,71,255,0.2); color:#a855f7; padding:4px 10px;">{{ box.count }} броней</span>
+                </div>
+                {% empty %}
+                <p style="color:var(--text-muted);">Нет данных</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Топ клиенты -->
+    <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; margin-bottom:16px;">👥 Топ клиенты</h6>
+                {% for client in top_clients %}
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <div style="font-weight:600; font-size:0.9rem;">{{ client.user__username }}</div>
+                        {% if client.user__phone %}
+                        <div style="font-size:0.75rem; color:var(--text-muted);">{{ client.user__phone }}</div>
+                        {% endif %}
+                    </div>
+                    <span class="badge" style="background:rgba(0,200,81,0.1); color:#00c851; padding:4px 10px;">{{ client.count }}x</span>
+                </div>
+                {% empty %}
+                <p style="color:var(--text-muted);">Нет данных</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const data = {{ bookings_by_day|safe }};
+const labels = Object.keys(data);
+const values = Object.values(data);
+
+const ctx = document.getElementById('bookingsChart').getContext('2d');
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Брони',
+            data: values,
+            borderColor: '#6c47ff',
+            backgroundColor: 'rgba(108,71,255,0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: '#a855f7',
+            pointRadius: 4,
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            x: {
+                ticks: { color: 'rgba(255,255,255,0.4)', maxTicksLimit: 7 },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+            },
+            y: {
+                ticks: { color: 'rgba(255,255,255,0.4)', stepSize: 1 },
+                grid: { color: 'rgba(255,255,255,0.05)' }
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

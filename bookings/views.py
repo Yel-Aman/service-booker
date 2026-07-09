@@ -1,9 +1,11 @@
 import os
+import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import models
-from datetime import datetime, timedelta
+from django.db.models import Count, Avg
+from datetime import datetime, timedelta, date as date_type
 import requests
 from .models import TimeSlot, Booking, Review
 from services.models import Box, Service
@@ -156,7 +158,6 @@ def generate_slots(request, service_id):
         interval = int(request.POST.get('interval', 60))
         box_id = request.POST.get('box_id', 'all')
 
-        # Выбор конкретного бокса или всех
         if box_id == 'all':
             boxes = active_boxes
         else:
@@ -209,10 +210,7 @@ def delete_slots(request, service_id):
         time_from = request.POST.get('time_from')
         time_to = request.POST.get('time_to')
 
-        slots = TimeSlot.objects.filter(
-            box__service=service,
-            status='free'
-        )
+        slots = TimeSlot.objects.filter(box__service=service, status='free')
 
         if date_from:
             slots = slots.filter(date__gte=date_from)
@@ -276,3 +274,66 @@ def connect_telegram(request, service_id):
         return redirect('owner_dashboard', service_id=service.pk)
 
     return render(request, 'bookings/connect_telegram.html', {'service': service})
+
+
+@login_required
+def analytics(request, service_id):
+    service = get_object_or_404(Service, pk=service_id)
+    if request.user.role != 'business_owner':
+        messages.error(request, 'Доступ запрещён.')
+        return redirect('home')
+
+    period = request.GET.get('period', '30')
+    days = int(period)
+    date_from = date_type.today() - timedelta(days=days)
+
+    bookings = Booking.objects.filter(
+        slot__box__service=service,
+        slot__date__gte=date_from
+    ).exclude(slot__status='free')
+
+    total = bookings.count()
+
+    # Брони по дням для графика
+    bookings_by_day = {}
+    for i in range(days):
+        d = date_type.today() - timedelta(days=days-i-1)
+        bookings_by_day[str(d)] = 0
+    for b in bookings:
+        key = str(b.slot.date)
+        if key in bookings_by_day:
+            bookings_by_day[key] += 1
+
+    # Популярные часы
+    hours = {}
+    for b in bookings:
+        hour = b.slot.start_time.strftime('%H:00')
+        hours[hour] = hours.get(hour, 0) + 1
+    popular_hours = sorted(hours.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    # Топ клиенты
+    top_clients = bookings.filter(user__isnull=False).values(
+        'user__username', 'user__phone'
+    ).annotate(count=Count('id')).order_by('-count')[:10]
+
+    # Загрузка боксов
+    box_stats = bookings.values('slot__box__name').annotate(
+        count=Count('id')
+    ).order_by('-count')
+
+    # Средний рейтинг
+    avg_rating = service.reviews.aggregate(Avg('rating'))['rating__avg']
+
+    periods = [('7', '7 дней'), ('30', '30 дней'), ('90', '3 месяца'), ('365', '1 год')]
+
+    return render(request, 'bookings/analytics.html', {
+        'service': service,
+        'period': period,
+        'periods': periods,
+        'total': total,
+        'bookings_by_day': json.dumps(bookings_by_day),
+        'popular_hours': popular_hours,
+        'top_clients': top_clients,
+        'box_stats': box_stats,
+        'avg_rating': avg_rating,
+    })
