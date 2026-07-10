@@ -1,11 +1,11 @@
 {
-    "name": "ServiceBooker",
-    "short_name": "ServiceBooker",
+    "name": "kimsongi",
+    "short_name": "kimsongi",
     "description": "Найди и запишись на сервис онлайн",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#080b11",
-    "theme_color": "#6c47ff",
+    "background_color": "#ffffff",
+    "theme_color": "#0a1a3a",
     "orientation": "portrait",
     "icons": [
         {
