@@ -6,3 +6,6 @@ db.sqlite3
 *.log
 .DS_Store
 .env
+backups/
+staticfiles/
+media/

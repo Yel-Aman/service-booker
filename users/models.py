@@ -21,3 +21,26 @@ class CustomUser(AbstractUser):
     @property
     def is_business_owner(self):
         return self.role == 'business_owner'
+
+
+class RecentlyViewedService(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='recently_viewed',
+    )
+    service = models.ForeignKey(
+        'services.Service',
+        on_delete=models.CASCADE,
+        related_name='recent_views',
+    )
+    viewed_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-viewed_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'service'],
+                name='unique_recent_service_per_user',
+            ),
+        ]

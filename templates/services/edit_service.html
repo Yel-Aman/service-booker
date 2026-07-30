@@ -29,6 +29,18 @@
                         <label class="form-label">Телефон</label>
                         <input type="text" name="phone" class="form-control" value="{{ service.phone }}" required>
                     </div>
+                    <div class="mb-4">
+                        <label class="form-label">Ссылка на основную фотографию</label>
+                        <input type="url" name="image_url" class="form-control" value="{{ service.image_url }}">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4"><label class="form-label">Сайт</label><input type="url" name="website" class="form-control" value="{{ service.website }}"></div>
+                        <div class="col-md-6 mb-4"><label class="form-label">Instagram</label><input name="instagram" class="form-control" value="{{ service.instagram }}" placeholder="@username"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-4"><label class="form-label">Широта</label><input type="number" step="0.000001" name="latitude" class="form-control" value="{{ service.latitude|stringformat:'f' }}" required></div>
+                        <div class="col-md-6 mb-4"><label class="form-label">Долгота</label><input type="number" step="0.000001" name="longitude" class="form-control" value="{{ service.longitude|stringformat:'f' }}" required></div>
+                    </div>
                     <div class="row">
                         <div class="col-6 mb-4">
                             <label class="form-label">Открытие</label>

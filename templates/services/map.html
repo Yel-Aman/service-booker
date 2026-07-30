@@ -1,47 +1,183 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Карта сервисов — ServiceBooker{% endblock %}
+{% block title %}{% trans "Карта сервисов" %} — kimsongy{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-up">
-    <h4 style="font-weight:800; letter-spacing:-1px; color:white;">🗺️ Карта сервисов</h4>
-    <a href="{% url 'service_list' %}" class="btn btn-outline-secondary btn-sm">Список →</a>
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4" data-aos="fade-up">
+    <div>
+        <h4 style="font-weight:800; letter-spacing:-1px; margin-bottom:4px;">🗺️ {% trans "Карта сервисов" %}</h4>
+        <p style="color:var(--text-muted); margin:0; font-size:0.9rem;">
+            📍 {{ current_city.name_ru }}
+            {% if has_filters %} · {{ service_count }} {% trans "сервисов" %}{% endif %}
+        </p>
+    </div>
+    <a href="{% url 'service_list' %}" class="btn btn-outline-secondary btn-sm">{% trans "Показать списком" %} →</a>
 </div>
 
-<div style="border-radius:24px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); box-shadow:0 8px 32px rgba(0,0,0,0.4);" data-aos="fade-up">
-    <div id="map" style="width:100%; height:600px;"></div>
+<form method="get" class="card mb-4" data-no-loader>
+    <div class="card-body p-3">
+        <div class="row g-2">
+            <div class="col-lg-3 col-md-6">
+                <select name="category" class="form-control" aria-label="{% trans 'Категория' %}">
+                    <option value="">{% trans "Все категории" %}</option>
+                    {% for category in categories %}
+                    <option value="{{ category.pk }}" {% if selected_category == category.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <select name="service" class="form-control" aria-label="{% trans 'Сервис' %}">
+                    <option value="">{% trans "Выбрать сервис" %}</option>
+                    {% for item in city_services %}
+                    <option value="{{ item.pk }}" {% if selected_service == item.pk|stringformat:"s" %}selected{% endif %}>
+                        {{ item.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-4 col-md-8">
+                <input type="search" name="q" value="{{ query }}" class="form-control"
+                       placeholder="{% trans 'Название или адрес' %}">
+            </div>
+            <div class="col-lg-2 col-md-4 d-flex gap-2">
+                <button class="btn btn-primary flex-grow-1">{% trans "Найти" %}</button>
+                {% if has_filters %}
+                <a href="{% url 'service_map' %}" class="btn btn-outline-secondary" aria-label="{% trans 'Сбросить' %}">×</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="map-shell" data-aos="fade-up">
+    <div id="map"></div>
+    <div class="map-hint">🖱️ {% trans "Перетаскивайте карту и изменяйте масштаб" %}</div>
 </div>
+
+<style>
+    .map-shell {
+        position:relative;
+        border-radius:24px;
+        overflow:hidden;
+        border:1px solid var(--border);
+        box-shadow:0 12px 42px rgba(0,0,0,0.25);
+        background:var(--bg-card);
+    }
+    #map { width:100%; height:min(68vh, 680px); min-height:480px; }
+    .map-hint {
+        position:absolute;
+        left:50%;
+        bottom:18px;
+        transform:translateX(-50%);
+        z-index:500;
+        padding:8px 14px;
+        border-radius:50px;
+        background:rgba(15,18,25,0.88);
+        color:white;
+        font-size:0.76rem;
+        box-shadow:0 6px 20px rgba(0,0,0,0.25);
+        pointer-events:none;
+        white-space:nowrap;
+    }
+    .service-pin {
+        width:42px;
+        height:42px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border-radius:14px 14px 14px 4px;
+        transform:rotate(-45deg);
+        color:white;
+        background:linear-gradient(135deg,#0a3a8a,#2563eb);
+        border:3px solid rgba(255,255,255,0.9);
+        box-shadow:0 6px 18px rgba(37,99,235,0.45);
+    }
+    .service-pin span { transform:rotate(45deg); font-size:18px; }
+    .leaflet-popup-content-wrapper {
+        border-radius:16px;
+        box-shadow:0 12px 36px rgba(0,0,0,0.22);
+    }
+    .leaflet-popup-content { margin:16px; }
+    .map-empty {
+        position:absolute;
+        top:18px;
+        left:50%;
+        transform:translateX(-50%);
+        z-index:500;
+        background:rgba(15,18,25,0.9);
+        color:white;
+        padding:10px 16px;
+        border-radius:12px;
+        font-size:0.85rem;
+    }
+    @media (max-width:768px) {
+        .map-shell { border-radius:16px; }
+        #map { height:calc(100vh - 220px); min-height:480px; }
+        .map-hint { bottom:12px; max-width:calc(100% - 24px); overflow:hidden; text-overflow:ellipsis; }
+    }
+</style>
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{{ services_data|json_script:"services-data" }}
 
 <script>
-    const services = {{ services_json|safe }};
+    const services = JSON.parse(document.getElementById('services-data').textContent);
+    const cityCenter = {{ city_center_json|safe }};
+    const map = L.map('map', {
+        zoomControl: false,
+        scrollWheelZoom: true,
+    }).setView(cityCenter, 13);
 
-    const map = L.map('map').setView([47.1067, 51.9214], 13);
-
+    L.control.zoom({position: 'bottomright'}).addTo(map);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19,
     }).addTo(map);
 
     const icon = L.divIcon({
-        html: `<div style="background:linear-gradient(135deg,#6c47ff,#a855f7); width:36px; height:36px; border-radius:50% 50% 50% 0; transform:rotate(-45deg); border:3px solid rgba(255,255,255,0.3); box-shadow:0 4px 16px rgba(108,71,255,0.6);"></div>`,
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        className: ''
+        html: '<div class="service-pin"><span>✦</span></div>',
+        iconSize: [42, 42],
+        iconAnchor: [21, 42],
+        popupAnchor: [0, -42],
+        className: '',
     });
 
-    services.forEach(service => {
+    const markers = [];
+    services.forEach((service) => {
         const marker = L.marker([service.lat, service.lng], {icon}).addTo(map);
+        markers.push(marker);
+        const googleUrl = `https://www.google.com/maps/search/?api=1&query=${service.lat},${service.lng}`;
+        const twoGisUrl = `https://2gis.kz/search/${encodeURIComponent(service.address)}`;
         marker.bindPopup(`
-            <div style="font-family:Inter,sans-serif; min-width:200px; padding:4px;">
-                <div style="font-size:0.75rem; color:#6c47ff; font-weight:600; margin-bottom:4px;">${service.category}</div>
-                <div style="font-weight:700; font-size:1rem; margin-bottom:8px; color:#1a1a1a;">${service.name}</div>
-                <div style="font-size:0.85rem; color:#888; margin-bottom:4px;">📍 ${service.address}</div>
-                <div style="font-size:0.85rem; color:#888; margin-bottom:12px;">📞 ${service.phone}</div>
-                <a href="${service.url}" style="background:linear-gradient(135deg,#6c47ff,#a855f7); color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.85rem; font-weight:600; display:block; text-align:center;">Записаться →</a>
+            <div style="font-family:Inter,sans-serif; min-width:220px;">
+                <div style="font-size:0.72rem; color:#2563eb; font-weight:700; margin-bottom:5px; text-transform:uppercase;">${service.category}</div>
+                <div style="font-weight:800; font-size:1.05rem; margin-bottom:9px; color:#16181d;">${service.name}</div>
+                <div style="font-size:0.84rem; color:#68707d; margin-bottom:5px;">📍 ${service.address}</div>
+                <div style="font-size:0.84rem; color:#68707d; margin-bottom:14px;">📞 ${service.phone}</div>
+                <a href="${service.url}" style="background:#2563eb; color:white; padding:9px 14px; border-radius:9px; text-decoration:none; font-size:0.82rem; font-weight:700; display:block; text-align:center; margin-bottom:8px;">{% trans "Открыть сервис" %} →</a>
+                <div style="display:flex; gap:6px;">
+                    <a href="${googleUrl}" target="_blank" rel="noopener" style="flex:1; color:#2563eb; text-align:center; font-size:0.76rem; text-decoration:none; font-weight:600;">Google Maps</a>
+                    <a href="${twoGisUrl}" target="_blank" rel="noopener" style="flex:1; color:#2563eb; text-align:center; font-size:0.76rem; text-decoration:none; font-weight:600;">2GIS</a>
+                </div>
             </div>
-        `, {maxWidth: 250});
+        `, {maxWidth: 290});
     });
+
+    const hasFilters = {{ has_filters|yesno:"true,false" }};
+    if (markers.length) {
+        const group = L.featureGroup(markers);
+        map.fitBounds(group.getBounds(), {padding:[55,55], maxZoom:15});
+    } else {
+        const empty = document.createElement('div');
+        empty.className = 'map-empty';
+        empty.textContent = hasFilters
+            ? '{% trans "По вашему запросу ничего не найдено" %}'
+            : '{% trans "Выберите категорию, сервис или введите название" %}';
+        document.querySelector('.map-shell').appendChild(empty);
+    }
 </script>
 {% endblock %}

@@ -24,6 +24,28 @@
 
 <div class="row">
     <div class="col-md-8">
+        {% if offerings %}
+        <div class="card mb-4" data-aos="fade-up">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; margin-bottom:18px;">💳 Услуги и цены</h6>
+                {% for offering in offerings %}
+                <div class="d-flex justify-content-between align-items-start gap-3 p-3 mb-2" style="background:var(--bg);border:1px solid var(--border);border-radius:12px;">
+                    <div><strong>{{ offering.name }}</strong>{% if offering.description %}<div class="text-muted" style="font-size:.82rem;">{{ offering.description }}</div>{% endif %}</div>
+                    <div class="text-end" style="white-space:nowrap;"><strong style="color:#2563eb;">{{ offering.price }} ₸</strong><div class="text-muted" style="font-size:.78rem;">{{ offering.duration_minutes }} мин.</div></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if employees %}
+        <div class="card mb-4" data-aos="fade-up">
+            <div class="card-body p-4">
+                <h6 style="font-weight:700; margin-bottom:18px;">👥 Специалисты</h6>
+                <div class="row g-2">{% for employee in employees %}<div class="col-md-6"><div class="p-3" style="background:var(--bg);border:1px solid var(--border);border-radius:12px;"><strong>{{ employee.name }}</strong><div class="text-muted" style="font-size:.82rem;">{{ employee.specialization }}</div></div></div>{% endfor %}</div>
+            </div>
+        </div>
+        {% endif %}
         <!-- Информация -->
         <div class="card mb-4" data-aos="fade-up">
             <div class="card-body p-4">
@@ -105,6 +127,9 @@
                         <span style="font-size:0.75rem; color:var(--text-muted);">{{ review.created_at|date:"d.m.Y" }}</span>
                     </div>
                     <p style="font-size:0.9rem; margin:0;">{{ review.comment }}</p>
+                    {% if review.owner_response %}
+                    <div class="mt-2 p-2" style="background:rgba(37,99,235,.08);border-radius:8px;font-size:.85rem;"><strong>Ответ владельца:</strong> {{ review.owner_response }}</div>
+                    {% endif %}
                 </div>
                 {% empty %}
                 <div class="text-center py-4">
@@ -122,6 +147,9 @@
                 <h6 style="font-weight:700; margin-bottom:20px;">{% trans "Быстрые действия" %}</h6>
                 <a href="tel:{{ service.phone }}" class="btn btn-success w-100 mb-3" style="border-radius:12px; padding:14px;">
                     📞 {% trans "Позвонить" %}
+                </a>
+                <a href="{% url 'service_map' %}?service={{ service.pk }}" class="btn btn-outline-secondary w-100 mb-3" style="border-radius:12px; padding:14px;">
+                    🗺️ {% trans "Посмотреть на карте" %}
                 </a>
                 {% if user.is_authenticated and user.role == 'client' %}
                 <form method="post" action="{% url 'toggle_favorite' service.pk %}">

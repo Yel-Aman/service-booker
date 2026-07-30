@@ -11,11 +11,13 @@ class TimeSlotAdmin(admin.ModelAdmin):
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
-    list_display = ('user', 'slot', 'created_at')
+    list_display = ('user', 'slot', 'offering', 'employee', 'status', 'created_at')
+    list_filter = ('status', 'offering', 'employee')
     search_fields = ('user__username',)
 
 
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('user', 'service', 'rating', 'created_at')
-    list_filter = ('rating', 'service')
+    list_display = ('user', 'service', 'rating', 'is_approved', 'created_at')
+    list_filter = ('rating', 'service', 'is_approved')
+    list_editable = ('is_approved',)

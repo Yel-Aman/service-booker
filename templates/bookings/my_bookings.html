@@ -32,21 +32,23 @@
             </div>
             <div class="text-end">
                 <span class="badge mb-2 d-block"
-                    style="{% if booking.slot.status == 'booked' %}background:rgba(108,71,255,0.2); color:#a855f7;
-                    {% elif booking.slot.status == 'in_progress' %}background:rgba(245,158,11,0.2); color:#f59e0b;
+                    style="{% if booking.status == 'confirmed' %}background:rgba(108,71,255,0.2); color:#a855f7;
+                    {% elif booking.status == 'in_progress' %}background:rgba(245,158,11,0.2); color:#f59e0b;
+                    {% elif booking.status == 'cancelled' or booking.status == 'no_show' %}background:rgba(239,68,68,.12);color:#ef4444;
                     {% else %}background:rgba(0,200,81,0.1); color:#00c851;{% endif %}
                     padding:6px 12px; font-size:0.8rem; border-radius:8px;">
-                    {% if booking.slot.status == 'booked' %}{% trans "Забронировано" %}
-                    {% elif booking.slot.status == 'in_progress' %}{% trans "В процессе" %}
-                    {% else %}{% trans "Завершено" %}{% endif %}
+                    {{ booking.get_status_display }}
                 </span>
-                {% if booking.slot.status == 'booked' %}
+                {% if booking.status == 'confirmed' %}
+                <a href="{% url 'reschedule_booking' booking.pk %}" class="btn btn-sm btn-outline-secondary mb-1">🔄 Перенести</a>
                 <form method="post" action="{% url 'cancel_booking' booking.pk %}">
                     {% csrf_token %}
                     <button class="btn btn-sm" style="background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); border-radius:8px; font-size:0.8rem;">
                         {% trans "Отменить" %}
                     </button>
                 </form>
+                {% else %}
+                <a href="{% url 'service_detail' booking.slot.box.service.pk %}" class="btn btn-sm btn-outline-secondary">↻ Повторить</a>
                 {% endif %}
             </div>
         </div>

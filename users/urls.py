@@ -8,5 +8,6 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('connect-telegram/', views.connect_client_telegram, name='connect_client_telegram'),
     path('favorites/', views.favorites, name='favorites'),
+    path('recent/', views.recently_viewed, name='recently_viewed'),
     path('favorites/<int:service_id>/toggle/', views.toggle_favorite, name='toggle_favorite'),
 ]

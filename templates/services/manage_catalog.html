@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Услуги и сотрудники — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <div>
+        <h2 style="font-weight:800;">🧩 Услуги и сотрудники</h2>
+        <p class="text-muted mb-0">{{ service.name }}</p>
+    </div>
+    <a href="{% url 'owner_dashboard' service.pk %}" class="btn btn-outline-secondary">← В панель</a>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100"><div class="card-body p-4">
+            <h5>Добавить услугу</h5>
+            <form method="post">
+                {% csrf_token %}<input type="hidden" name="action" value="add_offering">
+                <input class="form-control mb-2" name="name" placeholder="Название услуги" required>
+                <textarea class="form-control mb-2" name="description" placeholder="Описание" rows="2"></textarea>
+                <div class="row g-2 mb-3">
+                    <div class="col-6"><input class="form-control" type="number" min="0" step="0.01" name="price" placeholder="Цена, ₸" required></div>
+                    <div class="col-6"><input class="form-control" type="number" min="5" max="1440" name="duration_minutes" value="60" placeholder="Минуты" required></div>
+                </div>
+                <label class="form-label">Доступна в ресурсах</label>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    {% for box in service.boxes.all %}
+                    <label class="btn btn-outline-secondary btn-sm"><input type="checkbox" name="boxes" value="{{ box.pk }}"> {{ box.name }}</label>
+                    {% endfor %}
+                </div>
+                <button class="btn btn-primary w-100">Добавить услугу</button>
+            </form>
+            <hr style="border-color:var(--border);">
+            {% for item in offerings %}
+            <div class="p-3 mb-2" style="background:var(--bg);border:1px solid var(--border);border-radius:12px;">
+                <div class="d-flex justify-content-between gap-2">
+                    <div><strong>{{ item.name }}</strong><div class="text-muted" style="font-size:.82rem;">{{ item.price }} ₸ · {{ item.duration_minutes }} мин.</div></div>
+                    <form method="post" action="{% url 'delete_catalog_item' 'offering' item.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">×</button></form>
+                </div>
+            </div>
+            {% empty %}<p class="text-muted">Услуг пока нет.</p>{% endfor %}
+        </div></div>
+    </div>
+
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100"><div class="card-body p-4">
+            <h5>Добавить сотрудника</h5>
+            <form method="post">
+                {% csrf_token %}<input type="hidden" name="action" value="add_employee">
+                <input class="form-control mb-2" name="name" placeholder="Имя сотрудника" required>
+                <input class="form-control mb-2" name="specialization" placeholder="Специализация">
+                <input class="form-control mb-2" name="phone" placeholder="Телефон">
+                <input class="form-control mb-3" type="url" name="photo_url" placeholder="Ссылка на фотографию">
+                <label class="form-label">Ресурсы</label>
+                <div class="d-flex flex-wrap gap-2 mb-3">{% for box in service.boxes.all %}<label class="btn btn-outline-secondary btn-sm"><input type="checkbox" name="boxes" value="{{ box.pk }}"> {{ box.name }}</label>{% endfor %}</div>
+                <label class="form-label">Услуги</label>
+                <div class="d-flex flex-wrap gap-2 mb-3">{% for item in offerings %}<label class="btn btn-outline-secondary btn-sm"><input type="checkbox" name="offerings" value="{{ item.pk }}"> {{ item.name }}</label>{% endfor %}</div>
+                <button class="btn btn-primary w-100">Добавить сотрудника</button>
+            </form>
+            <hr style="border-color:var(--border);">
+            {% for item in employees %}
+            <div class="d-flex justify-content-between p-3 mb-2" style="background:var(--bg);border:1px solid var(--border);border-radius:12px;">
+                <div><strong>{{ item.name }}</strong><div class="text-muted" style="font-size:.82rem;">{{ item.specialization|default:"Специализация не указана" }}</div></div>
+                <form method="post" action="{% url 'delete_catalog_item' 'employee' item.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">×</button></form>
+            </div>
+            {% empty %}<p class="text-muted">Сотрудников пока нет.</p>{% endfor %}
+        </div></div>
+    </div>
+</div>
+
+<div class="card mb-4"><div class="card-body p-4">
+    <h5>📅 Особые дни, праздники и отпуск</h5>
+    <form method="post" class="row g-2 align-items-end">
+        {% csrf_token %}<input type="hidden" name="action" value="add_exception">
+        <div class="col-md-2"><label class="form-label">Дата</label><input type="date" name="date" class="form-control" required></div>
+        <div class="col-md-2"><label class="form-label">Ресурс</label><select name="box_id" class="form-control"><option value="">Весь бизнес</option>{% for box in service.boxes.all %}<option value="{{ box.pk }}">{{ box.name }}</option>{% endfor %}</select></div>
+        <div class="col-md-2"><label class="form-label">С</label><input type="time" name="start_time" class="form-control"></div>
+        <div class="col-md-2"><label class="form-label">До</label><input type="time" name="end_time" class="form-control"></div>
+        <div class="col-md-2"><label class="form-label">Причина</label><input name="label" class="form-control" placeholder="Праздник"></div>
+        <div class="col-md-2"><label class="form-label d-block"><input type="checkbox" name="is_closed" checked> Закрыто</label><button class="btn btn-primary w-100">Добавить</button></div>
+    </form>
+    <div class="mt-3">
+        {% for item in exceptions %}
+        <div class="d-flex justify-content-between align-items-center p-2">
+            <span>{{ item.date }} · {% if item.box %}{{ item.box.name }}{% else %}весь бизнес{% endif %} · {% if item.is_closed %}закрыто{% else %}{{ item.start_time }}–{{ item.end_time }}{% endif %} {{ item.label }}</span>
+            <form method="post" action="{% url 'delete_catalog_item' 'exception' item.pk %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">Удалить</button></form>
+        </div>
+        {% endfor %}
+    </div>
+</div></div>
+{% endblock %}

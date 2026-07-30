@@ -5,10 +5,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import RegisterForm
 from services.models import Service
+from .models import RecentlyViewedService
+from config.throttling import is_rate_limited
 
 
 def register(request):
     if request.method == 'POST':
+        if is_rate_limited(request, 'register', 10, 3600):
+            messages.error(request, 'Слишком много попыток. Попробуйте позже.')
+            return render(request, 'users/register.html', {'form': RegisterForm()})
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
@@ -22,6 +27,9 @@ def register(request):
 
 def login_view(request):
     if request.method == 'POST':
+        if is_rate_limited(request, 'login', 20, 900):
+            messages.error(request, 'Слишком много попыток входа. Попробуйте позже.')
+            return render(request, 'users/login.html', {'form': AuthenticationForm()})
         username = request.POST.get('username', '').lower()
         password = request.POST.get('password', '')
         user = authenticate(request, username=username, password=password)
@@ -81,3 +89,11 @@ def toggle_favorite(request, service_id):
 def favorites(request):
     services = request.user.favorites.all()
     return render(request, 'users/favorites.html', {'services': services})
+
+
+@login_required
+def recently_viewed(request):
+    services = Service.objects.filter(
+        recent_views__user=request.user,
+    ).order_by('-recent_views__viewed_at')[:20]
+    return render(request, 'users/recently_viewed.html', {'services': services})

@@ -11,4 +11,8 @@ urlpatterns = [
     path('box/<int:box_id>/toggle/', views.toggle_box, name='toggle_box'),
     path('box/<int:box_id>/delete/', views.delete_box, name='delete_box'),
     path('box/<int:box_id>/edit/', views.edit_box, name='edit_box'),
+    path('services/<int:service_id>/schedule/', views.manage_schedule, name='manage_schedule'),
+    path('schedule-break/<int:break_id>/delete/', views.delete_schedule_break, name='delete_schedule_break'),
+    path('services/<int:service_id>/catalog/', views.manage_catalog, name='manage_catalog'),
+    path('catalog/<str:kind>/<int:item_id>/delete/', views.delete_catalog_item, name='delete_catalog_item'),
 ]

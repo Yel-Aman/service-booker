@@ -1,20 +1,33 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Панель владельца — {{ service.name }}{% endblock %}
+{% block title %}{% trans "Панель владельца" %} — {{ service.name }}{% endblock %}
 
 {% block content %}
+{% if owner_services.count > 1 %}
+<div class="card mb-3"><div class="card-body p-3 d-flex align-items-center gap-2 flex-wrap">
+    <span class="text-muted" style="font-size:.85rem;">Ваши бизнесы:</span>
+    {% for owner_service in owner_services %}
+    <a href="{% url 'owner_dashboard' owner_service.pk %}" class="btn btn-sm {% if owner_service.pk == service.pk %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+        {{ owner_service.name }}
+    </a>
+    {% endfor %}
+</div></div>
+{% endif %}
 <!-- Header -->
 <div style="background:linear-gradient(135deg, rgba(108,71,255,0.3), rgba(168,85,247,0.2)); border:1px solid rgba(108,71,255,0.3); border-radius:24px; padding:40px; margin-bottom:32px; color:white;" data-aos="fade-up">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div>
-            <p style="opacity:0.5; font-size:0.8rem; text-transform:uppercase; letter-spacing:3px; margin-bottom:8px; color:#63ffb4;">Панель управления</p>
+            <p style="opacity:0.5; font-size:0.8rem; text-transform:uppercase; letter-spacing:3px; margin-bottom:8px; color:#63ffb4;">{% trans "Панель управления" %}</p>
             <h2 style="font-weight:800; letter-spacing:-1px; margin:0; color:white;">{{ service.name }}</h2>
         </div>
         <div class="d-flex gap-2 flex-wrap">
-            <a href="{% url 'edit_service' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">✏️ Редактировать</a>
-            <a href="{% url 'analytics' service.pk %}" class="btn btn-sm" style="background:rgba(99,255,180,0.1); color:#00c851; border:1px solid rgba(99,255,180,0.3); border-radius:10px;">📊 Аналитика</a>
-            <a href="{% url 'generate_slots' service.pk %}" class="btn btn-primary btn-sm">⚙️ Создать слоты</a>
-            <a href="{% url 'delete_slots' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">🗑️ Удалить слоты</a>
+            <a href="{% url 'edit_service' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">✏️ {% trans "Редактировать" %}</a>
+            <a href="{% url 'analytics' service.pk %}" class="btn btn-sm" style="background:rgba(99,255,180,0.1); color:#00c851; border:1px solid rgba(99,255,180,0.3); border-radius:10px;">📊 {% trans "Аналитика" %}</a>
+            <a href="{% url 'generate_slots' service.pk %}" class="btn btn-primary btn-sm">⚙️ {% trans "Создать слоты" %}</a>
+            <a href="{% url 'manage_schedule' service.pk %}" class="btn btn-sm" style="background:rgba(99,255,180,0.1); color:#63ffb4; border:1px solid rgba(99,255,180,0.3); border-radius:10px;">🗓️ {% trans "График работы" %}</a>
+            <a href="{% url 'manage_catalog' service.pk %}" class="btn btn-sm" style="background:rgba(37,99,235,0.12); color:#60a5fa; border:1px solid rgba(37,99,235,0.3); border-radius:10px;">🧩 Услуги и сотрудники</a>
+            <a href="{% url 'delete_slots' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">🗑️ {% trans "Удалить слоты" %}</a>
             <a href="{% url 'connect_telegram' service.pk %}" class="btn btn-sm" style="background:{% if service.telegram_chat_id %}rgba(99,255,180,0.15){% else %}rgba(255,255,255,0.08){% endif %}; color:{% if service.telegram_chat_id %}#63ffb4{% else %}white{% endif %}; border:1px solid {% if service.telegram_chat_id %}rgba(99,255,180,0.3){% else %}rgba(255,255,255,0.15){% endif %}; border-radius:10px;">
                 {% if service.telegram_chat_id %}✅ Telegram{% else %}📱 Подключить Telegram{% endif %}
             </a>
@@ -27,19 +40,19 @@
     <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="0">
         <div class="card text-center p-4">
             <div style="font-size:2.5rem; font-weight:800; color:#6c47ff;">{{ total_bookings }}</div>
-            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">Всего броней</div>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">{% trans "Всего броней" %}</div>
         </div>
     </div>
     <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="100">
         <div class="card text-center p-4">
             <div style="font-size:2.5rem; font-weight:800; color:#f59e0b;">{{ in_progress }}</div>
-            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">В процессе</div>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">{% trans "В процессе" %}</div>
         </div>
     </div>
     <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="200">
         <div class="card text-center p-4">
             <div style="font-size:2.5rem; font-weight:800; color:#00c851;">{{ free_slots }}</div>
-            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">Свободных слотов</div>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">{% trans "Свободных слотов" %}</div>
         </div>
     </div>
 </div>
@@ -49,7 +62,7 @@
     <div class="card-body p-4">
         <h6 style="font-weight:700; margin-bottom:20px;">{{ service.category.slot_unit }}</h6>
         {% for box in service.boxes.all %}
-        <div class="d-flex justify-content-between align-items-center p-3 mb-2"
+        <div id="box-row-{{ box.pk }}" class="d-flex justify-content-between align-items-center p-3 mb-2"
              style="background:var(--bg); border-radius:14px; border:1px solid var(--border);">
             <span style="font-weight:600; {% if not box.is_active %}opacity:0.4; text-decoration:line-through;{% endif %}">
                 {{ box.name }}
@@ -60,12 +73,12 @@
                     <input type="text" name="name" class="form-control form-control-sm" placeholder="{{ box.name }}" style="width:120px; border-radius:8px;">
                     <button class="btn btn-sm" style="background:rgba(108,71,255,0.2); color:#a855f7; border:1px solid rgba(108,71,255,0.3); border-radius:8px;">✏️</button>
                 </form>
-                <form method="post" action="{% url 'toggle_box' box.pk %}">
+                <form method="post" action="{% url 'toggle_box' box.pk %}" data-async-toggle data-no-loader>
                     {% csrf_token %}
                     {% if box.is_active %}
-                        <button class="btn btn-sm" style="background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); border-radius:8px;">🔴 Закрыть</button>
+                        <button class="btn btn-sm" style="background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); border-radius:8px;">🔴 {% trans "Закрыть" %}</button>
                     {% else %}
-                        <button class="btn btn-sm" style="background:rgba(0,200,81,0.1); color:#00c851; border:1px solid rgba(0,200,81,0.3); border-radius:8px;">🟢 Открыть</button>
+                        <button class="btn btn-sm" style="background:rgba(0,200,81,0.1); color:#00c851; border:1px solid rgba(0,200,81,0.3); border-radius:8px;">🟢 {% trans "Открыть" %}</button>
                     {% endif %}
                 </form>
                 <form method="post" action="{% url 'delete_box' box.pk %}">
@@ -87,7 +100,7 @@
 </div>
 
 <!-- Активные брони -->
-<h6 style="font-weight:700; margin-bottom:16px;" data-aos="fade-up">Активные брони</h6>
+<h6 style="font-weight:700; margin-bottom:16px;" data-aos="fade-up">{% trans "Активные брони" %}</h6>
 {% for booking in bookings %}
 <div class="card mb-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
     <div class="card-body p-4 d-flex justify-content-between align-items-center">
@@ -122,6 +135,16 @@
                 <button class="btn btn-sm" style="background:rgba(0,200,81,0.1); color:#00c851; border:1px solid rgba(0,200,81,0.3); border-radius:10px; padding:8px 16px; font-weight:600;">✅ Завершить</button>
             </form>
             {% endif %}
+            {% if booking.status == 'confirmed' or booking.status == 'in_progress' %}
+            <form method="post" action="{% url 'owner_booking_status' booking.pk 'no_show' %}">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-secondary">Не пришёл</button>
+            </form>
+            <form method="post" action="{% url 'owner_booking_status' booking.pk 'cancelled' %}">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-outline-danger">Отменить</button>
+            </form>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -131,4 +154,47 @@
     <p style="color:var(--text-muted); margin:0;">Активных броней нет</p>
 </div>
 {% endfor %}
+
+{% if service_reviews %}
+<h6 class="mt-4 mb-3" style="font-weight:700;">⭐ Последние отзывы</h6>
+{% for review in service_reviews %}
+<div class="card mb-2"><div class="card-body p-3">
+    <div><strong>{{ review.user.username }}</strong> · {{ review.rating }}⭐</div>
+    <p class="my-2">{{ review.comment }}</p>
+    <form method="post" action="{% url 'respond_review' review.pk %}" class="d-flex gap-2">
+        {% csrf_token %}
+        <input class="form-control" name="owner_response" value="{{ review.owner_response }}" placeholder="Ответ владельца">
+        <button class="btn btn-primary">Ответить</button>
+    </form>
+</div></div>
+{% endfor %}
+{% endif %}
+<script>
+document.querySelectorAll('[data-async-toggle]').forEach((form) => {
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const button = form.querySelector('button');
+        button.disabled = true;
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+            });
+            if (!response.ok) throw new Error('Request failed');
+            const data = await response.json();
+            const row = form.closest('[id^="box-row-"]');
+            const name = row.querySelector('span');
+            name.style.opacity = data.is_active ? '1' : '0.4';
+            name.style.textDecoration = data.is_active ? 'none' : 'line-through';
+            button.textContent = data.is_active ? '🔴 {% trans "Закрыть" %}' : '🟢 {% trans "Открыть" %}';
+            button.style.color = data.is_active ? '#f59e0b' : '#00c851';
+        } catch (error) {
+            window.location.reload();
+        } finally {
+            button.disabled = false;
+        }
+    });
+});
+</script>
 {% endblock %}

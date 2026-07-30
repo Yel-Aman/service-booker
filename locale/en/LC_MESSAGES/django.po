@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ServiceBooker\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-09 15:50+0500\n"
+"POT-Creation-Date: 2026-07-30 12:29+0500\n"
 "PO-Revision-Date: 2026-07-09 15:50+0500\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
@@ -16,278 +16,632 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
 
+#: .\config\settings.py:124
 msgid "Русский"
 msgstr "Russian"
 
+#: .\config\settings.py:125
 msgid "Қазақша"
 msgstr "Kazakh"
 
+#: .\config\settings.py:126
 msgid "English"
 msgstr "English"
 
+#: .\templates\base.html:181
 msgid "Выберите ваш город"
 msgstr "Select your city"
 
+#: .\templates\base.html:182
 msgid "Мы покажем сервисы рядом с вами"
 msgstr "We will show services near you"
 
+#: .\templates\base.html:184
 msgid "Поиск города..."
 msgstr "Search city..."
 
+#: .\templates\base.html:249 .\templates\services\home.html:4
 msgid "Сервисы"
 msgstr "Services"
 
+#: .\templates\base.html:250
 msgid "Карта"
 msgstr "Map"
 
+#: .\templates\base.html:264
 msgid "Выйти"
 msgstr "Logout"
 
+#: .\templates\base.html:266 .\templates\users\login.html:33
+#: .\templates\users\register.html:37
 msgid "Войти"
 msgstr "Login"
 
+#: .\templates\base.html:267 .\templates\services\home.html:32
+#: .\templates\users\register.html:4
 msgid "Регистрация"
 msgstr "Register"
 
-msgid "Казахстан"
-msgstr "Kazakhstan"
+#: .\templates\bookings\generate_slots.html:4
+#: .\templates\bookings\generate_slots.html:11
+#: .\templates\bookings\generate_slots.html:49
+#: .\templates\bookings\owner_dashboard.html:17
+msgid "Создать слоты"
+msgstr "Create slots"
 
-msgid "Найди и запишись"
-msgstr "Find and book"
+#: .\templates\bookings\generate_slots.html:18
+msgid ""
+"Слоты будут созданы по недельному графику с учётом выходных, индивидуальных "
+"часов и перерывов."
+msgstr ""
+"Slots will be created using the weekly schedule, including days off, "
+"individual hours, and breaks."
 
-msgid "онлайн за 30 секунд"
-msgstr "online in 30 seconds"
+#: .\templates\bookings\generate_slots.html:20
+msgid "Проверить график работы"
+msgstr "Check work schedule"
 
-msgid "Автомойки, СТО, салоны красоты и многое другое в"
-msgstr "Car washes, auto services, beauty salons and more in"
+#: .\templates\bookings\generate_slots.html:27
+msgid "Все ресурсы"
+msgstr "All resources"
 
-msgid "Найти сервис"
-msgstr "Find service"
+#: .\templates\bookings\generate_slots.html:34
+msgid "Дата с"
+msgstr "Start date"
 
-msgid "Категории"
-msgstr "Categories"
+#: .\templates\bookings\generate_slots.html:38
+msgid "Дата по"
+msgstr "End date"
 
-msgid "Онлайн запись"
-msgstr "Online booking"
+#: .\templates\bookings\generate_slots.html:42
+msgid "Интервал (минуты)"
+msgstr "Interval (minutes)"
 
-msgid "Время записи"
-msgstr "Booking time"
+#: .\templates\bookings\generate_slots.html:45
+msgid "Например: 30 для мойки · 60 для салона · 120 для СТО"
+msgstr ""
+"For example: 30 for a car wash · 60 for a salon · 120 for a service station"
 
-msgid "с"
-msgstr "s"
+#: .\templates\bookings\generate_slots.html:52
+msgid "Назад"
+msgstr "Back"
 
-msgid "Как это работает"
-msgstr "How it works"
-
-msgid "Найди сервис"
-msgstr "Find a service"
-
-msgid "Выбери категорию и найди ближайший сервис"
-msgstr "Choose a category and find the nearest service"
-
-msgid "Выбери время"
-msgstr "Choose time"
-
-msgid "Выбери свободный бокс и удобное время"
-msgstr "Choose a free slot and convenient time"
-
-msgid "Готово!"
-msgstr "Done!"
-
-msgid "Запись подтверждена — просто приезжай"
-msgstr "Booking confirmed — just come"
-
-msgid "Популярные сервисы"
-msgstr "Popular services"
-
-msgid "Записаться"
-msgstr "Book now"
-
-msgid "Вы владелец бизнеса?"
-msgstr "Are you a business owner?"
-
-msgid "Свяжитесь с нами — добавим ваш сервис на платформу"
-msgstr "Contact us — we will add your service to the platform"
-
-msgid "Связаться с нами"
-msgstr "Contact us"
-
-msgid "Все сервисы"
-msgstr "All services"
-
-msgid "Найти сервис в"
-msgstr "Find service in"
-
-msgid "Мойка, парикмахерская, шиномонтаж..."
-msgstr "Car wash, barbershop, tire service..."
-
-msgid "Найти"
-msgstr "Search"
-
-msgid "Все"
-msgstr "All"
-
-msgid "Открыто сейчас"
-msgstr "Open now"
-
-msgid "Результаты по запросу"
-msgstr "Search results"
-
-msgid "найдено"
-msgstr "found"
-
-msgid "Подробнее"
-msgstr "Details"
-
-msgid "Ничего не найдено"
-msgstr "Nothing found"
-
-msgid "Попробуйте другой запрос"
-msgstr "Try a different search"
-
-msgid "Показать все"
-msgstr "Show all"
-
-msgid "отзывов"
-msgstr "reviews"
-
-msgid "Информация"
-msgstr "Information"
-
-msgid "АДРЕС"
-msgstr "ADDRESS"
-
-msgid "ТЕЛЕФОН"
-msgstr "PHONE"
-
-msgid "РЕЖИМ РАБОТЫ"
-msgstr "WORKING HOURS"
-
-msgid "СТАТУС"
-msgstr "STATUS"
-
-msgid "Открыто"
-msgstr "Open"
-
-msgid "Доступные"
-msgstr "Available"
-
-msgid "Выбрать время"
-msgstr "Choose time"
-
-msgid "Нет доступных"
-msgstr "No available"
-
-msgid "Отзывы"
-msgstr "Reviews"
-
-msgid "Оставить отзыв"
-msgstr "Leave a review"
-
-msgid "Отзывов пока нет"
-msgstr "No reviews yet"
-
-msgid "Быстрые действия"
-msgstr "Quick actions"
-
-msgid "Позвонить"
-msgstr "Call"
-
-msgid "В избранном"
-msgstr "In favorites"
-
-msgid "В избранное"
-msgstr "Add to favorites"
-
-msgid "Поделиться в WhatsApp"
-msgstr "Share on WhatsApp"
-
-msgid "Поделиться в Telegram"
-msgstr "Share on Telegram"
-
-msgid "Записывайся онлайн"
-msgstr "Book online"
-
+#: .\templates\bookings\my_bookings.html:4
+#: .\templates\bookings\my_bookings.html:8
+#: .\templates\services\service_detail.html:154
+#: .\templates\users\profile.html:70
 msgid "Мои записи"
 msgstr "My bookings"
 
-msgid "Войти для записи"
-msgstr "Login to book"
-
-msgid "Добро пожаловать!"
-msgstr "Welcome!"
-
-msgid "Войдите чтобы управлять записями"
-msgstr "Login to manage your bookings"
-
-msgid "Забыли пароль?"
-msgstr "Forgot password?"
-
-msgid "Нет аккаунта?"
-msgstr "No account?"
-
-msgid "Зарегистрироваться"
-msgstr "Sign up"
-
-msgid "Создать аккаунт"
-msgstr "Create account"
-
-msgid "Регистрация займёт меньше минуты"
-msgstr "Registration takes less than a minute"
-
-msgid "Уже есть аккаунт?"
-msgstr "Already have an account?"
-
-msgid "Профиль"
-msgstr "Profile"
-
-msgid "Телефон"
-msgstr "Phone"
-
-msgid "Сохранить изменения"
-msgstr "Save changes"
-
-msgid "Telegram уведомления"
-msgstr "Telegram notifications"
-
-msgid "Telegram подключён!"
-msgstr "Telegram connected!"
-
-msgid "Вы будете получать уведомления о бронированиях"
-msgstr "You will receive booking notifications"
-
-msgid "Подключите Telegram чтобы получать уведомления о своих записях."
-msgstr "Connect Telegram to receive notifications about your bookings."
-
-msgid "Откройте бота"
-msgstr "Open the bot"
-
-msgid "Отправьте команду"
-msgstr "Send the command"
-
-msgid "Вернитесь сюда и нажмите кнопку"
-msgstr "Come back here and press the button"
-
-msgid "Проверить подключение"
-msgstr "Check connection"
-
+#: .\templates\bookings\my_bookings.html:9
 msgid "Новая запись"
 msgstr "New booking"
 
+#: .\templates\bookings\my_bookings.html:39
 msgid "Забронировано"
 msgstr "Booked"
 
+#: .\templates\bookings\my_bookings.html:40
+#: .\templates\bookings\owner_dashboard.html:38
 msgid "В процессе"
 msgstr "In progress"
 
+#: .\templates\bookings\my_bookings.html:41
 msgid "Завершено"
 msgstr "Completed"
 
+#: .\templates\bookings\my_bookings.html:47
 msgid "Отменить"
 msgstr "Cancel"
 
+#: .\templates\bookings\my_bookings.html:58
 msgid "Записей пока нет"
 msgstr "No bookings yet"
 
+#: .\templates\bookings\my_bookings.html:59
 msgid "Найди сервис и запишись онлайн!"
 msgstr "Find a service and book online!"
+
+#: .\templates\bookings\my_bookings.html:60 .\templates\services\home.html:28
+msgid "Найти сервис"
+msgstr "Find service"
+
+#: .\templates\bookings\owner_dashboard.html:4
+msgid "Панель владельца"
+msgstr "Owner dashboard"
+
+#: .\templates\bookings\owner_dashboard.html:11
+msgid "Панель управления"
+msgstr "Management dashboard"
+
+#: .\templates\bookings\owner_dashboard.html:15
+msgid "Редактировать"
+msgstr "Edit"
+
+#: .\templates\bookings\owner_dashboard.html:16
+msgid "Аналитика"
+msgstr "Analytics"
+
+#: .\templates\bookings\owner_dashboard.html:18
+#: .\templates\services\manage_schedule.html:4
+#: .\templates\services\manage_schedule.html:9
+msgid "График работы"
+msgstr "Work schedule"
+
+#: .\templates\bookings\owner_dashboard.html:19
+msgid "Удалить слоты"
+msgstr "Delete slots"
+
+#: .\templates\bookings\owner_dashboard.html:32
+msgid "Всего броней"
+msgstr "Total bookings"
+
+#: .\templates\bookings\owner_dashboard.html:44
+msgid "Свободных слотов"
+msgstr "Available slots"
+
+#: .\templates\bookings\owner_dashboard.html:68
+#: .\templates\bookings\owner_dashboard.html:154
+msgid "Закрыть"
+msgstr "Close"
+
+#: .\templates\bookings\owner_dashboard.html:70
+#: .\templates\bookings\owner_dashboard.html:154
+#, fuzzy
+#| msgid "Открыто"
+msgid "Открыть"
+msgstr "Open"
+
+#: .\templates\bookings\owner_dashboard.html:92
+msgid "Активные брони"
+msgstr "Active bookings"
+
+#: .\templates\services\home.html:19
+msgid "Казахстан"
+msgstr "Kazakhstan"
+
+#: .\templates\services\home.html:21
+msgid "Найди и запишись"
+msgstr "Find and book"
+
+#: .\templates\services\home.html:21
+msgid "онлайн за 30 секунд"
+msgstr "online in 30 seconds"
+
+#: .\templates\services\home.html:24
+msgid "Автомойки, СТО, салоны красоты и многое другое в"
+msgstr "Car washes, auto services, beauty salons and more in"
+
+#: .\templates\services\home.html:40 .\templates\services\home.html:57
+msgid "Категории"
+msgstr "Categories"
+
+#: .\templates\services\home.html:45
+msgid "Онлайн запись"
+msgstr "Online booking"
+
+#: .\templates\services\home.html:49
+msgid "с"
+msgstr "s"
+
+#: .\templates\services\home.html:50
+msgid "Время записи"
+msgstr "Booking time"
+
+#: .\templates\services\home.html:95
+msgid "Как это работает"
+msgstr "How it works"
+
+#: .\templates\services\home.html:99
+msgid "Найди сервис"
+msgstr "Find a service"
+
+#: .\templates\services\home.html:100
+msgid "Выбери категорию и найди ближайший сервис"
+msgstr "Choose a category and find the nearest service"
+
+#: .\templates\services\home.html:104
+msgid "Выбери время"
+msgstr "Choose time"
+
+#: .\templates\services\home.html:105
+msgid "Выбери свободный бокс и удобное время"
+msgstr "Choose a free slot and convenient time"
+
+#: .\templates\services\home.html:109
+msgid "Готово!"
+msgstr "Done!"
+
+#: .\templates\services\home.html:110
+msgid "Запись подтверждена — просто приезжай"
+msgstr "Booking confirmed — just come"
+
+#: .\templates\services\home.html:116
+msgid "Популярные сервисы"
+msgstr "Popular services"
+
+#: .\templates\services\home.html:146
+msgid "Записаться"
+msgstr "Book now"
+
+#: .\templates\services\home.html:156
+msgid "Вы владелец бизнеса?"
+msgstr "Are you a business owner?"
+
+#: .\templates\services\home.html:157
+msgid "Свяжитесь с нами — добавим ваш сервис на платформу"
+msgstr "Contact us — we will add your service to the platform"
+
+#: .\templates\services\home.html:159
+msgid "Связаться с нами"
+msgstr "Contact us"
+
+#: .\templates\services\manage_schedule.html:12
+msgid "В панель владельца"
+msgstr "Back to owner dashboard"
+
+#: .\templates\services\manage_schedule.html:17
+msgid "Что настраиваем"
+msgstr "Schedule scope"
+
+#: .\templates\services\manage_schedule.html:21
+#: .\templates\services\manage_schedule.html:105
+#: .\templates\services\manage_schedule.html:150
+msgid "Весь бизнес"
+msgstr "Entire business"
+
+#: .\templates\services\manage_schedule.html:32
+#, python-format
+msgid "Индивидуальный график заменяет общий график для ресурса «%(name)s»."
+msgstr "The individual schedule overrides the general schedule for “%(name)s”."
+
+#: .\templates\services\manage_schedule.html:36
+msgid ""
+"Этот график используется всеми ресурсами, для которых не задан "
+"индивидуальный режим."
+msgstr ""
+"This schedule is used by every resource that does not have an individual "
+"schedule."
+
+#: .\templates\services\manage_schedule.html:45
+msgid "График"
+msgstr "Schedule"
+
+#: .\templates\services\manage_schedule.html:45
+msgid "Общий недельный график"
+msgstr "General weekly schedule"
+
+#: .\templates\services\manage_schedule.html:74
+msgid "Сохранить недельный график"
+msgstr "Save weekly schedule"
+
+#: .\templates\services\manage_schedule.html:84
+msgid "Использовать общий график"
+msgstr "Use general schedule"
+
+#: .\templates\services\manage_schedule.html:95
+#: .\templates\services\manage_schedule.html:133
+msgid "Добавить перерыв"
+msgstr "Add break"
+
+#: .\templates\services\manage_schedule.html:97
+msgid ""
+"Например, обед, уборка или техническое окно. Слоты, пересекающие перерыв, "
+"создаваться не будут."
+msgstr ""
+"For example, lunch, cleaning, or maintenance. Slots overlapping a break will "
+"not be created."
+
+#: .\templates\services\manage_schedule.html:103
+msgid "Для кого"
+msgstr "Applies to"
+
+#: .\templates\services\manage_schedule.html:112
+msgid "День недели"
+msgstr "Day of week"
+
+#: .\templates\services\manage_schedule.html:121
+msgid "С"
+msgstr "From"
+
+#: .\templates\services\manage_schedule.html:125
+msgid "До"
+msgstr "To"
+
+#: .\templates\services\manage_schedule.html:130
+msgid "Название"
+msgstr "Name"
+
+#: .\templates\services\manage_schedule.html:131
+msgid "Например: обед"
+msgstr "For example: lunch"
+
+#: .\templates\services\manage_schedule.html:141
+msgid "Действующие перерывы"
+msgstr "Scheduled breaks"
+
+#: .\templates\services\manage_schedule.html:157
+msgid "Удалить этот перерыв?"
+msgstr "Delete this break?"
+
+#: .\templates\services\manage_schedule.html:157
+msgid "Удалить"
+msgstr "Delete"
+
+#: .\templates\services\manage_schedule.html:161
+msgid "Перерывов пока нет."
+msgstr "No breaks yet."
+
+#: .\templates\services\map.html:4 .\templates\services\map.html:9
+msgid "Карта сервисов"
+msgstr "Services map"
+
+#: .\templates\services\map.html:12
+msgid "сервисов"
+msgstr "services"
+
+#: .\templates\services\map.html:15
+msgid "Показать списком"
+msgstr "Show as list"
+
+#: .\templates\services\map.html:22
+#, fuzzy
+#| msgid "Категории"
+msgid "Категория"
+msgstr "Categories"
+
+#: .\templates\services\map.html:23
+msgid "Все категории"
+msgstr "All categories"
+
+#: .\templates\services\map.html:32
+#, fuzzy
+#| msgid "Сервисы"
+msgid "Сервис"
+msgstr "Services"
+
+#: .\templates\services\map.html:33
+msgid "Выбрать сервис"
+msgstr "Choose service"
+
+#: .\templates\services\map.html:43
+msgid "Название или адрес"
+msgstr "Name or address"
+
+#: .\templates\services\map.html:46 .\templates\services\service_list.html:18
+msgid "Найти"
+msgstr "Search"
+
+#: .\templates\services\map.html:48
+msgid "Сбросить"
+msgstr ""
+
+#: .\templates\services\map.html:57
+msgid "Перетаскивайте карту и изменяйте масштаб"
+msgstr "Drag the map and adjust the zoom"
+
+#: .\templates\services\map.html:161
+msgid "Открыть сервис"
+msgstr "Open service"
+
+#: .\templates\services\map.html:178
+msgid "По вашему запросу ничего не найдено"
+msgstr "Nothing matched your search"
+
+#: .\templates\services\map.html:179
+msgid "Выберите категорию, сервис или введите название"
+msgstr "Choose a category or service, or enter a name"
+
+#: .\templates\services\service_detail.html:20
+msgid "отзывов"
+msgstr "reviews"
+
+#: .\templates\services\service_detail.html:30
+msgid "Информация"
+msgstr "Information"
+
+#: .\templates\services\service_detail.html:34
+msgid "АДРЕС"
+msgstr "ADDRESS"
+
+#: .\templates\services\service_detail.html:40
+msgid "ТЕЛЕФОН"
+msgstr "PHONE"
+
+#: .\templates\services\service_detail.html:46
+msgid "РЕЖИМ РАБОТЫ"
+msgstr "WORKING HOURS"
+
+#: .\templates\services\service_detail.html:52
+msgid "СТАТУС"
+msgstr "STATUS"
+
+#: .\templates\services\service_detail.html:53
+msgid "Открыто"
+msgstr "Open"
+
+#: .\templates\services\service_detail.html:63
+msgid "Доступные"
+msgstr "Available"
+
+#: .\templates\services\service_detail.html:77
+msgid "Выбрать время"
+msgstr "Choose time"
+
+#: .\templates\services\service_detail.html:82
+msgid "Нет доступных"
+msgstr "No available"
+
+#: .\templates\services\service_detail.html:91
+msgid "Отзывы"
+msgstr "Reviews"
+
+#: .\templates\services\service_detail.html:93
+msgid "Оставить отзыв"
+msgstr "Leave a review"
+
+#: .\templates\services\service_detail.html:112
+msgid "Отзывов пока нет"
+msgstr "No reviews yet"
+
+#: .\templates\services\service_detail.html:122
+msgid "Быстрые действия"
+msgstr "Quick actions"
+
+#: .\templates\services\service_detail.html:124
+msgid "Позвонить"
+msgstr "Call"
+
+#: .\templates\services\service_detail.html:127
+msgid "Посмотреть на карте"
+msgstr "View on map"
+
+#: .\templates\services\service_detail.html:138
+msgid "В избранном"
+msgstr "In favorites"
+
+#: .\templates\services\service_detail.html:138
+msgid "В избранное"
+msgstr "Add to favorites"
+
+#: .\templates\services\service_detail.html:142
+#: .\templates\services\service_detail.html:147
+msgid "Записывайся онлайн"
+msgstr "Book online"
+
+#: .\templates\services\service_detail.html:145
+msgid "Поделиться в WhatsApp"
+msgstr "Share on WhatsApp"
+
+#: .\templates\services\service_detail.html:150
+msgid "Поделиться в Telegram"
+msgstr "Share on Telegram"
+
+#: .\templates\services\service_detail.html:158
+msgid "Войти для записи"
+msgstr "Login to book"
+
+#: .\templates\services\service_detail.html:162
+#: .\templates\services\service_list.html:4
+msgid "Все сервисы"
+msgstr "All services"
+
+#: .\templates\services\service_list.html:9
+msgid "Найти сервис в"
+msgstr "Find service in"
+
+#: .\templates\services\service_list.html:13
+msgid "Мойка, парикмахерская, шиномонтаж..."
+msgstr "Car wash, barbershop, tire service..."
+
+#: .\templates\services\service_list.html:29
+msgid "Все"
+msgstr "All"
+
+#: .\templates\services\service_list.html:39
+msgid "Открыто сейчас"
+msgstr "Open now"
+
+#: .\templates\services\service_list.html:45
+msgid "Результаты по запросу"
+msgstr "Search results"
+
+#: .\templates\services\service_list.html:45
+msgid "найдено"
+msgstr "found"
+
+#: .\templates\services\service_list.html:79
+msgid "Подробнее"
+msgstr "Details"
+
+#: .\templates\services\service_list.html:86
+msgid "Ничего не найдено"
+msgstr "Nothing found"
+
+#: .\templates\services\service_list.html:87
+msgid "Попробуйте другой запрос"
+msgstr "Try a different search"
+
+#: .\templates\services\service_list.html:88
+msgid "Показать все"
+msgstr "Show all"
+
+#: .\templates\users\login.html:4
+msgid "Вход"
+msgstr ""
+
+#: .\templates\users\login.html:11
+msgid "Добро пожаловать!"
+msgstr "Welcome!"
+
+#: .\templates\users\login.html:12
+msgid "Войдите чтобы управлять записями"
+msgstr "Login to manage your bookings"
+
+#: .\templates\users\login.html:37
+msgid "Забыли пароль?"
+msgstr "Forgot password?"
+
+#: .\templates\users\login.html:40
+msgid "Нет аккаунта?"
+msgstr "No account?"
+
+#: .\templates\users\login.html:40 .\templates\users\register.html:33
+msgid "Зарегистрироваться"
+msgstr "Sign up"
+
+#: .\templates\users\profile.html:4
+msgid "Профиль"
+msgstr "Profile"
+
+#: .\templates\users\profile.html:26
+msgid "Телефон"
+msgstr "Phone"
+
+#: .\templates\users\profile.html:34
+msgid "Сохранить изменения"
+msgstr "Save changes"
+
+#: .\templates\users\profile.html:43
+msgid "Telegram уведомления"
+msgstr "Telegram notifications"
+
+#: .\templates\users\profile.html:46
+msgid "Telegram подключён!"
+msgstr "Telegram connected!"
+
+#: .\templates\users\profile.html:47
+msgid "Вы будете получать уведомления о бронированиях"
+msgstr "You will receive booking notifications"
+
+#: .\templates\users\profile.html:50
+msgid "Подключите Telegram чтобы получать уведомления о своих записях."
+msgstr "Connect Telegram to receive notifications about your bookings."
+
+#: .\templates\users\profile.html:52
+msgid "Откройте бота"
+msgstr "Open the bot"
+
+#: .\templates\users\profile.html:53
+msgid "Отправьте команду"
+msgstr "Send the command"
+
+#: .\templates\users\profile.html:58
+msgid "Вернитесь сюда и нажмите кнопку"
+msgstr "Come back here and press the button"
+
+#: .\templates\users\profile.html:63
+msgid "Проверить подключение"
+msgstr "Check connection"
+
+#: .\templates\users\register.html:11
+msgid "Создать аккаунт"
+msgstr "Create account"
+
+#: .\templates\users\register.html:12
+msgid "Регистрация займёт меньше минуты"
+msgstr "Registration takes less than a minute"
+
+#: .\templates\users\register.html:37
+msgid "Уже есть аккаунт?"
+msgstr "Already have an account?"

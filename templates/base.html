@@ -59,6 +59,9 @@
         [data-theme="dark"] .logo-dark { display: inline; }
         [data-theme="light"] .logo-light { display: inline; }
         [data-theme="light"] .logo-dark { display: none; }
+        .navbar-brand { height:58px; display:flex; align-items:center; }
+        .navbar-brand img { height:58px !important; width:auto; }
+        .navbar-brand .logo-dark { height:77px !important; margin-left:-1px; }
 
         body { background: var(--bg); color: var(--text); min-height: 100vh; background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px); background-size: 40px 40px; transition: background 0.3s, color 0.3s; }
         body::before { content: ''; position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(37,99,235,0.08) 0%, transparent 70%); pointer-events: none; z-index: 0; }
@@ -104,6 +107,8 @@
         .lang-menu form button { display:block; width:100%; text-align:left; padding:8px 12px; border-radius:8px; border:none; background:transparent; color:var(--text); font-size:0.85rem; cursor:pointer; transition:background 0.15s; }
         .lang-menu form button:hover { background:rgba(37,99,235,0.2); }
         .lang-menu form button.active { color:#2563eb; font-weight:600; }
+        .lang-dropdown.open .lang-menu { display:block; }
+        .nav-tools { display:flex; align-items:center; gap:8px; }
 
         .city-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; }
         .city-modal.show { display:flex; }
@@ -113,7 +118,9 @@
         .city-item.active { background:rgba(37,99,235,0.3); color:#2563eb; font-weight:600; }
 
         .badge { border-radius: 8px; font-weight: 500; }
-        .form-control { border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); padding: 11px 16px; font-size: 0.9rem; transition: all 0.2s; }
+        .form-control { border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); padding: 11px 16px; font-size: 0.9rem; transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s; color-scheme: dark; }
+        [data-theme="light"] .form-control { color-scheme: light; }
+        .form-control option { background: var(--modal-bg); color: var(--text); }
         .form-control:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); color: var(--text); }
         .form-control::placeholder { color: var(--text-muted); }
         .form-label { color: var(--text-sub); font-weight: 500; font-size: 0.88rem; }
@@ -123,6 +130,13 @@
         h1, h2, h3, h4, h5, h6 { color: var(--text); }
         p { color: var(--text-sub); }
         .text-muted { color: var(--text-muted) !important; }
+        .theme-toggle { width:42px; min-width:42px; }
+        main { transition: opacity 0.16s ease; }
+        body.page-leaving main { opacity:0.35; }
+        .page-loader { position:fixed; inset:0; z-index:10000; display:none; align-items:center; justify-content:center; background:rgba(8,11,17,0.18); pointer-events:none; }
+        body.page-leaving .page-loader { display:flex; }
+        .page-loader-spinner { width:34px; height:34px; border:3px solid rgba(37,99,235,0.2); border-top-color:#2563eb; border-radius:50%; animation:loaderSpin 0.65s linear infinite; }
+        @keyframes loaderSpin { to { transform:rotate(360deg); } }
 
         @media (max-width: 768px) {
             .container { padding-left: 16px; padding-right: 16px; }
@@ -130,15 +144,27 @@
             .hero h1 { font-size: 2.2rem !important; letter-spacing: -1px !important; }
             .hero p { font-size: 0.95rem !important; }
             .navbar { padding: 8px 0; }
-            .navbar .container { flex-wrap: nowrap; overflow-x: auto; }
-            .navbar-nav { flex-wrap: nowrap !important; gap: 8px !important; }
-            .city-selector, .theme-toggle, .lang-btn { font-size: 0.75rem; padding: 4px 8px; }
-            .nav-link { font-size: 0.8rem !important; }
+            .navbar .container { flex-wrap: wrap; overflow: visible; }
+            .navbar-brand { height:36px; margin-right:0; }
+            .navbar-toggler { border:1px solid var(--border); color:var(--text); padding:7px 10px; box-shadow:none !important; }
+            .navbar-toggler-icon { width:22px; height:22px; filter:var(--navbar-toggler-filter, none); }
+            [data-theme="dark"] { --navbar-toggler-filter: invert(1); }
+            .navbar-collapse { width:100%; overflow:visible; }
+            .navbar-nav { width:100%; padding:12px 0 4px; align-items:stretch !important; gap:4px; }
+            .nav-tools { width:100%; display:grid; grid-template-columns:auto minmax(0, 1fr) auto; gap:8px; margin-bottom:6px; }
+            .city-selector { width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+            .city-selector, .theme-toggle, .lang-btn { min-height:40px; font-size:0.8rem; padding:7px 10px; }
+            .nav-link { width:100%; font-size:0.88rem !important; padding:10px 8px !important; border-radius:9px; }
+            .nav-link:hover { background:var(--bg-card-hover); }
+            .navbar-nav > .btn { width:100%; margin-top:4px; padding:10px 16px; }
+            .lang-menu { left:0; right:auto; top:calc(100% + 4px); min-width:160px; z-index:1100; }
+            .lang-dropdown:hover:not(.open) .lang-menu { display:none; }
             .city-modal-content { width: calc(100% - 32px); margin: 16px; padding: 24px; }
             .card { border-radius: 12px; }
             .btn { padding: 8px 16px; font-size: 0.85rem; }
             #weather { display: none; }
             .navbar-brand img { height: 36px !important; }
+            .navbar-brand .logo-dark { height:48px !important; }
         }
 
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); opacity: 0.8; } }
@@ -147,6 +173,8 @@
     </style>
 </head>
 <body>
+{% get_current_language as CURRENT_LANGUAGE %}
+<div class="page-loader" aria-hidden="true"><div class="page-loader-spinner"></div></div>
 
 <!-- City Modal -->
 <div class="city-modal" id="cityModal">
@@ -175,15 +203,22 @@
             <img src="{% static 'kimsongy_logo_white.png' %}" alt="kimsongy" class="logo-dark" style="height:98px; width:auto;">
         </a>
         <span id="weather" style="font-size:0.8rem; color:var(--text-muted); margin-left:12px;"></span>
-        <div class="navbar-nav ms-auto d-flex flex-row gap-2 align-items-center">
+        <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNavbar" aria-controls="mainNavbar"
+                aria-expanded="false" aria-label="Открыть меню">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNavbar">
+        <div class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
 
             <!-- Выпадающее меню языков -->
+            <div class="nav-tools">
             <div class="lang-dropdown">
-                <button class="lang-btn">
+                <button class="lang-btn" type="button" aria-expanded="false" aria-label="Выбрать язык">
                     🌐
-                    {% if LANGUAGE_CODE == 'ru' %}RU
-                    {% elif LANGUAGE_CODE == 'kk' %}ҚАЗ
-                    {% elif LANGUAGE_CODE == 'en' %}EN
+                    {% if CURRENT_LANGUAGE == 'ru' %}RU
+                    {% elif CURRENT_LANGUAGE == 'kk' %}ҚАЗ
+                    {% elif CURRENT_LANGUAGE == 'en' %}EN
                     {% else %}RU{% endif %}
                     ▾
                 </button>
@@ -192,19 +227,19 @@
                         {% csrf_token %}
                         <input type="hidden" name="language" value="ru">
                         <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit" class="{% if LANGUAGE_CODE == 'ru' %}active{% endif %}">🇷🇺 Русский</button>
+                        <button type="submit" class="{% if CURRENT_LANGUAGE == 'ru' %}active{% endif %}">🇷🇺 Русский</button>
                     </form>
                     <form action="{% url 'set_language' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="language" value="kk">
                         <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit" class="{% if LANGUAGE_CODE == 'kk' %}active{% endif %}">🇰🇿 Қазақша</button>
+                        <button type="submit" class="{% if CURRENT_LANGUAGE == 'kk' %}active{% endif %}">🇰🇿 Қазақша</button>
                     </form>
                     <form action="{% url 'set_language' %}" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="language" value="en">
                         <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit" class="{% if LANGUAGE_CODE == 'en' %}active{% endif %}">🇬🇧 English</button>
+                        <button type="submit" class="{% if CURRENT_LANGUAGE == 'en' %}active{% endif %}">🇬🇧 English</button>
                     </form>
                 </div>
             </div>
@@ -213,6 +248,7 @@
                 📍 {{ request.session.city_name|default:"Выбрать город" }}
             </button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+            </div>
             <a class="nav-link" href="{% url 'service_list' %}">{% trans "Сервисы" %}</a>
             <a class="nav-link" href="{% url 'service_map' %}">🗺️ {% trans "Карта" %}</a>
             {% if user.is_authenticated %}
@@ -233,6 +269,7 @@
                 <a class="nav-link" href="{% url 'login' %}">{% trans "Войти" %}</a>
                 <a class="btn btn-primary btn-sm" href="{% url 'register' %}">{% trans "Регистрация" %}</a>
             {% endif %}
+        </div>
         </div>
     </div>
 </nav>
@@ -269,6 +306,37 @@
         localStorage.setItem('theme', next);
         document.getElementById('themeBtn').textContent = next === 'dark' ? '🌙' : '☀️';
     }
+
+    const langDropdown = document.querySelector('.lang-dropdown');
+    const langButton = document.querySelector('.lang-btn');
+    langButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const isOpen = langDropdown.classList.toggle('open');
+        langButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    document.addEventListener('click', (event) => {
+        if (!langDropdown.contains(event.target)) {
+            langDropdown.classList.remove('open');
+            langButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest('a[href]');
+        if (!link || event.defaultPrevented || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        if (link.target === '_blank' || link.hasAttribute('download')) return;
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:')) return;
+        document.body.classList.add('page-leaving');
+    });
+    document.addEventListener('submit', (event) => {
+        if (!event.defaultPrevented && !event.target.matches('[data-no-loader]')) {
+            document.body.classList.add('page-leaving');
+        }
+    });
+    window.addEventListener('pageshow', () => {
+        document.body.classList.remove('page-leaving');
+    });
 
     if (!localStorage.getItem('city_selected')) {
         setTimeout(() => {

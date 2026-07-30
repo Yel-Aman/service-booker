@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import Service, Box
+from .models import (
+    Box,
+    Employee,
+    ScheduleBreak,
+    ScheduleException,
+    Service,
+    ServiceOffering,
+    WeeklySchedule,
+)
 
 
 class BoxInline(admin.TabularInline):
@@ -19,3 +27,35 @@ class ServiceAdmin(admin.ModelAdmin):
 class BoxAdmin(admin.ModelAdmin):
     list_display = ('name', 'service', 'is_active')
     list_filter = ('service', 'is_active')
+
+
+@admin.register(WeeklySchedule)
+class WeeklyScheduleAdmin(admin.ModelAdmin):
+    list_display = ('service', 'box', 'weekday', 'is_working', 'start_time', 'end_time')
+    list_filter = ('service', 'weekday', 'is_working')
+
+
+@admin.register(ScheduleBreak)
+class ScheduleBreakAdmin(admin.ModelAdmin):
+    list_display = ('service', 'box', 'weekday', 'start_time', 'end_time', 'label')
+    list_filter = ('service', 'weekday')
+
+
+@admin.register(ServiceOffering)
+class ServiceOfferingAdmin(admin.ModelAdmin):
+    list_display = ('name', 'service', 'price', 'duration_minutes', 'is_active')
+    list_filter = ('service', 'is_active')
+    search_fields = ('name', 'service__name')
+
+
+@admin.register(Employee)
+class EmployeeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'service', 'specialization', 'is_active')
+    list_filter = ('service', 'is_active')
+    search_fields = ('name', 'service__name')
+
+
+@admin.register(ScheduleException)
+class ScheduleExceptionAdmin(admin.ModelAdmin):
+    list_display = ('service', 'box', 'date', 'is_closed', 'start_time', 'end_time')
+    list_filter = ('service', 'date', 'is_closed')

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Перенести запись{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-lg-7">
+    <div class="card"><div class="card-body p-4">
+        <h3 style="font-weight:800;">🔄 Перенести запись</h3>
+        <p class="text-muted">{{ booking.slot.box.service.name }} · сейчас {{ booking.slot.date }} {{ booking.slot.start_time|time:"H:i" }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-2 mb-3">
+                {% for slot in available_slots %}
+                <div class="col-md-4">
+                    <label class="d-block p-3" style="background:var(--bg);border:1px solid var(--border);border-radius:12px;cursor:pointer;">
+                        <input type="radio" name="slot_id" value="{{ slot.pk }}" required>
+                        <strong>{{ slot.date }}</strong><br>{{ slot.start_time|time:"H:i" }} · {{ slot.box.name }}
+                    </label>
+                </div>
+                {% empty %}<p class="text-muted">Нет свободного времени для переноса.</p>{% endfor %}
+            </div>
+            {% if available_slots %}<button class="btn btn-primary">Подтвердить перенос</button>{% endif %}
+            <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary">Назад</a>
+        </form>
+    </div></div>
+</div></div>
+{% endblock %}

@@ -31,6 +31,28 @@
 
                 <form method="post">
                     {% csrf_token %}
+                    {% if offerings %}
+                    <div class="mb-3 text-start">
+                        <label class="form-label">Услуга</label>
+                        <select name="offering" class="form-control">
+                            <option value="">Выберите услугу</option>
+                            {% for offering in offerings %}
+                            <option value="{{ offering.pk }}">{{ offering.name }} · {{ offering.price }} ₸ · {{ offering.duration_minutes }} мин.</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
+                    {% if employees %}
+                    <div class="mb-3 text-start">
+                        <label class="form-label">Специалист</label>
+                        <select name="employee" class="form-control">
+                            <option value="">Любой доступный</option>
+                            {% for employee in employees %}
+                            <option value="{{ employee.pk }}">{{ employee.name }}{% if employee.specialization %} · {{ employee.specialization }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endif %}
                     {% if is_owner %}
                     <div class="mb-3 text-start">
                         <label class="form-label">Имя клиента</label>
@@ -41,6 +63,10 @@
                         <input type="text" name="client_phone" class="form-control" placeholder="+7 777 123 4567" required>
                     </div>
                     {% endif %}
+                    <div class="mb-3 text-start">
+                        <label class="form-label">Комментарий</label>
+                        <textarea name="notes" class="form-control" rows="2" placeholder="Пожелания или важная информация"></textarea>
+                    </div>
                     <button type="submit" class="btn btn-primary w-100 mb-2 py-3" style="border-radius:12px; font-size:1rem;">
                         ✅ Подтвердить
                     </button>
