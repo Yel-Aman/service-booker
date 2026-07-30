@@ -81,8 +81,8 @@
         .btn-light { background: white; color: #0a3a8a; border: none; }
         .btn-sm { padding: 6px 14px; font-size: 0.82rem; }
 
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); transition: all 0.3s; color: var(--text); }
-        .card:hover { transform: translateY(-4px); border-color: rgba(37,99,235,0.3); box-shadow: 0 8px 40px rgba(37,99,235,0.15); }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); transition: border-color .2s, box-shadow .2s; color: var(--text); }
+        .card:hover { border-color: rgba(37,99,235,0.22); box-shadow: 0 12px 36px rgba(0,0,0,0.12); }
         .card-footer { background: transparent !important; border-top: 1px solid var(--border) !important; }
 
         .hero { background: linear-gradient(135deg, rgba(10,26,58,0.9) 0%, rgba(37,99,235,0.7) 50%, rgba(10,26,58,0.8) 100%); border: 1px solid rgba(37,99,235,0.2); color: white; border-radius: 28px; padding: 100px 40px; margin-bottom: 64px; position: relative; overflow: hidden; }
@@ -123,7 +123,8 @@
         .form-control option { background: var(--modal-bg); color: var(--text); }
         .form-control:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); color: var(--text); }
         .form-control::placeholder { color: var(--text-muted); }
-        .form-label { color: var(--text-sub); font-weight: 500; font-size: 0.88rem; }
+        .form-label { display:block; color: var(--text-sub); font-weight: 500; font-size: 0.88rem; }
+        .auth-panel .form-control { display:block; width:100%; }
 
         .alert { border-radius: 12px; border: none; }
         footer { background: var(--footer-bg) !important; border-top: 1px solid var(--border); margin-top: 80px; }
@@ -170,10 +171,206 @@
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); opacity: 0.8; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Единая визуальная система */
+        :root {
+            --brand: #2563eb;
+            --brand-strong: #1d4ed8;
+            --positive: #16a34a;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+        main.container { max-width: 1180px; }
+        h1, h2, h3 { letter-spacing: -.035em; }
+        .btn { min-height: 42px; display:inline-flex; align-items:center; justify-content:center; gap:7px; box-shadow:none; }
+        .btn-sm { min-height: 34px; }
+        .btn-primary { background:var(--brand); box-shadow:0 8px 22px rgba(37,99,235,.22); }
+        .btn-primary:hover { background:var(--brand-strong); box-shadow:0 10px 28px rgba(37,99,235,.28); }
+        .form-control { min-height:44px; }
+        .table { --bs-table-bg: transparent; --bs-table-color: var(--text); --bs-table-border-color: var(--border); }
+        .page-kicker { color:#60a5fa; font-size:.75rem; font-weight:750; letter-spacing:.12em; text-transform:uppercase; }
+        .section-title { font-weight:780; letter-spacing:-.02em; margin-bottom:18px; }
+        .owner-hero, .service-hero {
+            background:
+                radial-gradient(circle at 88% 10%, rgba(96,165,250,.2), transparent 35%),
+                linear-gradient(135deg, #0d1b36, #172554 65%, #1e3a8a);
+            border:1px solid rgba(96,165,250,.24);
+            border-radius:var(--radius-lg);
+            padding:34px;
+            margin-bottom:28px;
+            color:white;
+        }
+        .action-grid { display:flex; flex-wrap:wrap; gap:8px; }
+        .action-grid .btn { background:rgba(255,255,255,.08) !important; color:white !important; border:1px solid rgba(255,255,255,.14) !important; }
+        .action-grid .btn:hover { background:rgba(255,255,255,.14) !important; }
+        .metric-card { min-height:132px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .resource-row { background:var(--bg); border:1px solid var(--border); border-radius:14px; }
+        .booking-row .card-body { gap:18px; }
+        .booking-actions { display:flex; gap:8px; align-items:flex-start; }
+        .mobile-bottom-nav { display:none; }
+        .scroll-progress { position:fixed; top:0; left:0; height:2px; width:0; background:#60a5fa; z-index:2000; }
+        .cinematic-hero {
+            min-height:calc(100vh - 108px); position:relative; overflow:hidden;
+            width:calc(100vw - 18px); left:50%; transform:translateX(-50%);
+            border-radius:0; margin:-24px 0 96px;
+            display:flex; align-items:center; justify-content:center; color:white;
+        }
+        .cinematic-media {
+            position:absolute; inset:-4%; background:
+                url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=2000&auto=format&fit=crop&q=88')
+                center/cover no-repeat;
+            animation:cinematicZoom 16s cubic-bezier(.2,.6,.2,1) both;
+        }
+        .cinematic-shade {
+            position:absolute; inset:0;
+            background:linear-gradient(180deg,rgba(4,12,25,.25),rgba(4,12,25,.2) 45%,rgba(4,12,25,.72));
+        }
+        .cinematic-content { position:relative; z-index:2; text-align:center; max-width:900px; padding:48px 24px; }
+        .cinematic-kicker { color:white; opacity:.78; text-transform:uppercase; letter-spacing:.28em; font-size:.72rem; font-weight:650; margin-bottom:22px; animation:luxuryReveal .9s .1s both; }
+        .cinematic-content h1 { color:white; font-size:clamp(3.5rem,7vw,7rem); font-weight:500; line-height:.94; letter-spacing:-.06em; margin-bottom:28px; animation:luxuryReveal 1s .25s both; }
+        .cinematic-lead { color:rgba(255,255,255,.82); font-size:1.1rem; max-width:570px; margin:0 auto 34px; animation:luxuryReveal 1s .4s both; }
+        .cinematic-link { display:inline-flex; gap:18px; align-items:center; color:white; text-decoration:none; font-weight:650; border-bottom:1px solid rgba(255,255,255,.65); padding:8px 0; animation:luxuryReveal 1s .55s both; }
+        .cinematic-link span { transition:transform .25s; }
+        .cinematic-link:hover { color:white; }
+        .cinematic-link:hover span { transform:translateX(6px); }
+        .scroll-cue { position:absolute; z-index:2; bottom:26px; left:50%; transform:translateX(-50%); color:white; text-decoration:none; text-align:center; font-size:.66rem; text-transform:uppercase; letter-spacing:.18em; opacity:.78; }
+        .scroll-cue i { display:block; width:1px; height:34px; background:rgba(255,255,255,.65); margin:10px auto 0; transform-origin:top; animation:scrollCue 1.8s ease-in-out infinite; }
+        .editorial-heading { max-width:760px; margin:0 auto 38px; text-align:center; }
+        .editorial-heading p { color:#2563eb; text-transform:uppercase; letter-spacing:.18em; font-size:.7rem; font-weight:750; margin-bottom:12px; }
+        .editorial-heading h2 { font-size:clamp(2rem,4vw,3.7rem); font-weight:520; line-height:1.05; }
+        .page-hero {
+            position:relative; overflow:hidden; padding:38px; margin-bottom:30px;
+            border-radius:24px; color:white;
+            background:
+                radial-gradient(circle at 88% 10%,rgba(96,165,250,.2),transparent 38%),
+                linear-gradient(135deg,#0b1730,#142c5b 68%,#1e40af);
+            border:1px solid rgba(96,165,250,.22);
+        }
+        .page-hero--media {
+            min-height:320px; display:flex; flex-direction:column; justify-content:flex-end;
+            overflow:visible; z-index:20;
+            background:
+                linear-gradient(90deg,rgba(4,12,25,.88),rgba(4,12,25,.44)),
+                url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1800&auto=format&fit=crop&q=86') center/cover;
+        }
+        .page-hero--media h4 { font-size:clamp(2.2rem,5vw,4.6rem); font-weight:520 !important; max-width:800px; line-height:1; margin-bottom:28px !important; }
+        .page-hero h1, .page-hero h2, .page-hero h3, .page-hero h4 { color:white; }
+        .page-hero p { color:rgba(255,255,255,.66); }
+        .search-composer { position:relative; max-width:900px; }
+        .service-grid-card { overflow:hidden; border:0; background:transparent; box-shadow:none; }
+        .service-grid-card:hover { box-shadow:none; border-color:transparent; }
+        .service-grid-card .card-body { padding:22px 2px 14px !important; }
+        .service-grid-card .card-footer { padding:8px 2px 22px !important; border:0 !important; }
+        .service-grid-card > div:first-child { height:240px !important; border-radius:18px; }
+        .service-grid-card img { transition:transform .8s cubic-bezier(.2,.6,.2,1) !important; }
+        .service-grid-card:hover img { transform:scale(1.035); }
+        .form-page { max-width:620px; margin-inline:auto; }
+        .form-page .card-body { padding:clamp(24px,4vw,48px); }
+        .slot-card { border-radius:16px; padding:16px; text-align:center; border:1px solid var(--border); transition:border-color .2s,background .2s; }
+        .slot-card:hover { border-color:rgba(37,99,235,.45); background:var(--bg-card-hover); }
+        .auth-shell { min-height:calc(100vh - 230px); display:flex; align-items:center; }
+        .auth-shell--cinematic {
+            position:relative; min-height:680px; padding:46px; border-radius:28px; overflow:hidden;
+            justify-content:flex-end !important;
+            background:
+                linear-gradient(90deg,rgba(3,10,22,.25),rgba(3,10,22,.42) 46%,rgba(3,10,22,.88)),
+                url('https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1800&auto=format&fit=crop&q=86') center/cover;
+        }
+        .auth-shell--cinematic::before {
+            content:'KIMSONGY'; position:absolute; left:48px; bottom:44px; color:white;
+            font-size:.72rem; font-weight:750; letter-spacing:.28em; opacity:.72;
+        }
+        .auth-shell--cinematic .auth-panel { position:relative; z-index:2; }
+        .auth-shell--cinematic .auth-panel > .text-center h3,
+        .auth-shell--cinematic .auth-panel > .text-center p { color:white !important; }
+        .auth-shell--cinematic .card { background:color-mix(in srgb,var(--modal-bg) 92%,transparent); backdrop-filter:blur(18px); }
+        .service-hero { min-height:360px; display:flex; flex-direction:column; justify-content:flex-end; }
+        .section-band { padding:56px 0 28px; }
+        .premium-intro { max-width:720px; margin-bottom:32px; }
+        .premium-intro .eyebrow { color:#2563eb; font-size:.7rem; font-weight:750; letter-spacing:.16em; text-transform:uppercase; }
+        @keyframes cinematicZoom { from { transform:scale(1.08); } to { transform:scale(1); } }
+        @keyframes luxuryReveal { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:none; } }
+        @keyframes scrollCue { 0%,100% { transform:scaleY(.3); opacity:.4; } 50% { transform:scaleY(1); opacity:1; } }
+
+        @media (max-width: 768px) {
+            body { padding-bottom:78px; background-size:32px 32px; }
+            main.container { margin-top:18px !important; }
+            footer { display:none; }
+            .hero { min-height:auto !important; padding:54px 20px 42px; }
+            .hero h1 { font-size:2.35rem !important; line-height:1.08 !important; }
+            .hero::before, .hero::after, #particles { opacity:.55; }
+            .owner-hero, .service-hero { padding:24px 20px; border-radius:20px; }
+            .owner-hero h2, .service-hero h2 { font-size:1.8rem !important; }
+            .action-grid { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); width:100%; margin-top:18px; }
+            .action-grid .btn { white-space:normal; min-height:46px; line-height:1.15; }
+            .booking-row .card-body, .booking-card-layout { flex-direction:column; align-items:stretch !important; }
+            .booking-actions { display:grid !important; grid-template-columns:1fr 1fr; width:100%; }
+            .booking-actions form, .booking-actions .btn, .booking-actions form .btn { width:100%; }
+            .booking-actions form:has(input[name="owner_note"]) { grid-column:1 / -1; }
+            .booking-actions input[name="owner_note"] { width:100% !important; }
+            .resource-row { align-items:flex-start !important; gap:12px; }
+            .resource-row > div { width:100%; }
+            .resource-row form.d-flex { flex:1; }
+            .resource-row form.d-flex input { width:100% !important; min-width:0; }
+            .mobile-bottom-nav {
+                display:grid; grid-template-columns:repeat(5,1fr); position:fixed;
+                left:10px; right:10px; bottom:10px; z-index:1200; padding:7px 4px;
+                background:color-mix(in srgb, var(--modal-bg) 92%, transparent);
+                border:1px solid var(--border); border-radius:18px;
+                box-shadow:0 16px 45px rgba(0,0,0,.3); backdrop-filter:blur(18px);
+            }
+            .mobile-bottom-nav a { color:var(--text-muted); text-decoration:none; text-align:center; font-size:.65rem; line-height:1.15; padding:4px 1px; }
+            .mobile-bottom-nav .nav-icon { display:block; color:var(--text); font-size:1.18rem; margin-bottom:3px; }
+            .mobile-bottom-nav a:hover { color:var(--brand); }
+            .sticky-actions { position:static !important; }
+            .cinematic-hero { width:100vw; min-height:calc(100svh - 70px); margin:-18px 0 64px; }
+            .cinematic-content h1 { font-size:3.25rem !important; }
+            .cinematic-lead { font-size:.96rem; }
+            .editorial-heading { margin-bottom:26px; }
+            .page-hero { padding:26px 20px; border-radius:20px; margin-bottom:22px; }
+            .page-hero--media { min-height:280px; }
+            .page-hero--media h4 { font-size:2.35rem; }
+            .page-hero h2, .page-hero h3, .page-hero h4 { font-size:1.65rem; }
+            .search-composer { display:grid; gap:9px; }
+            .search-composer input { padding:14px 16px !important; }
+            .search-composer .btn { position:static !important; transform:none !important; width:100%; }
+            .filter-strip { flex-wrap:nowrap !important; overflow-x:auto; padding-bottom:7px; scrollbar-width:none; }
+            .filter-strip::-webkit-scrollbar { display:none; }
+            .filter-strip .btn { flex:0 0 auto; }
+            .form-page .card-body { padding:24px 20px !important; }
+            .auth-shell { min-height:auto; padding:22px 0; }
+            .auth-shell--cinematic { min-height:auto; margin-inline:-8px; padding:70px 12px 18px; border-radius:22px; background-position:36% center; }
+            .auth-shell--cinematic::before { top:25px; left:26px; bottom:auto; }
+            .auth-shell--cinematic .auth-panel > .text-center { text-align:left !important; padding-inline:8px; }
+            .service-grid-card > div:first-child { height:210px !important; }
+            .service-hero { min-height:300px; }
+            .map-toolbar > * { width:100%; }
+            .map-toolbar .btn { width:100%; }
+            .table-responsive { margin-inline:-4px; }
+            .table { min-width:620px; font-size:.84rem; }
+            canvas { max-height:280px; }
+            .d-flex.justify-content-between.align-items-center > h3 { font-size:1.55rem; }
+        }
+        @media (min-width:769px) and (max-width:1024px) {
+            main.container { max-width:940px; }
+            .cinematic-content h1 { font-size:5.4rem; }
+            .action-grid { max-width:100%; margin-top:18px; }
+            .booking-row .card-body { align-items:flex-start !important; }
+            .booking-actions { flex-wrap:wrap; justify-content:flex-end; max-width:360px; }
+            .sticky-actions { position:static !important; }
+            .map-shell #map { height:58vh; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
+        }
     </style>
 </head>
 <body>
 {% get_current_language as CURRENT_LANGUAGE %}
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 <div class="page-loader" aria-hidden="true"><div class="page-loader-spinner"></div></div>
 
 <!-- City Modal -->
@@ -182,7 +379,7 @@
         <div class="text-center mb-4">
             <div style="font-size:2.5rem; margin-bottom:8px;">📍</div>
             <h5 style="font-weight:700; margin-bottom:4px;">{% trans "Выберите ваш город" %}</h5>
-            <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">{% trans "Мы покажем сервисы рядом с вами" %}</p>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin:0;">{% trans "Мы покажем услуги рядом с вами" %}</p>
         </div>
         <input type="text" id="citySearch" class="form-control mb-3" placeholder="{% trans 'Поиск города...' %}">
         <div id="cityList">
@@ -249,9 +446,12 @@
             </button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
             </div>
-            <a class="nav-link" href="{% url 'service_list' %}">{% trans "Сервисы" %}</a>
+            <a class="nav-link" href="{% url 'service_list' %}">{% trans "Услуги" %}</a>
             <a class="nav-link" href="{% url 'service_map' %}">🗺️ {% trans "Карта" %}</a>
             {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                    <a class="nav-link" href="{% url 'platform_dashboard' %}">◆ Платформа</a>
+                {% endif %}
                 {% if user.role == 'business_owner' %}
                     {% with service=user.services.first %}
                     {% if service %}
@@ -260,6 +460,7 @@
                         <a class="nav-link" href="#">📊 {{ user.username }}</a>
                     {% endif %}
                     {% endwith %}
+                    <a class="nav-link" href="{% url 'my_bookings' %}">□ {% trans "Мои записи" %}</a>
                 {% else %}
                     <a class="nav-link" href="{% url 'favorites' %}">❤️</a>
                     <a class="nav-link" href="{% url 'profile' %}">👤 {{ user.username }}</a>
@@ -272,6 +473,30 @@
         </div>
         </div>
     </div>
+</nav>
+
+<nav class="mobile-bottom-nav" aria-label="Мобильная навигация">
+    <a href="{% url 'home' %}"><span class="nav-icon">⌂</span>{% trans "Главная" %}</a>
+    <a href="{% url 'service_list' %}"><span class="nav-icon">⌕</span>{% trans "Услуги" %}</a>
+    <a href="{% url 'service_map' %}"><span class="nav-icon">⌖</span>{% trans "Карта" %}</a>
+    {% if user.is_authenticated and user.role == 'business_owner' %}
+        {% with mobile_service=user.services.first %}
+        {% if mobile_service %}
+        <a href="{% url 'owner_dashboard' mobile_service.pk %}"><span class="nav-icon">▦</span>{% trans "Панель" %}</a>
+        {% else %}
+        <a href="{% url 'profile' %}"><span class="nav-icon">◎</span>{% trans "Профиль" %}</a>
+        {% endif %}
+        {% endwith %}
+    {% elif user.is_authenticated %}
+        <a href="{% url 'my_bookings' %}"><span class="nav-icon">□</span>{% trans "Записи" %}</a>
+    {% else %}
+        <a href="{% url 'login' %}"><span class="nav-icon">□</span>{% trans "Войти" %}</a>
+    {% endif %}
+    {% if user.is_authenticated %}
+    <a href="{% url 'profile' %}"><span class="nav-icon">◎</span>{% trans "Профиль" %}</a>
+    {% else %}
+    <a href="{% url 'register' %}"><span class="nav-icon">＋</span>{% trans "Регистрация" %}</a>
+    {% endif %}
 </nav>
 
 <main class="container my-4">
@@ -294,6 +519,13 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
     AOS.init({ duration: 600, once: true, offset: 80 });
+    const scrollProgress = document.getElementById('scrollProgress');
+    function updateScrollProgress() {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        scrollProgress.style.width = (scrollable > 0 ? window.scrollY / scrollable * 100 : 0) + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress, {passive:true});
+    updateScrollProgress();
 
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);

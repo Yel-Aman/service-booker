@@ -4,15 +4,24 @@
 {% block title %}{% trans "Мои записи" %} — ServiceBooker{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-up">
-    <h3 style="font-weight:800; letter-spacing:-1px;">{% trans "Мои записи" %}</h3>
+<div class="page-hero d-flex justify-content-between align-items-end mb-4" data-aos="fade-up">
+    <div><div class="page-kicker mb-2">KIMSONGY</div><h3 class="mb-0">{% trans "Мои записи" %}</h3></div>
     <a href="{% url 'service_list' %}" class="btn btn-primary btn-sm">+ {% trans "Новая запись" %}</a>
 </div>
+
+{% for entry in waitlist_entries %}
+{% if entry.last_notified_at %}
+<div class="alert alert-warning d-flex flex-wrap justify-content-between align-items-center gap-2">
+    <div>🔔 В <strong>{{ entry.service.name }}</strong> недавно освободилось время.</div>
+    <a href="{% url 'service_detail' entry.service.pk %}" class="btn btn-sm btn-warning">Посмотреть время</a>
+</div>
+{% endif %}
+{% endfor %}
 
 {% for booking in bookings %}
 <div class="card mb-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
     <div class="card-body p-4">
-        <div class="d-flex justify-content-between align-items-start">
+        <div class="booking-card-layout d-flex justify-content-between align-items-start gap-3">
             <div class="d-flex gap-3 align-items-center">
                 <div style="width:56px; height:56px; background:linear-gradient(135deg,#6c47ff,#a855f7); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0;">
                     {% if booking.slot.box.service.category.name == 'Автомойка' %}🚗
@@ -28,6 +37,16 @@
                     <p style="font-size:0.85rem; color:var(--text-muted); margin:0;">
                         📅 {{ booking.slot.date }} &nbsp; 🕐 {{ booking.slot.start_time|time:"H:i" }} - {{ booking.slot.end_time|time:"H:i" }}
                     </p>
+                    {% if booking.is_group_booking %}
+                    <p class="mt-2 mb-0" style="font-size:.82rem;color:#60a5fa;">
+                        👥 Совместная запись · {{ booking.participants.count|add:"1" }} из {{ booking.party_size }}
+                    </p>
+                    {% if booking.user == request.user %}
+                    <a href="{% url 'booking_invite' booking.pk %}" class="btn btn-sm btn-outline-primary mt-2">Пригласить друзей</a>
+                    {% else %}
+                    <span class="badge mt-2" style="background:rgba(37,99,235,.12);color:#60a5fa;">Вы участник</span>
+                    {% endif %}
+                    {% endif %}
                 </div>
             </div>
             <div class="text-end">
@@ -39,7 +58,23 @@
                     padding:6px 12px; font-size:0.8rem; border-radius:8px;">
                     {{ booking.get_status_display }}
                 </span>
-                {% if booking.status == 'confirmed' %}
+                {% if booking.status == 'confirmed' and booking.user == request.user %}
+                {% if booking.visit_confirmation == 'confirmed' %}
+                <div class="small mb-2" style="color:#00c851;font-weight:700;">✓ Вы подтвердили визит</div>
+                {% else %}
+                <div class="d-flex gap-1 mb-2">
+                    <form method="post" action="{% url 'confirm_visit' booking.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="answer" value="confirm">
+                        <button class="btn btn-sm btn-success">Я приду</button>
+                    </form>
+                    <form method="post" action="{% url 'confirm_visit' booking.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="answer" value="decline">
+                        <button class="btn btn-sm btn-outline-danger">Не смогу</button>
+                    </form>
+                </div>
+                {% endif %}
                 <a href="{% url 'reschedule_booking' booking.pk %}" class="btn btn-sm btn-outline-secondary mb-1">🔄 Перенести</a>
                 <form method="post" action="{% url 'cancel_booking' booking.pk %}">
                     {% csrf_token %}
@@ -47,8 +82,14 @@
                         {% trans "Отменить" %}
                     </button>
                 </form>
-                {% else %}
-                <a href="{% url 'service_detail' booking.slot.box.service.pk %}" class="btn btn-sm btn-outline-secondary">↻ Повторить</a>
+                {% elif booking.user == request.user %}
+                <a href="{% url 'repeat_booking' booking.pk %}" class="btn btn-sm btn-outline-secondary">↻ Повторить запись</a>
+                {% endif %}
+                {% if booking.status == 'no_show' %}
+                <div class="alert alert-danger mt-3 mb-0" style="font-size:.88rem;">
+                    <strong>Вы не пришли на эту запись.</strong>
+                    {% if booking.owner_note %}<div class="mt-1">Комментарий: {{ booking.owner_note }}</div>{% endif %}
+                </div>
                 {% endif %}
             </div>
         </div>
@@ -58,8 +99,8 @@
 <div class="text-center py-5" data-aos="fade-up">
     <div style="font-size:5rem; margin-bottom:16px; animation:float 3s ease-in-out infinite;">📋</div>
     <h5 style="font-weight:700; margin-bottom:8px;">{% trans "Записей пока нет" %}</h5>
-    <p style="color:var(--text-muted); margin-bottom:24px;">{% trans "Найди сервис и запишись онлайн!" %}</p>
-    <a href="{% url 'service_list' %}" class="btn btn-primary px-4">{% trans "Найти сервис" %}</a>
+    <p style="color:var(--text-muted); margin-bottom:24px;">{% trans "Найди услугу и запишись онлайн!" %}</p>
+    <a href="{% url 'service_list' %}" class="btn btn-primary px-4">{% trans "Найти услугу" %}</a>
 </div>
 {% endfor %}
 {% endblock %}

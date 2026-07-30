@@ -5,13 +5,13 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-up">
     <h3 style="font-weight:800; letter-spacing:-1px;">❤️ Избранное</h3>
-    <a href="{% url 'service_list' %}" class="btn btn-primary btn-sm">+ Найти сервис</a>
+    <a href="{% url 'service_list' %}" class="btn btn-primary btn-sm">+ Найти услугу</a>
 </div>
 
 <div class="row">
     {% for service in services %}
     <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-        <div class="card h-100" style="border-radius:20px; overflow:hidden;">
+        <div class="service-grid-card card h-100">
             <div style="position:relative; height:140px; overflow:hidden;">
                 <img src="
                     {% if service.category.image_url %}{{ service.category.image_url }}
@@ -49,8 +49,8 @@
     <div class="col-12 text-center py-5" data-aos="fade-up">
         <div style="font-size:4rem; margin-bottom:16px;">❤️</div>
         <h5 style="font-weight:700;">Избранное пусто</h5>
-        <p style="color:var(--text-muted);">Добавляйте сервисы в избранное чтобы быстро их находить</p>
-        <a href="{% url 'service_list' %}" class="btn btn-primary px-4 mt-2">Найти сервис</a>
+        <p style="color:var(--text-muted);">Добавляйте услуги в избранное, чтобы быстро их находить</p>
+        <a href="{% url 'service_list' %}" class="btn btn-primary px-4 mt-2">Найти услугу</a>
     </div>
     {% endfor %}
 </div>

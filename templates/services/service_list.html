@@ -1,13 +1,20 @@
 {% extends 'base.html' %}
 {% load i18n %}
 
-{% block title %}{% trans "Все сервисы" %} — ServiceBooker{% endblock %}
+{% block title %}{% trans "Все услуги" %} — kimsongy{% endblock %}
 
 {% block content %}
 <!-- Поиск -->
-<div style="background:linear-gradient(135deg, rgba(108,71,255,0.2), rgba(168,85,247,0.1)); border:1px solid rgba(108,71,255,0.2); border-radius:24px; padding:40px; margin-bottom:32px;" data-aos="fade-up">
-    <h4 style="font-weight:800; letter-spacing:-1px; margin-bottom:20px; color:white;">🔍 {% trans "Найти сервис в" %} {{ current_city.name_ru }}</h4>
-    <div class="position-relative">
+<div class="page-hero page-hero--media" data-aos="fade-up">
+    <div class="page-kicker mb-2">
+        {% if show_all_cities %}
+            ВСЕ ГОРОДА · РЕЖИМ ВЛАДЕЛЬЦА
+        {% else %}
+            {% trans "Каталог города" %} · {{ current_city.name_ru }}
+        {% endif %}
+    </div>
+    <h4>{% trans "Найдите место для своего времени" %}</h4>
+    <div class="search-composer">
         <input type="text" id="search-input" value="{{ query }}"
                class="form-control form-control-lg"
                placeholder="{% trans 'Мойка, парикмахерская, шиномонтаж...' %}"
@@ -23,7 +30,7 @@
 </div>
 
 <!-- Фильтр -->
-<div class="mb-4 d-flex flex-wrap gap-2" data-aos="fade-up">
+<div class="filter-strip mb-4 d-flex flex-wrap gap-2" data-aos="fade-up">
     <a href="{% url 'service_list' %}{% if query %}?q={{ query }}{% endif %}"
        class="btn btn-sm {% if not selected_category and not open_now %}btn-primary{% else %}btn-outline-secondary{% endif %}">
         {% trans "Все" %}
@@ -50,7 +57,7 @@
 <div class="row">
     {% for service in services %}
     <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-        <div class="card h-100" style="border-radius:20px; overflow:hidden;">
+        <div class="service-grid-card card h-100">
             <div style="position:relative; height:160px; overflow:hidden;">
                 <img src="
                     {% if service.category.image_url %}{{ service.category.image_url }}
@@ -72,6 +79,9 @@
             <div class="card-body p-4">
                 <h5 style="font-weight:700; letter-spacing:-0.5px; margin-bottom:12px;">{{ service.name }}</h5>
                 <p style="font-size:0.85rem; margin-bottom:6px;">📍 {{ service.address }}</p>
+                {% if show_all_cities and service.city %}
+                <p style="font-size:0.8rem; color:#60a5fa; margin-bottom:6px;">{{ service.city.name_ru }}</p>
+                {% endif %}
                 <p style="font-size:0.85rem; margin-bottom:6px;">📞 {{ service.phone }}</p>
                 <p style="font-size:0.85rem; color:#00c851; font-weight:600; margin-bottom:0;">🕐 {{ service.opening_time|time:"H:i" }} - {{ service.closing_time|time:"H:i" }}</p>
             </div>

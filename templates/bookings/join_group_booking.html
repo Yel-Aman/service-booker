@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Совместная запись — kimsongy{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="page-hero text-center">
+        <div class="page-kicker mb-2">ВАС ПРИГЛАСИЛИ</div>
+        <h2>{{ booking.slot.box.service.name }}</h2>
+        <p>{{ booking.slot.date|date:"d.m.Y" }} · {{ booking.slot.start_time|time:"H:i" }} · {{ booking.slot.box.name }}</p>
+    </div>
+    <div class="card"><div class="card-body p-4 text-center">
+        <p>Организатор: <strong>{{ booking.user.username }}</strong></p>
+        <p>Участников: {{ participant_count|add:"1" }} из {{ booking.party_size }}</p>
+        {% if already_joined %}
+        <div class="alert alert-success">Вы уже присоединились к этой записи.</div>
+        {% elif can_join %}
+        <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary w-100">Присоединиться</button>
+        </form>
+        {% elif booking.user == request.user %}
+        <div class="alert alert-info">Вы организатор этой записи.</div>
+        {% else %}
+        <div class="alert alert-warning">Все места уже заняты.</div>
+        {% endif %}
+    </div></div>
+</div>
+{% endblock %}

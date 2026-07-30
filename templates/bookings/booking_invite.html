@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Пригласить друзей — kimsongy{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <div class="page-hero text-center">
+        <div class="page-kicker mb-2">СОВМЕСТНАЯ ЗАПИСЬ</div>
+        <h2>Пригласите друзей</h2>
+        <p class="mb-0">{{ booking.slot.box.service.name }} · {{ booking.slot.date|date:"d.m.Y" }} · {{ booking.slot.start_time|time:"H:i" }}</p>
+    </div>
+    <div class="card"><div class="card-body p-4">
+        <p>Отправьте эту ссылку участникам. После входа они смогут подтвердить участие.</p>
+        <div class="input-group mb-3">
+            <input id="inviteUrl" class="form-control" value="{{ invite_url }}" readonly>
+            <button class="btn btn-primary" type="button" onclick="copyInvite()">Копировать</button>
+        </div>
+        <div class="d-grid gap-2">
+            <a class="btn" style="background:#25D366;color:white;" target="_blank"
+               href="https://wa.me/?text={{ invite_url|urlencode }}">Отправить в WhatsApp</a>
+            <a class="btn" style="background:#229ED9;color:white;" target="_blank"
+               href="https://t.me/share/url?url={{ invite_url|urlencode }}">Отправить в Telegram</a>
+            <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary">← Мои записи</a>
+        </div>
+    </div></div>
+</div>
+<script>
+function copyInvite() {
+    navigator.clipboard.writeText(document.getElementById('inviteUrl').value);
+}
+</script>
+{% endblock %}

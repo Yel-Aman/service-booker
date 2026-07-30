@@ -22,6 +22,9 @@ class CustomUser(AbstractUser):
     def is_business_owner(self):
         return self.role == 'business_owner'
 
+    @property
+    def no_show_count(self):
+        return self.booking_set.filter(status='no_show').count()
 
 class RecentlyViewedService(models.Model):
     user = models.ForeignKey(
@@ -42,5 +45,24 @@ class RecentlyViewedService(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'service'],
                 name='unique_recent_service_per_user',
+            ),
+        ]
+
+
+class UserDailyActivity(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='daily_activity',
+    )
+    date = models.DateField()
+    last_seen_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-date']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'date'],
+                name='unique_user_activity_per_day',
             ),
         ]

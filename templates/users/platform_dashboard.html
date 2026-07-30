@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Панель платформы — kimsongy{% endblock %}
+
+{% block content %}
+<div class="page-hero d-flex flex-wrap justify-content-between align-items-end gap-3">
+    <div>
+        <div class="page-kicker mb-2">KIMSONGY · PLATFORM</div>
+        <h2 class="mb-2">Состояние платформы</h2>
+        <p class="mb-0">Пользователи, активность и записи по всей системе</p>
+    </div>
+    <a href="/admin/" class="btn btn-outline-light">Django Admin →</a>
+</div>
+
+<h5 class="section-title">Аудитория</h5>
+<div class="row g-3 mb-5">
+    <div class="col-6 col-lg-3"><div class="metric-card card p-3"><strong>{{ users_total }}</strong><span>Всего пользователей</span></div></div>
+    <div class="col-6 col-lg-3"><div class="metric-card card p-3"><strong>{{ dau }}</strong><span>DAU · сегодня</span></div></div>
+    <div class="col-6 col-lg-3"><div class="metric-card card p-3"><strong>{{ wau }}</strong><span>WAU · 7 дней</span></div></div>
+    <div class="col-6 col-lg-3"><div class="metric-card card p-3"><strong>{{ mau }}</strong><span>MAU · 30 дней</span></div></div>
+</div>
+
+<div class="card mb-5"><div class="card-body p-4">
+    <div class="d-flex flex-wrap justify-content-between gap-2 mb-4">
+        <div><h5 class="mb-1">Динамика за 30 дней</h5><div class="text-muted small">Активность, регистрации и записи</div></div>
+        <div class="d-flex flex-wrap gap-3 small">
+            <span style="color:#60a5fa;">● Активные</span>
+            <span style="color:#22c55e;">● Регистрации</span>
+            <span style="color:#f59e0b;">● Записи</span>
+        </div>
+    </div>
+    <canvas id="platformChart" height="90"></canvas>
+</div></div>
+
+<h5 class="section-title">Сегодня и последние 30 дней</h5>
+<div class="row g-3 mb-5">
+    <div class="col-6 col-md-4 col-xl-2"><div class="metric-card card p-3"><strong>{{ new_today }}</strong><span>Новых сегодня</span></div></div>
+    <div class="col-6 col-md-4 col-xl-2"><div class="metric-card card p-3"><strong>{{ bookings_today }}</strong><span>Создано записей</span></div></div>
+    <div class="col-6 col-md-4 col-xl-2"><div class="metric-card card p-3"><strong>{{ appointments_today }}</strong><span>Визитов сегодня</span></div></div>
+    <div class="col-6 col-md-4 col-xl-2"><div class="metric-card card p-3"><strong style="color:#22c55e;">{{ completed_30 }}</strong><span>Завершено</span></div></div>
+    <div class="col-6 col-md-4 col-xl-2"><div class="metric-card card p-3"><strong style="color:#f59e0b;">{{ cancelled_30 }}</strong><span>Отменено</span></div></div>
+    <div class="col-6 col-md-4 col-xl-2"><div class="metric-card card p-3"><strong style="color:#ef4444;">{{ no_show_30 }}</strong><span>Неявки</span></div></div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-lg-4"><div class="card h-100"><div class="card-body p-4">
+        <h5>Популярные услуги</h5>
+        {% for item in top_services %}
+        <div class="d-flex justify-content-between py-2 border-bottom">
+            <span>{{ item.slot__box__service__name }}<small class="d-block text-muted">{{ item.slot__box__service__city__name_ru|default:"—" }}</small></span>
+            <strong>{{ item.count }}</strong>
+        </div>
+        {% empty %}<p class="text-muted">Пока нет данных.</p>{% endfor %}
+    </div></div></div>
+    <div class="col-lg-4"><div class="card h-100"><div class="card-body p-4">
+        <h5>Категории</h5>
+        {% for item in top_categories %}
+        <div class="d-flex justify-content-between py-2 border-bottom"><span>{{ item.slot__box__service__category__name }}</span><strong>{{ item.count }}</strong></div>
+        {% empty %}<p class="text-muted">Пока нет данных.</p>{% endfor %}
+    </div></div></div>
+    <div class="col-lg-4"><div class="card h-100"><div class="card-body p-4">
+        <h5>Города</h5>
+        {% for item in top_cities %}
+        <div class="d-flex justify-content-between py-2 border-bottom"><span>{{ item.slot__box__service__city__name_ru|default:"Без города" }}</span><strong>{{ item.count }}</strong></div>
+        {% empty %}<p class="text-muted">Пока нет данных.</p>{% endfor %}
+    </div></div></div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6"><div class="card h-100"><div class="card-body p-4">
+        <h5>Последние пользователи</h5>
+        <div class="table-responsive"><table class="table align-middle">
+            <thead><tr><th>Пользователь</th><th>Роль</th><th>Дата</th></tr></thead>
+            <tbody>{% for item in latest_users %}<tr><td>{{ item.username }}<small class="d-block text-muted">{{ item.email|default:"—" }}</small></td><td>{{ item.get_role_display }}</td><td>{{ item.date_joined|date:"d.m H:i" }}</td></tr>{% endfor %}</tbody>
+        </table></div>
+    </div></div></div>
+    <div class="col-lg-6"><div class="card h-100"><div class="card-body p-4">
+        <h5>Последние записи</h5>
+        <div class="table-responsive"><table class="table align-middle">
+            <thead><tr><th>Клиент</th><th>Услуга</th><th>Статус</th></tr></thead>
+            <tbody>{% for item in latest_bookings %}<tr><td>{{ item.user.username|default:item.client_name|default:"Гость" }}</td><td>{{ item.slot.box.service.name }}<small class="d-block text-muted">{{ item.created_at|date:"d.m H:i" }}</small></td><td>{{ item.get_status_display }}</td></tr>{% endfor %}</tbody>
+        </table></div>
+    </div></div></div>
+</div>
+
+<style>
+.metric-card strong { font-size:2rem; line-height:1; margin-bottom:9px; }
+.metric-card span { color:var(--text-muted); font-size:.78rem; text-align:center; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const platformData = {{ chart_data|safe }};
+new Chart(document.getElementById('platformChart'), {
+    type:'line',
+    data:{labels:platformData.labels,datasets:[
+        {data:platformData.activity,borderColor:'#60a5fa',backgroundColor:'rgba(96,165,250,.08)',fill:true,tension:.35},
+        {data:platformData.registrations,borderColor:'#22c55e',tension:.35},
+        {data:platformData.bookings,borderColor:'#f59e0b',tension:.35}
+    ]},
+    options:{responsive:true,plugins:{legend:{display:false}},scales:{
+        x:{grid:{display:false},ticks:{color:'#8b95a7',maxTicksLimit:10}},
+        y:{beginAtZero:true,ticks:{precision:0,color:'#8b95a7'},grid:{color:'rgba(128,128,128,.1)'}}
+    }}
+});
+</script>
+{% endblock %}

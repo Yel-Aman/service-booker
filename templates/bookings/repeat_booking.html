@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Повторить запись — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary btn-sm mb-3">← Мои записи</a>
+    <h3 style="font-weight:800;">↻ Повторить запись</h3>
+    <p style="color:var(--text-muted);">
+        {{ service.name }} · {{ booking.slot.box.name }}
+        {% if booking.offering %} · {{ booking.offering.name }}{% endif %}
+        {% if booking.employee %} · {{ booking.employee.name }}{% endif %}
+    </p>
+</div>
+
+<div class="row g-3">
+{% for slot in available_slots %}
+    <div class="col-sm-6 col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <div style="font-weight:750;">{{ slot.date|date:"d.m.Y" }} · {{ slot.start_time|time:"H:i" }}</div>
+                <div class="mb-3" style="color:var(--text-muted);font-size:.85rem;">{{ slot.box.name }}</div>
+                <form method="post" action="{% url 'book_slot' slot.pk %}">
+                    {% csrf_token %}
+                    {% if booking.offering %}<input type="hidden" name="offering" value="{{ booking.offering.pk }}">{% endif %}
+                    {% if booking.employee %}<input type="hidden" name="employee" value="{{ booking.employee.pk }}">{% endif %}
+                    <button class="btn btn-primary w-100">Записаться так же</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <div class="col-12">
+        <div class="card"><div class="card-body text-center py-5">
+            <h5>Свободного времени пока нет</h5>
+            <form method="post" action="{% url 'join_waitlist' service.pk %}" class="mt-3">
+                {% csrf_token %}
+                <button class="btn btn-outline-warning">🔔 Встать в лист ожидания</button>
+            </form>
+        </div></div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

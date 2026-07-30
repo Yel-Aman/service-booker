@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Неявки — {{ service.name }}{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+        <a href="{% url 'owner_dashboard' service.pk %}" class="btn btn-outline-secondary btn-sm mb-2">← Назад</a>
+        <h3 class="mb-1" style="font-weight:800;">⚠️ Статистика неявок</h3>
+        <div style="color:var(--text-muted);">{{ service.name }}</div>
+    </div>
+    <a href="{% url 'analytics' service.pk %}" class="btn btn-outline-primary">Общая аналитика</a>
+</div>
+
+<form method="get" class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-sm-4">
+                <label class="form-label">С даты</label>
+                <input type="date" name="date_from" value="{{ date_from|date:'Y-m-d' }}" class="form-control">
+            </div>
+            <div class="col-sm-4">
+                <label class="form-label">По дату</label>
+                <input type="date" name="date_to" value="{{ date_to|date:'Y-m-d' }}" class="form-control">
+            </div>
+            <div class="col-sm-4">
+                <button class="btn btn-primary w-100">Показать</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-4">
+        <div class="card h-100 text-center p-3">
+            <div style="font-size:2rem;font-weight:800;color:#ef4444;">{{ no_show_total }}</div>
+            <div style="color:var(--text-muted);">Неявок за период</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-4">
+        <div class="card h-100 text-center p-3">
+            <div style="font-size:2rem;font-weight:800;color:#f59e0b;">{{ no_show_rate }}%</div>
+            <div style="color:var(--text-muted);">Доля неявок</div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <div class="card h-100 text-center p-3">
+            <div style="font-size:2rem;font-weight:800;color:#6c47ff;">{{ total_bookings }}</div>
+            <div style="color:var(--text-muted);">Всего записей за период</div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 style="font-weight:750;">Клиенты с неявками</h5>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr><th>Клиент</th><th>Телефон</th><th>Неявок</th></tr>
+                </thead>
+                <tbody>
+                {% for client in frequent_clients %}
+                    <tr>
+                        <td>{{ client.user__username }}</td>
+                        <td>{{ client.user__phone|default:"—" }}</td>
+                        <td><span class="badge bg-danger">{{ client.no_show_count }}</span></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="3" class="text-center py-4" style="color:var(--text-muted);">За этот период неявок нет.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 style="font-weight:750;">Список неявок по датам</h5>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr><th>Дата и время</th><th>Клиент</th><th>Ресурс</th><th>Комментарий владельца</th><th>Всего неявок</th></tr>
+                </thead>
+                <tbody>
+                {% for booking in no_shows %}
+                    <tr>
+                        <td>{{ booking.slot.date|date:"d.m.Y" }} · {{ booking.slot.start_time|time:"H:i" }}</td>
+                        <td>
+                            {% if booking.user %}
+                                {{ booking.user.username }}
+                                {% if booking.user.phone %}<div style="color:var(--text-muted);font-size:.8rem;">{{ booking.user.phone }}</div>{% endif %}
+                            {% else %}
+                                {{ booking.client_name|default:"Гость" }}
+                            {% endif %}
+                        </td>
+                        <td>{{ booking.slot.box.name }}</td>
+                        <td>{{ booking.owner_note|default:"—" }}</td>
+                        <td>{% if booking.user %}{{ booking.user.no_show_count }}{% else %}—{% endif %}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="5" class="text-center py-4" style="color:var(--text-muted);">Записей не найдено.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

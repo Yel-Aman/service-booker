@@ -645,3 +645,50 @@ msgstr "Registration takes less than a minute"
 #: .\templates\users\register.html:37
 msgid "Уже есть аккаунт?"
 msgstr "Already have an account?"
+msgid "Время — самое ценное"
+msgstr "Time is the ultimate luxury"
+
+msgid "Находите лучшие места и бронируйте услуги в несколько касаний"
+msgstr "Discover exceptional places and book services in just a few taps"
+
+msgid "Прокрутить ниже"
+msgstr "Scroll down"
+
+msgid "Исследовать"
+msgstr "Explore"
+
+msgid "Выберите направление"
+msgstr "Choose your direction"
+
+msgid "Всё необходимое — рядом"
+msgstr "Everything you need, close at hand"
+
+msgid "Каталог города"
+msgstr "City guide"
+
+msgid "Найдите место для своего времени"
+msgstr "Find a place worthy of your time"
+
+msgid "Услуги"
+msgstr "Services"
+
+msgid "Все услуги"
+msgstr "All services"
+
+msgid "Найти услугу"
+msgstr "Find a service"
+
+msgid "Популярные услуги"
+msgstr "Popular services"
+
+msgid "Карта услуг"
+msgstr "Services map"
+
+msgid "Выбрать услугу"
+msgstr "Choose a service"
+
+msgid "Мы покажем услуги рядом с вами"
+msgstr "We will show services near you"
+
+msgid "вариантов"
+msgstr "options"

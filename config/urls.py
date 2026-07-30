@@ -3,9 +3,11 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
+from users import views as user_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('platform-dashboard/', user_views.platform_dashboard, name='platform_dashboard'),
     path('i18n/', include('django.conf.urls.i18n')),
     path('', include('services.urls')),
     path('bookings/', include('bookings.urls')),

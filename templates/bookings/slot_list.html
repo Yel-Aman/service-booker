@@ -3,7 +3,7 @@
 {% block title %}Слоты — {{ box.name }}{% endblock %}
 
 {% block content %}
-<div style="background:linear-gradient(135deg, rgba(108,71,255,0.3), rgba(168,85,247,0.2)); border:1px solid rgba(108,71,255,0.3); border-radius:24px; padding:40px; margin-bottom:32px; color:white;" data-aos="fade-up">
+<div class="page-hero" data-aos="fade-up">
     <a href="{% url 'service_detail' box.service.pk %}" style="color:rgba(255,255,255,0.5); font-size:0.85rem; text-decoration:none;">← {{ box.service.name }}</a>
     <h2 style="font-weight:800; letter-spacing:-1px; margin-top:8px; margin-bottom:4px; color:white;">{{ box.name }}</h2>
     <p style="opacity:0.6; margin:0; color:white;">Выберите удобное время для записи</p>
@@ -19,18 +19,17 @@
     <div class="row">
         {% for slot in day.list %}
         <div class="col-md-3 col-6 mb-3">
-            <div style="border-radius:16px; padding:16px; text-align:center; border:1px solid;
+            <div class="slot-card" style="border-color:
                 {% if slot.status == 'free' %}
-                    border-color:rgba(108,71,255,0.3); background:var(--bg-card);
+                    rgba(37,99,235,0.3); background:var(--bg-card);
                 {% elif slot.status == 'booked' %}
-                    border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.05);
+                    rgba(239,68,68,0.3); background:rgba(239,68,68,0.05);
                 {% else %}
-                    border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.05);
+                    rgba(245,158,11,0.3); background:rgba(245,158,11,0.05);
                 {% endif %}"
                 {% if slot.status == 'free' %}
                 onmouseover="this.style.borderColor='rgba(108,71,255,0.6)'; this.style.background='rgba(108,71,255,0.1)'; this.style.transform='translateY(-2px)';"
                 onmouseout="this.style.borderColor='rgba(108,71,255,0.3)'; this.style.background='var(--bg-card)'; this.style.transform='translateY(0)';"
-                style="transition:all 0.2s; cursor:pointer;"
                 {% endif %}>
                 <div style="font-weight:700; font-size:1rem; margin-bottom:6px;">
                     {{ slot.start_time|time:"H:i" }}
@@ -56,7 +55,7 @@
 <div class="text-center py-5" data-aos="fade-up">
     <div style="font-size:4rem; margin-bottom:16px;">😔</div>
     <h5 style="font-weight:700;">Слоты не добавлены</h5>
-    <p style="color:var(--text-muted);">Обратитесь к владельцу сервиса</p>
+    <p style="color:var(--text-muted);">Обратитесь к владельцу услуги</p>
 </div>
 {% endfor %}
 

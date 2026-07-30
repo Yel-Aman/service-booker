@@ -5,7 +5,12 @@
 
 {% block content %}
 <!-- Hero сервиса -->
-<div style="background:linear-gradient(135deg, rgba(108,71,255,0.3), rgba(168,85,247,0.2)); border:1px solid rgba(108,71,255,0.3); border-radius:24px; padding:48px; margin-bottom:32px; color:white; position:relative; overflow:hidden;" data-aos="fade-up">
+<div class="service-hero position-relative overflow-hidden" data-aos="fade-up">
+    <div style="position:absolute;inset:0;opacity:.3;background:
+        {% if service.image_url %}url('{{ service.image_url }}'){% else %}url('https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1800&auto=format&fit=crop&q=85'){% endif %}
+        center/cover;"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,15,35,.92),rgba(5,15,35,.25));"></div>
+    <div style="position:relative;z-index:1;">
     <div style="position:absolute; top:-60px; right:-60px; width:250px; height:250px; background:radial-gradient(circle, rgba(108,71,255,0.3), transparent); border-radius:50%;"></div>
     <span style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); padding:4px 14px; border-radius:50px; font-size:0.8rem; font-weight:600; color:white;">{{ service.category.name }}</span>
     <h2 style="font-weight:800; letter-spacing:-1px; margin-top:12px; margin-bottom:4px; font-size:2.5rem; color:white;">{{ service.name }}</h2>
@@ -20,6 +25,7 @@
         <span style="color:rgba(255,255,255,0.6); font-size:0.9rem; margin-left:8px;">{{ avg_rating|floatformat:1 }} / 5 ({{ reviews|length }} {% trans "отзывов" %})</span>
     </div>
     {% endif %}
+    </div>
 </div>
 
 <div class="row">
@@ -142,7 +148,7 @@
     </div>
 
     <div class="col-md-4">
-        <div class="card" data-aos="fade-up" data-aos-delay="200" style="position:sticky; top:80px;">
+        <div class="card sticky-actions" data-aos="fade-up" data-aos-delay="200" style="position:sticky; top:80px;">
             <div class="card-body p-4">
                 <h6 style="font-weight:700; margin-bottom:20px;">{% trans "Быстрые действия" %}</h6>
                 <a href="tel:{{ service.phone }}" class="btn btn-success w-100 mb-3" style="border-radius:12px; padding:14px;">
@@ -163,6 +169,21 @@
                         {% if service in user.favorites.all %}❤️ {% trans "В избранном" %}{% else %}🤍 {% trans "В избранное" %}{% endif %}
                     </button>
                 </form>
+                {% if is_waitlisted %}
+                <form method="post" action="{% url 'leave_waitlist' service.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-warning w-100 mb-3" style="border-radius:12px;padding:14px;">
+                        🔔 В листе ожидания — выйти
+                    </button>
+                </form>
+                {% else %}
+                <form method="post" action="{% url 'join_waitlist' service.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-warning w-100 mb-3" style="border-radius:12px;padding:14px;">
+                        🔔 Сообщить, если освободится время
+                    </button>
+                </form>
+                {% endif %}
                 {% endif %}
                 <a href="https://wa.me/?text={% trans 'Записывайся онлайн' %}: {{ service.name }} — {{ request.build_absolute_uri }}"
                    target="_blank" class="btn w-100 mb-3"
@@ -184,7 +205,7 @@
                 </a>
                 {% endif %}
                 <a href="{% url 'service_list' %}" class="btn btn-outline-secondary w-100" style="border-radius:12px; padding:14px;">
-                    ← {% trans "Все сервисы" %}
+                    ← {% trans "Все услуги" %}
                 </a>
             </div>
         </div>

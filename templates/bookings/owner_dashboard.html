@@ -15,15 +15,17 @@
 </div></div>
 {% endif %}
 <!-- Header -->
-<div style="background:linear-gradient(135deg, rgba(108,71,255,0.3), rgba(168,85,247,0.2)); border:1px solid rgba(108,71,255,0.3); border-radius:24px; padding:40px; margin-bottom:32px; color:white;" data-aos="fade-up">
+<div class="owner-hero" data-aos="fade-up">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div>
             <p style="opacity:0.5; font-size:0.8rem; text-transform:uppercase; letter-spacing:3px; margin-bottom:8px; color:#63ffb4;">{% trans "Панель управления" %}</p>
             <h2 style="font-weight:800; letter-spacing:-1px; margin:0; color:white;">{{ service.name }}</h2>
         </div>
-        <div class="d-flex gap-2 flex-wrap">
+        <div class="action-grid">
+            <a href="{% url 'service_list' %}" class="btn btn-sm">⌕ Услуги для себя</a>
             <a href="{% url 'edit_service' service.pk %}" class="btn btn-sm" style="background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.15); border-radius:10px;">✏️ {% trans "Редактировать" %}</a>
             <a href="{% url 'analytics' service.pk %}" class="btn btn-sm" style="background:rgba(99,255,180,0.1); color:#00c851; border:1px solid rgba(99,255,180,0.3); border-radius:10px;">📊 {% trans "Аналитика" %}</a>
+            <a href="{% url 'no_show_report' service.pk %}" class="btn btn-sm" style="background:rgba(239,68,68,.1);color:#ef4444;border:1px solid rgba(239,68,68,.3);border-radius:10px;">⚠️ Неявки</a>
             <a href="{% url 'generate_slots' service.pk %}" class="btn btn-primary btn-sm">⚙️ {% trans "Создать слоты" %}</a>
             <a href="{% url 'manage_schedule' service.pk %}" class="btn btn-sm" style="background:rgba(99,255,180,0.1); color:#63ffb4; border:1px solid rgba(99,255,180,0.3); border-radius:10px;">🗓️ {% trans "График работы" %}</a>
             <a href="{% url 'manage_catalog' service.pk %}" class="btn btn-sm" style="background:rgba(37,99,235,0.12); color:#60a5fa; border:1px solid rgba(37,99,235,0.3); border-radius:10px;">🧩 Услуги и сотрудники</a>
@@ -38,19 +40,19 @@
 <!-- Статистика -->
 <div class="row mb-4">
     <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="0">
-        <div class="card text-center p-4">
+        <div class="card metric-card text-center p-4">
             <div style="font-size:2.5rem; font-weight:800; color:#6c47ff;">{{ total_bookings }}</div>
             <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">{% trans "Всего броней" %}</div>
         </div>
     </div>
     <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="100">
-        <div class="card text-center p-4">
+        <div class="card metric-card text-center p-4">
             <div style="font-size:2.5rem; font-weight:800; color:#f59e0b;">{{ in_progress }}</div>
             <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">{% trans "В процессе" %}</div>
         </div>
     </div>
     <div class="col-md-4 mb-3" data-aos="fade-up" data-aos-delay="200">
-        <div class="card text-center p-4">
+        <div class="card metric-card text-center p-4">
             <div style="font-size:2.5rem; font-weight:800; color:#00c851;">{{ free_slots }}</div>
             <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">{% trans "Свободных слотов" %}</div>
         </div>
@@ -62,8 +64,7 @@
     <div class="card-body p-4">
         <h6 style="font-weight:700; margin-bottom:20px;">{{ service.category.slot_unit }}</h6>
         {% for box in service.boxes.all %}
-        <div id="box-row-{{ box.pk }}" class="d-flex justify-content-between align-items-center p-3 mb-2"
-             style="background:var(--bg); border-radius:14px; border:1px solid var(--border);">
+        <div id="box-row-{{ box.pk }}" class="resource-row d-flex justify-content-between align-items-center p-3 mb-2">
             <span style="font-weight:600; {% if not box.is_active %}opacity:0.4; text-decoration:line-through;{% endif %}">
                 {{ box.name }}
             </span>
@@ -102,8 +103,8 @@
 <!-- Активные брони -->
 <h6 style="font-weight:700; margin-bottom:16px;" data-aos="fade-up">{% trans "Активные брони" %}</h6>
 {% for booking in bookings %}
-<div class="card mb-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
-    <div class="card-body p-4 d-flex justify-content-between align-items-center">
+<div class="card booking-row mb-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+    <div class="card-body booking-card-layout p-4 d-flex justify-content-between align-items-center">
         <div class="d-flex gap-3 align-items-center">
             <div style="width:48px; height:48px; background:linear-gradient(135deg,#6c47ff,#a855f7); border-radius:14px; display:flex; align-items:center; justify-content:center; color:white; font-size:1.2rem; flex-shrink:0;">
                 👤
@@ -113,6 +114,12 @@
                     <div style="font-weight:700; margin-bottom:4px;">{{ booking.user.username }}
                         {% if booking.user.phone %}<span style="color:var(--text-muted); font-weight:400; font-size:0.85rem;"> — {{ booking.user.phone }}</span>{% endif %}
                     </div>
+                    {% if booking.user.no_show_count >= 2 %}
+                    <div style="font-size:.78rem;color:#ef4444;font-weight:700;">⚠️ Частые неявки: {{ booking.user.no_show_count }}</div>
+                    {% endif %}
+                    <div class="mt-1">
+                        <a href="{% url 'client_card' service.pk booking.user.pk %}" style="font-size:.78rem;">Карточка клиента →</a>
+                    </div>
                 {% else %}
                     <div style="font-weight:700; margin-bottom:4px;">📞 {{ booking.client_name }}
                         <span style="color:var(--text-muted); font-weight:400; font-size:0.85rem;"> — {{ booking.client_phone }}</span>
@@ -121,9 +128,18 @@
                 <div style="font-size:0.85rem; color:var(--text-muted);">
                     {{ booking.slot.box.name }} · 📅 {{ booking.slot.date }} · 🕐 {{ booking.slot.start_time|time:"H:i" }} - {{ booking.slot.end_time|time:"H:i" }}
                 </div>
+                {% if booking.user %}
+                <div style="font-size:.78rem;margin-top:4px;">
+                    {% if booking.visit_confirmation == 'confirmed' %}
+                    <span style="color:#00c851;font-weight:700;">✓ Клиент подтвердил визит</span>
+                    {% else %}
+                    <span style="color:#f59e0b;">Ожидается подтверждение</span>
+                    {% endif %}
+                </div>
+                {% endif %}
             </div>
         </div>
-        <div class="d-flex gap-2">
+        <div class="booking-actions">
             {% if booking.slot.status == 'booked' %}
             <form method="post" action="{% url 'slot_in_progress' booking.slot.pk %}">
                 {% csrf_token %}
@@ -138,7 +154,8 @@
             {% if booking.status == 'confirmed' or booking.status == 'in_progress' %}
             <form method="post" action="{% url 'owner_booking_status' booking.pk 'no_show' %}">
                 {% csrf_token %}
-                <button class="btn btn-sm btn-outline-secondary">Не пришёл</button>
+                <input type="text" name="owner_note" class="form-control form-control-sm mb-1" style="width:150px;" placeholder="Комментарий">
+                <button class="btn btn-sm btn-outline-secondary w-100">Не пришёл</button>
             </form>
             <form method="post" action="{% url 'owner_booking_status' booking.pk 'cancelled' %}">
                 {% csrf_token %}
@@ -154,6 +171,21 @@
     <p style="color:var(--text-muted); margin:0;">Активных броней нет</p>
 </div>
 {% endfor %}
+
+{% if waitlist_entries %}
+<h6 class="mt-4 mb-3" style="font-weight:700;">🔔 Лист ожидания</h6>
+<div class="card mb-4"><div class="card-body">
+    {% for entry in waitlist_entries %}
+    <div class="d-flex justify-content-between align-items-center py-2 {% if not forloop.last %}border-bottom{% endif %}">
+        <div>
+            <strong>{{ entry.user.username }}</strong>
+            {% if entry.user.phone %}<span style="color:var(--text-muted);"> · {{ entry.user.phone }}</span>{% endif %}
+        </div>
+        <a href="{% url 'client_card' service.pk entry.user.pk %}" class="btn btn-sm btn-outline-secondary">Карточка</a>
+    </div>
+    {% endfor %}
+</div></div>
+{% endif %}
 
 {% if service_reviews %}
 <h6 class="mt-4 mb-3" style="font-weight:700;">⭐ Последние отзывы</h6>

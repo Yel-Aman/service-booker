@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Booking, TimeSlot, Review
+from .models import (
+    Booking,
+    BookingParticipant,
+    ClientCard,
+    Review,
+    TimeSlot,
+    WaitlistEntry,
+)
 
 
 @admin.register(TimeSlot)
@@ -21,3 +28,8 @@ class ReviewAdmin(admin.ModelAdmin):
     list_display = ('user', 'service', 'rating', 'is_approved', 'created_at')
     list_filter = ('rating', 'service', 'is_approved')
     list_editable = ('is_approved',)
+
+
+admin.site.register(WaitlistEntry)
+admin.site.register(ClientCard)
+admin.site.register(BookingParticipant)

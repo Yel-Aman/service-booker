@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <div class="col-md-5" data-aos="fade-up">
+    <div class="form-page col-md-7 col-lg-6" data-aos="fade-up">
         <div class="card" style="border-radius:24px;">
             <div class="card-body p-5 text-center">
                 <div style="font-size:3rem; margin-bottom:16px; animation:float 3s ease-in-out infinite;">📅</div>
@@ -12,7 +12,7 @@
 
                 <div style="background:var(--bg); border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:24px; text-align:left;">
                     <div class="d-flex justify-content-between mb-2">
-                        <span style="color:var(--text-muted); font-size:0.85rem;">Сервис</span>
+                        <span style="color:var(--text-muted); font-size:0.85rem;">Услуга</span>
                         <span style="font-weight:600; font-size:0.85rem;">{{ slot.box.service.name }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
@@ -67,6 +67,19 @@
                         <label class="form-label">Комментарий</label>
                         <textarea name="notes" class="form-control" rows="2" placeholder="Пожелания или важная информация"></textarea>
                     </div>
+                    {% if not is_owner %}
+                    <div class="p-3 mb-3 text-start" style="background:var(--bg);border:1px solid var(--border);border-radius:14px;">
+                        <label class="d-flex align-items-center gap-2 mb-2" style="cursor:pointer;">
+                            <input type="checkbox" name="is_group_booking" id="groupBookingToggle">
+                            <strong>Записываюсь вместе с друзьями</strong>
+                        </label>
+                        <div id="partySizeBlock" style="display:none;">
+                            <label class="form-label">Сколько человек будет всего</label>
+                            <input type="number" name="party_size" min="2" max="50" value="2" class="form-control">
+                            <div class="text-muted mt-2" style="font-size:.78rem;">После записи вы получите ссылку-приглашение для друзей.</div>
+                        </div>
+                    </div>
+                    {% endif %}
                     <button type="submit" class="btn btn-primary w-100 mb-2 py-3" style="border-radius:12px; font-size:1rem;">
                         ✅ Подтвердить
                     </button>
@@ -76,4 +89,12 @@
         </div>
     </div>
 </div>
+<script>
+const groupToggle = document.getElementById('groupBookingToggle');
+if (groupToggle) {
+    groupToggle.addEventListener('change', () => {
+        document.getElementById('partySizeBlock').style.display = groupToggle.checked ? 'block' : 'none';
+    });
+}
+</script>
 {% endblock %}

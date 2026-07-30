@@ -1,13 +1,24 @@
 import os
 import json
+import uuid
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.db import IntegrityError, models, transaction
 from django.db.models import Count, Avg
+from django.utils import timezone
 from datetime import datetime, timedelta, date as date_type
 import requests
-from .models import TimeSlot, Booking, Review
+from .models import (
+    Booking,
+    BookingParticipant,
+    ClientCard,
+    Review,
+    TimeSlot,
+    WaitlistEntry,
+)
 from services.models import (
     Box,
     Employee,
@@ -45,6 +56,23 @@ def send_telegram_to_user(user, message):
         print(f'Telegram client error: {e}')
 
 
+def notify_waitlist(service, slot):
+    entries = WaitlistEntry.objects.filter(
+        service=service,
+        status='active',
+    ).select_related('user')[:20]
+    notified_at = timezone.now()
+    for entry in entries:
+        send_telegram_to_user(
+            entry.user,
+            f'🔔 Освободилось время в {service.name}\n'
+            f'{slot.date} в {slot.start_time:%H:%M}\n'
+            'Откройте сервис, чтобы записаться.',
+        )
+        entry.last_notified_at = notified_at
+        entry.save(update_fields=['last_notified_at'])
+
+
 def slot_list(request, box_id):
     box = get_object_or_404(Box, pk=box_id, is_active=True)
     now = datetime.now()
@@ -68,13 +96,19 @@ def book_slot(request, slot_id):
         request.user.role == 'business_owner'
         and slot.box.service.owner_id == request.user.id
     )
-
     if request.method == 'POST':
         if is_rate_limited(request, 'booking', 30, 600):
             messages.error(request, 'Слишком много операций. Попробуйте немного позже.')
             return redirect('slot_list', box_id=slot.box_id)
         offering = None
         employee = None
+        try:
+            party_size = max(
+                1,
+                min(50, int(request.POST.get('party_size') or 1)),
+            )
+        except ValueError:
+            party_size = 1
         offering_id = request.POST.get('offering')
         employee_id = request.POST.get('employee')
         if offering_id:
@@ -110,7 +144,33 @@ def book_slot(request, slot_id):
                     notes=request.POST.get('notes', '').strip(),
                     client_name=request.POST.get('client_name', '') if is_owner else '',
                     client_phone=request.POST.get('client_phone', '') if is_owner else '',
+                    is_group_booking=(
+                        not is_owner
+                        and request.POST.get('is_group_booking') == 'on'
+                    ),
+                    party_size=(
+                        party_size
+                        if (
+                            not is_owner
+                            and request.POST.get('is_group_booking') == 'on'
+                        )
+                        else 1
+                    ),
+                    invite_code=(
+                        uuid.uuid4()
+                        if (
+                            not is_owner
+                            and request.POST.get('is_group_booking') == 'on'
+                        )
+                        else None
+                    ),
                 )
+                if booking.user:
+                    WaitlistEntry.objects.filter(
+                        user=booking.user,
+                        service=slot.box.service,
+                        status='active',
+                    ).update(status='booked')
                 slot = locked_slot
         except (IntegrityError, TimeSlot.DoesNotExist):
             messages.error(request, 'Этот слот только что забронировал другой клиент.')
@@ -158,8 +218,181 @@ def book_slot(request, slot_id):
 
 @login_required
 def my_bookings(request):
-    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
-    return render(request, 'bookings/my_bookings.html', {'bookings': bookings})
+    bookings = Booking.objects.filter(
+        models.Q(user=request.user)
+        | models.Q(participants__user=request.user)
+    ).distinct().order_by('-created_at')
+    waitlist_entries = WaitlistEntry.objects.filter(
+        user=request.user,
+        status='active',
+    ).select_related('service')
+    return render(request, 'bookings/my_bookings.html', {
+        'bookings': bookings,
+        'waitlist_entries': waitlist_entries,
+    })
+
+
+@login_required
+def confirm_visit(request, booking_id):
+    booking = get_object_or_404(
+        Booking,
+        pk=booking_id,
+        user=request.user,
+        status='confirmed',
+    )
+    if request.method == 'POST':
+        answer = request.POST.get('answer')
+        if answer == 'confirm':
+            booking.visit_confirmation = 'confirmed'
+            booking.visit_confirmed_at = timezone.now()
+            booking.save(update_fields=[
+                'visit_confirmation',
+                'visit_confirmed_at',
+                'updated_at',
+            ])
+            send_telegram_notification(
+                booking.slot.box.service,
+                f'✅ Клиент {request.user.username} подтвердил визит '
+                f'{booking.slot.date} в {booking.slot.start_time:%H:%M}.',
+            )
+            messages.success(request, 'Спасибо! Визит подтверждён.')
+        elif answer == 'decline':
+            booking.visit_confirmation = 'declined'
+            booking.visit_confirmed_at = timezone.now()
+            booking.status = 'cancelled'
+            booking.cancellation_reason = 'Клиент заранее сообщил, что не придёт'
+            booking.slot.status = 'free'
+            booking.slot.save(update_fields=['status'])
+            booking.save(update_fields=[
+                'visit_confirmation',
+                'visit_confirmed_at',
+                'status',
+                'cancellation_reason',
+                'updated_at',
+            ])
+            send_telegram_notification(
+                booking.slot.box.service,
+                f'ℹ️ Клиент {request.user.username} заранее отказался от визита '
+                f'{booking.slot.date} в {booking.slot.start_time:%H:%M}.',
+            )
+            notify_waitlist(booking.slot.box.service, booking.slot)
+            messages.success(request, 'Запись отменена, время снова доступно.')
+    return redirect('my_bookings')
+
+
+@login_required
+def join_waitlist(request, service_id):
+    service = get_object_or_404(Service, pk=service_id)
+    if request.method == 'POST':
+        _, created = WaitlistEntry.objects.get_or_create(
+            user=request.user,
+            service=service,
+            status='active',
+            defaults={'note': request.POST.get('note', '').strip()},
+        )
+        if created:
+            messages.success(
+                request,
+                'Вы в листе ожидания. Сообщим, когда освободится время.',
+            )
+        else:
+            messages.info(request, 'Вы уже находитесь в листе ожидания.')
+    return redirect('service_detail', pk=service.pk)
+
+
+@login_required
+def leave_waitlist(request, service_id):
+    service = get_object_or_404(Service, pk=service_id)
+    if request.method == 'POST':
+        WaitlistEntry.objects.filter(
+            user=request.user,
+            service=service,
+            status='active',
+        ).update(status='cancelled')
+        messages.success(request, 'Вы вышли из листа ожидания.')
+    return redirect('service_detail', pk=service.pk)
+
+
+@login_required
+def repeat_booking(request, booking_id):
+    booking = get_object_or_404(
+        Booking.objects.select_related(
+            'slot__box__service',
+            'offering',
+            'employee',
+        ),
+        pk=booking_id,
+        user=request.user,
+    )
+    service = booking.slot.box.service
+    now = timezone.localtime()
+    available_slots = TimeSlot.objects.filter(
+        box__service=service,
+        box__is_active=True,
+        status='free',
+    ).filter(
+        models.Q(date__gt=now.date())
+        | models.Q(date=now.date(), start_time__gte=now.time())
+    ).exclude(pk=booking.slot_id).select_related('box').order_by(
+        models.Case(
+            models.When(box_id=booking.slot.box_id, then=0),
+            default=1,
+        ),
+        'date',
+        'start_time',
+    )[:50]
+    return render(request, 'bookings/repeat_booking.html', {
+        'booking': booking,
+        'service': service,
+        'available_slots': available_slots,
+    })
+
+
+@login_required
+def booking_invite(request, booking_id):
+    booking = get_object_or_404(
+        Booking.objects.select_related('slot__box__service', 'user'),
+        pk=booking_id,
+        user=request.user,
+        is_group_booking=True,
+    )
+    invite_url = request.build_absolute_uri(
+        reverse('join_group_booking', args=[booking.invite_code])
+    )
+    return render(request, 'bookings/booking_invite.html', {
+        'booking': booking,
+        'invite_url': invite_url,
+    })
+
+
+@login_required
+def join_group_booking(request, invite_code):
+    booking = get_object_or_404(
+        Booking.objects.select_related('slot__box__service', 'user'),
+        invite_code=invite_code,
+        is_group_booking=True,
+        status__in=['confirmed', 'in_progress'],
+    )
+    already_joined = booking.participants.filter(user=request.user).exists()
+    participant_count = booking.participants.count()
+    can_join = (
+        booking.user_id != request.user.id
+        and not already_joined
+        and participant_count < max(booking.party_size - 1, 0)
+    )
+    if request.method == 'POST' and can_join:
+        BookingParticipant.objects.create(
+            booking=booking,
+            user=request.user,
+        )
+        messages.success(request, 'Вы присоединились к совместной записи.')
+        return redirect('my_bookings')
+    return render(request, 'bookings/join_group_booking.html', {
+        'booking': booking,
+        'already_joined': already_joined,
+        'participant_count': participant_count,
+        'can_join': can_join,
+    })
 
 
 @login_required
@@ -182,6 +415,7 @@ def cancel_booking(request, booking_id):
         booking.status = 'cancelled'
         booking.cancellation_reason = request.POST.get('reason', '').strip()
         booking.save(update_fields=['status', 'cancellation_reason', 'updated_at'])
+        notify_waitlist(booking.slot.box.service, booking.slot)
         messages.success(request, 'Бронирование отменено.')
         return redirect('my_bookings')
     return render(request, 'bookings/cancel_booking.html', {'booking': booking})
@@ -252,18 +486,132 @@ def owner_booking_status(request, booking_id, status):
     if request.method == 'POST':
         booking.status = status
         booking.cancellation_reason = request.POST.get('reason', '').strip()
-        booking.save(update_fields=['status', 'cancellation_reason', 'updated_at'])
+        booking.owner_note = request.POST.get('owner_note', '').strip()
+        if status == 'no_show':
+            booking.no_show_marked_at = timezone.now()
+        booking.save(update_fields=[
+            'status',
+            'cancellation_reason',
+            'owner_note',
+            'no_show_marked_at',
+            'updated_at',
+        ])
         booking.slot.status = 'free'
         booking.slot.save(update_fields=['status'])
         if booking.user:
-            send_telegram_to_user(
-                booking.user,
-                f'❌ Запись в {booking.slot.box.service.name} отменена владельцем.',
-            )
+            if status == 'no_show':
+                no_show_count = booking.user.booking_set.filter(
+                    status='no_show'
+                ).count()
+                if no_show_count >= 2:
+                    messages.warning(
+                        request,
+                        f'Внимание: у клиента {booking.user.username} уже '
+                        f'{no_show_count} неявки.',
+                    )
+                send_telegram_to_user(
+                    booking.user,
+                    f'⚠️ Отмечена неявка\n'
+                    f'Сервис: {booking.slot.box.service.name}\n'
+                    f'Дата: {booking.slot.date} {booking.slot.start_time:%H:%M}\n'
+                    f'Количество неявок: {no_show_count}',
+                )
+            else:
+                send_telegram_to_user(
+                    booking.user,
+                    f'❌ Запись в {booking.slot.box.service.name} отменена владельцем.',
+                )
+                notify_waitlist(booking.slot.box.service, booking.slot)
     return redirect(
         'owner_dashboard',
         service_id=booking.slot.box.service_id,
     )
+
+
+@login_required
+def no_show_report(request, service_id):
+    service = get_object_or_404(Service, pk=service_id, owner=request.user)
+    today = date_type.today()
+    default_from = today - timedelta(days=30)
+    date_from_raw = request.GET.get('date_from')
+    date_to_raw = request.GET.get('date_to')
+    try:
+        date_from = (
+            datetime.strptime(date_from_raw, '%Y-%m-%d').date()
+            if date_from_raw else default_from
+        )
+        date_to = (
+            datetime.strptime(date_to_raw, '%Y-%m-%d').date()
+            if date_to_raw else today
+        )
+    except ValueError:
+        date_from, date_to = default_from, today
+
+    no_shows = Booking.objects.filter(
+        slot__box__service=service,
+        status='no_show',
+        slot__date__range=(date_from, date_to),
+    ).select_related('user', 'slot__box').order_by(
+        '-slot__date',
+        '-slot__start_time',
+    )
+    frequent_clients = no_shows.filter(user__isnull=False).values(
+        'user_id',
+        'user__username',
+        'user__phone',
+    ).annotate(no_show_count=Count('id')).order_by('-no_show_count')[:20]
+    total_bookings = Booking.objects.filter(
+        slot__box__service=service,
+        slot__date__range=(date_from, date_to),
+    ).exclude(status='cancelled').count()
+    no_show_total = no_shows.count()
+    no_show_rate = (
+        round(no_show_total / total_bookings * 100, 1)
+        if total_bookings else 0
+    )
+    return render(request, 'bookings/no_show_report.html', {
+        'service': service,
+        'no_shows': no_shows,
+        'frequent_clients': frequent_clients,
+        'date_from': date_from,
+        'date_to': date_to,
+        'no_show_total': no_show_total,
+        'no_show_rate': no_show_rate,
+        'total_bookings': total_bookings,
+    })
+
+
+@login_required
+def client_card(request, service_id, user_id):
+    service = get_object_or_404(Service, pk=service_id, owner=request.user)
+    client = get_object_or_404(get_user_model(), pk=user_id)
+    client_bookings = Booking.objects.filter(
+        user=client,
+        slot__box__service=service,
+    ).select_related('slot__box', 'offering', 'employee')
+    card, _ = ClientCard.objects.get_or_create(
+        service=service,
+        client=client,
+    )
+    if request.method == 'POST':
+        card.owner_note = request.POST.get('owner_note', '').strip()
+        card.preferences = request.POST.get('preferences', '').strip()
+        card.save(update_fields=['owner_note', 'preferences', 'updated_at'])
+        messages.success(request, 'Карточка клиента сохранена.')
+        return redirect('client_card', service_id=service.pk, user_id=client.pk)
+    return render(request, 'bookings/client_card.html', {
+        'service': service,
+        'client_user': client,
+        'client_bookings': client_bookings.order_by(
+            '-slot__date',
+            '-slot__start_time',
+        )[:50],
+        'card': card,
+        'visits_total': client_bookings.count(),
+        'completed_total': client_bookings.filter(status='completed').count(),
+        'cancelled_total': client_bookings.filter(status='cancelled').count(),
+        'no_show_total': client_bookings.filter(status='no_show').count(),
+    })
 
 
 @login_required
@@ -273,8 +621,9 @@ def owner_dashboard(request, service_id):
         messages.error(request, 'Доступ запрещён.')
         return redirect('home')
     bookings = Booking.objects.filter(
-        slot__box__service=service
-    ).exclude(slot__status='free').order_by('slot__date', 'slot__start_time')
+        slot__box__service=service,
+        status__in=['confirmed', 'in_progress'],
+    ).order_by('slot__date', 'slot__start_time')
     total_bookings = bookings.count()
     in_progress = bookings.filter(slot__status='in_progress').count()
     free_slots = TimeSlot.objects.filter(box__service=service, status='free').count()
@@ -285,6 +634,9 @@ def owner_dashboard(request, service_id):
         'total_bookings': total_bookings,
         'in_progress': in_progress,
         'free_slots': free_slots,
+        'waitlist_entries': service.waitlist_entries.filter(
+            status='active',
+        ).select_related('user'),
         'service_reviews': service.reviews.filter(is_approved=True).select_related('user')[:10],
     })
 
@@ -571,9 +923,15 @@ def analytics(request, service_id):
     bookings = Booking.objects.filter(
         slot__box__service=service,
         slot__date__gte=date_from
-    ).exclude(slot__status='free')
+    ).exclude(status='cancelled')
 
     total = bookings.count()
+    no_show_total = Booking.objects.filter(
+        slot__box__service=service,
+        slot__date__gte=date_from,
+        status='no_show',
+    ).count()
+    no_show_rate = round(no_show_total / total * 100, 1) if total else 0
 
     bookings_by_day = {}
     for i in range(days):
@@ -612,6 +970,8 @@ def analytics(request, service_id):
         'top_clients': top_clients,
         'box_stats': box_stats,
         'avg_rating': avg_rating,
+        'no_show_total': no_show_total,
+        'no_show_rate': no_show_rate,
     })
 
 

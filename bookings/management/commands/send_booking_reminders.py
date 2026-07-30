@@ -37,7 +37,8 @@ class Command(BaseCommand):
                     f'Сервис: {booking.slot.box.service.name}\n'
                     f'Дата: {booking.slot.date}\n'
                     f'Время: {booking.slot.start_time:%H:%M}\n'
-                    f'Адрес: {booking.slot.box.service.address}',
+                    f'Адрес: {booking.slot.box.service.address}\n'
+                    'Пожалуйста, подтвердите визит в разделе «Мои записи».',
                 )
                 booking.reminder_sent_at = timezone.now()
                 booking.save(update_fields=['reminder_sent_at'])

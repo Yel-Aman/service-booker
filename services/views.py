@@ -35,7 +35,13 @@ def home(request):
 
 def service_list(request):
     current_city = get_current_city(request)
-    services = Service.objects.filter(is_active=True, city=current_city)
+    show_all_cities = (
+        request.user.is_authenticated
+        and request.user.role == 'business_owner'
+    )
+    services = Service.objects.filter(is_active=True)
+    if not show_all_cities:
+        services = services.filter(city=current_city)
     categories = Category.objects.all()
 
     category_id = request.GET.get('category')
@@ -63,17 +69,25 @@ def service_list(request):
         'query': query,
         'open_now': open_now,
         'current_city': current_city,
+        'show_all_cities': show_all_cities,
     })
 
 
 def service_detail(request, pk):
     service = get_object_or_404(Service, pk=pk, is_active=True)
+    is_waitlisted = False
     if request.user.is_authenticated:
+        from bookings.models import WaitlistEntry
         from users.models import RecentlyViewedService
         RecentlyViewedService.objects.update_or_create(
             user=request.user,
             service=service,
         )
+        is_waitlisted = WaitlistEntry.objects.filter(
+            user=request.user,
+            service=service,
+            status='active',
+        ).exists()
     reviews = service.reviews.filter(is_approved=True).order_by('-created_at')
     avg_rating = reviews.aggregate(models.Avg('rating'))['rating__avg']
     return render(request, 'services/service_detail.html', {
@@ -82,6 +96,7 @@ def service_detail(request, pk):
         'avg_rating': avg_rating,
         'offerings': service.offerings.filter(is_active=True),
         'employees': service.employees.filter(is_active=True),
+        'is_waitlisted': is_waitlisted,
     })
 
 

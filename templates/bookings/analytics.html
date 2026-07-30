@@ -3,14 +3,14 @@
 {% block title %}Аналитика — {{ service.name }}{% endblock %}
 
 {% block content %}
-<div class="d-flex align-items-center gap-3 mb-4" data-aos="fade-up">
+<div class="page-hero d-flex align-items-center flex-wrap gap-3 mb-4" data-aos="fade-up">
     <a href="{% url 'owner_dashboard' service.pk %}" class="btn btn-outline-secondary btn-sm">← Назад</a>
     <h3 style="font-weight:800; letter-spacing:-1px; margin:0;">📊 Аналитика</h3>
     <span style="color:var(--text-muted); font-size:0.9rem;">{{ service.name }}</span>
 </div>
 
 <!-- Фильтр периода -->
-<div class="d-flex gap-2 mb-4" data-aos="fade-up">
+<div class="filter-strip d-flex gap-2 mb-4" data-aos="fade-up">
     {% for p, label in periods %}
     <a href="?period={{ p }}" class="btn btn-sm {% if period == p %}btn-primary{% else %}btn-outline-secondary{% endif %}">
         {{ label }}
@@ -21,28 +21,40 @@
 <!-- Общая статистика -->
 <div class="row mb-4">
     <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="0">
-        <div class="card text-center p-4">
+        <div class="metric-card card text-center p-4">
             <div style="font-size:2rem; font-weight:800; color:#6c47ff;">{{ total }}</div>
             <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Всего броней</div>
         </div>
     </div>
     <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="100">
-        <div class="card text-center p-4">
+        <div class="metric-card card text-center p-4">
             <div style="font-size:2rem; font-weight:800; color:#00c851;">{{ avg_rating|floatformat:1|default:"—" }}</div>
             <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Средний рейтинг</div>
         </div>
     </div>
     <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="200">
-        <div class="card text-center p-4">
+        <div class="metric-card card text-center p-4">
             <div style="font-size:2rem; font-weight:800; color:#a855f7;">{{ top_clients|length }}</div>
             <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Уникальных клиентов</div>
         </div>
     </div>
     <div class="col-6 col-md-3 mb-3" data-aos="fade-up" data-aos-delay="300">
-        <div class="card text-center p-4">
+        <div class="metric-card card text-center p-4">
             <div style="font-size:2rem; font-weight:800; color:#f59e0b;">{{ box_stats|length }}</div>
             <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Активных боксов</div>
         </div>
+    </div>
+</div>
+
+<div class="card mb-4" data-aos="fade-up">
+    <div class="card-body d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <div style="font-size:.85rem;color:var(--text-muted);">Неявки за выбранный период</div>
+            <div style="font-size:1.8rem;font-weight:800;color:#ef4444;">
+                {{ no_show_total }} <span style="font-size:1rem;">({{ no_show_rate }}%)</span>
+            </div>
+        </div>
+        <a href="{% url 'no_show_report' service.pk %}" class="btn btn-outline-danger">Подробный отчёт</a>
     </div>
 </div>
 
