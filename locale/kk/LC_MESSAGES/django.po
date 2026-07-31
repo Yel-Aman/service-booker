@@ -239,6 +239,14 @@ msgstr "Қызмет табыңыз"
 msgid "Выбери категорию и найди ближайший сервис"
 msgstr "Санатты таңдап, жақын қызметті табыңыз"
 
+#: .\templates\services\home.html:68
+msgid "Найди услугу"
+msgstr "Қызметті табыңыз"
+
+#: .\templates\services\home.html:69
+msgid "Выбери категорию и найди подходящее место"
+msgstr "Санатты таңдап, қолайлы орынды табыңыз"
+
 #: .\templates\services\home.html:104
 msgid "Выбери время"
 msgstr "Уақытты таңдаңыз"

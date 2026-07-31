@@ -240,6 +240,14 @@ msgstr "Find a service"
 msgid "Выбери категорию и найди ближайший сервис"
 msgstr "Choose a category and find the nearest service"
 
+#: .\templates\services\home.html:68
+msgid "Найди услугу"
+msgstr "Find a service"
+
+#: .\templates\services\home.html:69
+msgid "Выбери категорию и найди подходящее место"
+msgstr "Choose a category and find the right place"
+
 #: .\templates\services\home.html:104
 msgid "Выбери время"
 msgstr "Choose time"
