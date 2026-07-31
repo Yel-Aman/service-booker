@@ -52,3 +52,34 @@ class PlatformDashboardTests(TestCase):
         response = self.client.get(reverse('platform_dashboard'))
 
         self.assertGreaterEqual(response.context['dau'], 1)
+
+
+class LoginRedirectTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username='booking-client',
+            password='password',
+        )
+
+    def test_login_returns_user_to_requested_page(self):
+        destination = reverse('profile')
+
+        login_page = self.client.get(reverse('login'), {'next': destination})
+        self.assertContains(login_page, f'name="next" value="{destination}"')
+
+        response = self.client.post(reverse('login'), {
+            'username': self.user.username,
+            'password': 'password',
+            'next': destination,
+        })
+
+        self.assertRedirects(response, destination)
+
+    def test_login_does_not_redirect_to_external_site(self):
+        response = self.client.post(reverse('login'), {
+            'username': self.user.username,
+            'password': 'password',
+            'next': 'https://example.com/unsafe/',
+        })
+
+        self.assertRedirects(response, reverse('home'))

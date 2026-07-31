@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db import models
 from django.db.models import Count
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
 from bookings.models import Booking
 from .forms import LoginForm, RegisterForm
@@ -33,22 +34,36 @@ def register(request):
 
 
 def login_view(request):
+    next_url = request.POST.get('next') or request.GET.get('next') or ''
+
     if request.method == 'POST':
         if is_rate_limited(request, 'login', 20, 900):
             messages.error(request, 'Слишком много попыток входа. Попробуйте позже.')
-            return render(request, 'users/login.html', {'form': LoginForm()})
+            return render(request, 'users/login.html', {
+                'form': LoginForm(),
+                'next': next_url,
+            })
         username = request.POST.get('username', '').lower()
         password = request.POST.get('password', '')
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
+            if next_url and url_has_allowed_host_and_scheme(
+                url=next_url,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                return redirect(next_url)
             return redirect('home')
         else:
             messages.error(request, 'Неверный логин или пароль')
         form = LoginForm(data=request.POST)
     else:
         form = LoginForm()
-    return render(request, 'users/login.html', {'form': form})
+    return render(request, 'users/login.html', {
+        'form': form,
+        'next': next_url,
+    })
 
 
 def logout_view(request):
