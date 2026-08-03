@@ -13,6 +13,11 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <style>
         * { font-family: 'Inter', sans-serif; }
+        @property --nav-active-x {
+            syntax: '<length>';
+            inherits: true;
+            initial-value: 36px;
+        }
 
         [data-theme="dark"] {
             --bg: #080b11;
@@ -68,6 +73,7 @@
         .container { position: relative; z-index: 1; }
 
         .navbar { background: var(--navbar-bg) !important; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--navbar-border); padding: 12px 0; position: sticky; top: 0; z-index: 1000; }
+        .navbar-shell { width:100%; max-width:none; padding-inline:clamp(24px,4vw,76px); }
         .nav-link { color: var(--text-sub) !important; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
         .nav-link:hover { color: #2563eb !important; }
 
@@ -145,6 +151,7 @@
             .hero h1 { font-size: 2.2rem !important; letter-spacing: -1px !important; }
             .hero p { font-size: 0.95rem !important; }
             .navbar { padding: 8px 0; }
+            .navbar-shell { padding-inline:16px; }
             .navbar .container { flex-wrap: wrap; overflow: visible; }
             .navbar-brand { height:36px; margin-right:0; }
             .navbar-toggler { border:1px solid var(--border); color:var(--text); padding:7px 10px; box-shadow:none !important; }
@@ -296,7 +303,7 @@
         @keyframes scrollCue { 0%,100% { transform:scaleY(.3); opacity:.4; } 50% { transform:scaleY(1); opacity:1; } }
 
         @media (max-width: 768px) {
-            body { padding-bottom:78px; background-size:32px 32px; }
+            body { padding-bottom:calc(104px + env(safe-area-inset-bottom)); background-size:32px 32px; }
             main.container { margin-top:18px !important; }
             footer { display:none; }
             .hero { min-height:auto !important; padding:54px 20px 42px; }
@@ -316,15 +323,70 @@
             .resource-row form.d-flex { flex:1; }
             .resource-row form.d-flex input { width:100% !important; min-width:0; }
             .mobile-bottom-nav {
-                display:grid; grid-template-columns:repeat(5,1fr); position:fixed;
-                left:10px; right:10px; bottom:10px; z-index:1200; padding:7px 4px;
-                background:color-mix(in srgb, var(--modal-bg) 92%, transparent);
-                border:1px solid var(--border); border-radius:18px;
-                box-shadow:0 16px 45px rgba(0,0,0,.3); backdrop-filter:blur(18px);
+                --nav-active-x:10%;
+                display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); position:fixed;
+                left:10px; right:10px; bottom:max(10px,env(safe-area-inset-bottom));
+                z-index:1200; min-height:76px; padding:11px 5px 7px;
+                background:transparent; border:0; border-radius:24px;
+                isolation:isolate;
+                transition:--nav-active-x .42s cubic-bezier(.22,.8,.24,1);
             }
-            .mobile-bottom-nav a { color:var(--text-muted); text-decoration:none; text-align:center; font-size:.65rem; line-height:1.15; padding:4px 1px; }
-            .mobile-bottom-nav .nav-icon { display:block; color:var(--text); font-size:1.18rem; margin-bottom:3px; }
-            .mobile-bottom-nav a:hover { color:var(--brand); }
+            .mobile-bottom-nav::before {
+                content:''; position:absolute; z-index:0; pointer-events:none; inset:0;
+                border:1px solid color-mix(in srgb,var(--border) 76%,#60a5fa 24%);
+                border-radius:24px;
+                background:color-mix(in srgb,var(--modal-bg) 94%,transparent);
+                box-shadow:0 20px 52px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.045);
+                backdrop-filter:blur(24px) saturate(145%);
+                -webkit-backdrop-filter:blur(24px) saturate(145%);
+                -webkit-mask:radial-gradient(circle 39px at var(--nav-active-x) -8px,transparent 38px,#000 39px);
+                mask:radial-gradient(circle 39px at var(--nav-active-x) -8px,transparent 38px,#000 39px);
+            }
+            .mobile-bottom-nav::after {
+                content:''; position:absolute; z-index:1; pointer-events:none;
+                width:82px; height:82px; top:-36px; left:var(--nav-active-x);
+                transform:translateX(-50%); border-radius:50%;
+                background:radial-gradient(circle,rgba(96,165,250,.34),rgba(37,99,235,.12) 44%,transparent 70%);
+                filter:blur(6px);
+            }
+            .mobile-nav-bead {
+                position:absolute; z-index:1; pointer-events:none;
+                width:58px; height:58px; top:-28px; left:var(--nav-active-x);
+                transform:translateX(-50%); border-radius:50%;
+                background:linear-gradient(145deg,#60a5fa,#2563eb 58%,#1d4ed8);
+                border:1px solid rgba(255,255,255,.32);
+                box-shadow:0 12px 30px rgba(37,99,235,.62),inset 0 1px 1px rgba(255,255,255,.28);
+            }
+            .mobile-bottom-nav a {
+                position:relative; z-index:2; min-width:0; height:56px;
+                display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+                gap:4px; color:var(--text-muted); text-decoration:none; text-align:center;
+                font-size:.61rem; font-weight:650; line-height:1; padding:2px 1px 3px;
+                transition:color .25s ease,transform .38s cubic-bezier(.22,.8,.24,1);
+                -webkit-tap-highlight-color:transparent;
+            }
+            .mobile-bottom-nav .nav-icon {
+                width:34px; height:34px; display:grid; place-items:center; flex:0 0 auto;
+                color:var(--text-sub); border-radius:50%;
+                transition:width .38s cubic-bezier(.22,.8,.24,1),height .38s cubic-bezier(.22,.8,.24,1),
+                    color .25s ease,background .25s ease,box-shadow .3s ease,transform .38s cubic-bezier(.22,.8,.24,1);
+            }
+            .mobile-bottom-nav .nav-icon svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+            .mobile-bottom-nav .nav-label { max-width:100%; flex:0 0 auto; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+            .mobile-bottom-nav a.is-active { color:#60a5fa; transform:translateY(-20px); }
+            .mobile-bottom-nav a.is-active .nav-icon {
+                width:58px; height:58px; color:white; transform:translateY(-2px);
+                background:transparent;
+            }
+            .mobile-bottom-nav a.is-active .nav-icon svg { width:24px; height:24px; }
+            .mobile-bottom-nav a:hover { color:#60a5fa; }
+            .mobile-bottom-nav a:focus-visible { outline:2px solid #60a5fa; outline-offset:4px; border-radius:12px; }
+            .mobile-bottom-nav.nav-positioning::before,
+            .mobile-bottom-nav.nav-positioning::after,
+            .mobile-bottom-nav.nav-positioning,
+            .mobile-bottom-nav.nav-positioning .mobile-nav-bead,
+            .mobile-bottom-nav.nav-positioning a,
+            .mobile-bottom-nav.nav-positioning .nav-icon { transition:none !important; }
             .sticky-actions { position:static !important; }
             .cinematic-hero { width:100vw; min-height:calc(100svh - 70px); margin:-18px 0 64px; }
             .cinematic-content h1 { font-size:3.25rem !important; }
@@ -348,6 +410,9 @@
             .service-grid-card > div:first-child { height:210px !important; }
             .service-hero { min-height:300px; }
             .map-toolbar > * { width:100%; }
+            @media (prefers-reduced-motion:reduce) {
+                .mobile-bottom-nav::before,.mobile-bottom-nav::after,.mobile-nav-bead,.mobile-bottom-nav a,.mobile-bottom-nav .nav-icon { transition:none !important; }
+            }
             .map-toolbar .btn { width:100%; }
             .table-responsive { margin-inline:-4px; }
             .table { min-width:620px; font-size:.84rem; }
@@ -394,7 +459,7 @@
 </div>
 
 <nav class="navbar navbar-expand-lg">
-    <div class="container">
+    <div class="container-fluid navbar-shell">
         <a class="navbar-brand" href="{% url 'home' %}">
             <img src="{% static 'kimsongy_logo.png' %}" alt="kimsongy" class="logo-light" style="height:58px; width:auto;">
             <img src="{% static 'kimsongy_logo_white.png' %}" alt="kimsongy" class="logo-dark" style="height:98px; width:auto;">
@@ -475,27 +540,28 @@
     </div>
 </nav>
 
-<nav class="mobile-bottom-nav" aria-label="Мобильная навигация">
-    <a href="{% url 'home' %}"><span class="nav-icon">⌂</span>{% trans "Главная" %}</a>
-    <a href="{% url 'service_list' %}"><span class="nav-icon">⌕</span>{% trans "Услуги" %}</a>
-    <a href="{% url 'service_map' %}"><span class="nav-icon">⌖</span>{% trans "Карта" %}</a>
+<nav class="mobile-bottom-nav" aria-label="Мобильная навигация" data-current-url="{{ request.resolver_match.url_name }}">
+    <span class="mobile-nav-bead" aria-hidden="true"></span>
+    <a href="{% url 'home' %}" data-nav-match="home"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5M9.5 21v-6h5v6"/></svg></span><span class="nav-label">{% trans "Главная" %}</span></a>
+    <a href="{% url 'service_list' %}" data-nav-match="service_list,service_detail,slot_list,book_slot"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5"/></svg></span><span class="nav-label">{% trans "Услуги" %}</span></a>
+    <a href="{% url 'service_map' %}" data-nav-match="service_map"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><span class="nav-label">{% trans "Карта" %}</span></a>
     {% if user.is_authenticated and user.role == 'business_owner' %}
         {% with mobile_service=user.services.first %}
         {% if mobile_service %}
-        <a href="{% url 'owner_dashboard' mobile_service.pk %}"><span class="nav-icon">▦</span>{% trans "Панель" %}</a>
+        <a href="{% url 'owner_dashboard' mobile_service.pk %}" data-nav-match="owner_dashboard,manage_schedule,generate_slots,delete_slots,manage_catalog,no_show_report"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="nav-label">{% trans "Панель" %}</span></a>
         {% else %}
-        <a href="{% url 'profile' %}"><span class="nav-icon">◎</span>{% trans "Профиль" %}</a>
+        <a href="{% url 'profile' %}" data-nav-match="profile"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></span><span class="nav-label">{% trans "Профиль" %}</span></a>
         {% endif %}
         {% endwith %}
     {% elif user.is_authenticated %}
-        <a href="{% url 'my_bookings' %}"><span class="nav-icon">□</span>{% trans "Записи" %}</a>
+        <a href="{% url 'my_bookings' %}" data-nav-match="my_bookings,cancel_booking,reschedule_booking,repeat_booking,booking_invite"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4m8-4v4M3 10h18M8 14h3m2 0h3m-8 4h3"/></svg></span><span class="nav-label">{% trans "Записи" %}</span></a>
     {% else %}
-        <a href="{% url 'login' %}"><span class="nav-icon">□</span>{% trans "Войти" %}</a>
+        <a href="{% url 'login' %}" data-nav-match="login"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h5v16h-5M10 8l4 4-4 4m4-4H3"/></svg></span><span class="nav-label">{% trans "Войти" %}</span></a>
     {% endif %}
     {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}"><span class="nav-icon">◎</span>{% trans "Профиль" %}</a>
+    <a href="{% url 'profile' %}" data-nav-match="profile,favorites,recently_viewed"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg></span><span class="nav-label">{% trans "Профиль" %}</span></a>
     {% else %}
-    <a href="{% url 'register' %}"><span class="nav-icon">＋</span>{% trans "Регистрация" %}</a>
+    <a href="{% url 'register' %}" data-nav-match="register"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2.5 21a6.5 6.5 0 0 1 13 0M18 8v6m-3-3h6"/></svg></span><span class="nav-label">{% trans "Регистрация" %}</span></a>
     {% endif %}
 </nav>
 
@@ -519,6 +585,72 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
     AOS.init({ duration: 600, once: true, offset: 80 });
+    const mobileNav = document.querySelector('.mobile-bottom-nav');
+    if (mobileNav) {
+        const mobileNavLinks = Array.from(mobileNav.querySelectorAll('a[data-nav-match]'));
+        const currentUrlName = mobileNav.dataset.currentUrl;
+        const activeMobileLink = mobileNavLinks.find(link =>
+            link.dataset.navMatch.split(',').includes(currentUrlName)
+        ) || mobileNavLinks[0];
+
+        function positionMobileNav(link, animate = true) {
+            if (!link) return;
+            mobileNavLinks.forEach(item => {
+                const isActive = item === link;
+                item.classList.toggle('is-active', isActive);
+                if (isActive) item.setAttribute('aria-current', 'page');
+                else item.removeAttribute('aria-current');
+            });
+            if (!animate) mobileNav.classList.add('nav-positioning');
+            const navRect = mobileNav.getBoundingClientRect();
+            const linkRect = link.getBoundingClientRect();
+            mobileNav.style.setProperty('--nav-active-x', `${linkRect.left - navRect.left + linkRect.width / 2}px`);
+            if (!animate) requestAnimationFrame(() => mobileNav.classList.remove('nav-positioning'));
+        }
+
+        let previousMobileNavIndex = null;
+        try {
+            const storedIndex = sessionStorage.getItem('kimsongy_mobile_nav_from');
+            if (storedIndex !== null) previousMobileNavIndex = Number.parseInt(storedIndex, 10);
+            sessionStorage.removeItem('kimsongy_mobile_nav_from');
+        } catch (error) {
+            previousMobileNavIndex = null;
+        }
+
+        const activeMobileNavIndex = mobileNavLinks.indexOf(activeMobileLink);
+        if (
+            Number.isInteger(previousMobileNavIndex)
+            && previousMobileNavIndex >= 0
+            && previousMobileNavIndex < mobileNavLinks.length
+            && previousMobileNavIndex !== activeMobileNavIndex
+        ) {
+            requestAnimationFrame(() => {
+                positionMobileNav(mobileNavLinks[previousMobileNavIndex], false);
+                requestAnimationFrame(() => positionMobileNav(activeMobileLink));
+            });
+        } else {
+            requestAnimationFrame(() => positionMobileNav(activeMobileLink, false));
+        }
+
+        mobileNavLinks.forEach(link => link.addEventListener('click', event => {
+            if (event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+            if (link.classList.contains('is-active')) {
+                event.preventDefault();
+                return;
+            }
+            try {
+                sessionStorage.setItem(
+                    'kimsongy_mobile_nav_from',
+                    String(mobileNavLinks.indexOf(mobileNav.querySelector('a.is-active')))
+                );
+            } catch (error) {}
+            if (event.detail > 0) link.blur();
+        }));
+        window.addEventListener('resize', () => positionMobileNav(
+            mobileNav.querySelector('a.is-active') || activeMobileLink,
+            false
+        ));
+    }
     const scrollProgress = document.getElementById('scrollProgress');
     function updateScrollProgress() {
         const scrollable = document.documentElement.scrollHeight - window.innerHeight;
@@ -556,6 +688,7 @@
     document.addEventListener('click', (event) => {
         const link = event.target.closest('a[href]');
         if (!link || event.defaultPrevented || event.ctrlKey || event.metaKey || event.shiftKey) return;
+        if (link.closest('.mobile-bottom-nav')) return;
         if (link.target === '_blank' || link.hasAttribute('download')) return;
         const href = link.getAttribute('href');
         if (!href || href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:')) return;

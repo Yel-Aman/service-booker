@@ -68,7 +68,11 @@
             </div>
         </div>
 
-        <a href="{% url 'my_bookings' %}" class="btn btn-outline-secondary w-100" style="border-radius:12px;">📋 {% trans "Мои записи" %}</a>
+        <a href="{% url 'my_bookings' %}" class="btn btn-primary w-100 py-3" style="border-radius:16px; min-height:68px; font-size:1.08rem; box-shadow:0 14px 34px rgba(37,99,235,.3);">
+            <span style="font-size:1.45rem;">📋</span>
+            <strong>{% trans "Мои записи" %}</strong>
+            <span style="margin-left:auto; font-size:1.25rem;">→</span>
+        </a>
     </div>
 </div>
 {% endblock %}
